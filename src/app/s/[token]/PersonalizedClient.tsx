@@ -1,8 +1,33 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { PersonalizedLink } from '@/lib/supabase';
 import LaurenChat from '@/components/LaurenChat';
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const, delay },
+});
+
+const rowVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.4 } },
+};
+const rowItem = {
+  hidden: { opacity: 0, x: -10 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
+const stepListVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+};
+const stepItem = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const } },
+};
 
 function fmt(n: number) {
   return '$' + Number(n).toLocaleString();
@@ -45,68 +70,91 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
 
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '48px 24px 120px' }}>
         {/* Headline */}
-        <h1 style={{
-          fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 800,
-          letterSpacing: '-.03em', lineHeight: 1.15, marginBottom: 36,
-          color: 'var(--cream)',
-        }}>
+        <motion.h1
+          {...fadeUp(0.05)}
+          style={{
+            fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 800,
+            letterSpacing: '-.03em', lineHeight: 1.15, marginBottom: 36,
+            color: 'var(--cream)',
+          }}
+        >
           {link.first_name} — this is what we found.
-        </h1>
+        </motion.h1>
 
-        {/* Case card */}
-        <div style={{
-          border: '1px solid rgba(201,162,74,.3)',
-          borderRadius: 6, padding: '28px 28px',
-          background: 'rgba(201,162,74,.04)',
-          marginBottom: 36,
-        }}>
+        {/* Case card — staggered data rows */}
+        <motion.div
+          {...fadeUp(0.18)}
+          style={{
+            border: '1px solid rgba(201,162,74,.3)',
+            borderRadius: 6, padding: '28px 28px',
+            background: 'rgba(201,162,74,.04)',
+            marginBottom: 36,
+          }}
+        >
           {link.property_address && (
-            <p style={{ fontSize: 15, color: 'var(--cream)', marginBottom: 20, lineHeight: 1.5 }}>
+            <motion.p {...fadeUp(0.28)} style={{ fontSize: 15, color: 'var(--cream)', marginBottom: 20, lineHeight: 1.5 }}>
               Your property at{' '}
               <strong>{link.property_address}</strong>{' '}
               {link.sale_date ? `sold at a sheriff sale on ${formatDate(link.sale_date)}.` : 'was involved in a sheriff sale.'}
-            </p>
+            </motion.p>
           )}
 
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+          <motion.table
+            variants={rowVariants} initial="hidden" animate="show"
+            style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}
+          >
             <tbody>
               {link.sale_price && (
-                <DataRow label="Sale price" value={fmt(link.sale_price)} />
+                <motion.tr variants={rowItem}>
+                  <DataRow label="Sale price" value={fmt(link.sale_price)} asFragment />
+                </motion.tr>
               )}
               {link.judgment_amount && (
-                <DataRow label="Debt paid from sale" value={fmt(link.judgment_amount)} />
+                <motion.tr variants={rowItem}>
+                  <DataRow label="Debt paid from sale" value={fmt(link.judgment_amount)} asFragment />
+                </motion.tr>
               )}
               {surplusRange && (
-                <DataRow label="Estimated surplus" value={surplusRange} highlight />
+                <motion.tr variants={rowItem}>
+                  <DataRow label="Estimated surplus" value={surplusRange} highlight asFragment />
+                </motion.tr>
               )}
               {link.county && (
-                <DataRow label="Held by" value={`${link.county} County Clerk of Courts`} />
+                <motion.tr variants={rowItem}>
+                  <DataRow label="Held by" value={`${link.county} County Clerk of Courts`} asFragment />
+                </motion.tr>
               )}
             </tbody>
-          </table>
+          </motion.table>
 
           {surplusRange && (
-            <p style={{
-              marginTop: 20, fontSize: 13, color: 'var(--cream-45)',
-              lineHeight: 1.7, borderTop: '1px solid var(--border)', paddingTop: 16,
-            }}>
-              This money is sitting with the {link.county || 'county'} Clerk of Courts. It's yours — you just have to claim it. Most people don't know it exists. Many wait too long and lose it to the state after 5 years.
-            </p>
+            <motion.p
+              {...fadeUp(0.6)}
+              style={{
+                marginTop: 20, fontSize: 13, color: 'var(--cream-45)',
+                lineHeight: 1.7, borderTop: '1px solid var(--border)', paddingTop: 16,
+              }}
+            >
+              This money is sitting with the {link.county || 'county'} Clerk of Courts. It&apos;s yours — you just have to claim it. Most people don&apos;t know it exists. Many wait too long and lose it to the state after 5 years.
+            </motion.p>
           )}
-        </div>
+        </motion.div>
 
         {/* Process */}
         <h2 style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: 'var(--cream)' }}>
           What I'd like to do
         </h2>
-        <ol style={{ paddingLeft: 0, listStyle: 'none', marginBottom: 36 }}>
+        <motion.ol
+          variants={stepListVariants} initial="hidden" animate="show"
+          style={{ paddingLeft: 0, listStyle: 'none', marginBottom: 36 }}
+        >
           {[
             'Our attorney (Jeff Kalniz, Ohio Bar #0068927) files the motion with the court.',
             'You sign one agreement. No money up front.',
             `When the funds are released — usually 60–90 days — we take 20%. You get 80%.`,
             'If your case requires contested litigation, fee is 35%. You\'ll know that before you sign anything.',
           ].map((step, i) => (
-            <li key={i} style={{
+            <motion.li key={i} variants={stepItem} style={{
               display: 'flex', gap: 16, marginBottom: 14, fontSize: 14,
               color: 'var(--cream-70)', lineHeight: 1.6,
             }}>
@@ -117,18 +165,21 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
                 fontSize: 12, fontWeight: 700, flexShrink: 0, marginTop: 1,
               }}>{i + 1}</span>
               {step}
-            </li>
+            </motion.li>
           ))}
-        </ol>
+        </motion.ol>
 
         <p style={{ fontSize: 13, color: 'var(--cream-45)', marginBottom: 32, lineHeight: 1.6 }}>
           That's it. No hidden fees. No monthly charges. We pay the attorney out of our share.
         </p>
 
         {/* CTAs */}
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 48 }}>
-          <button
+        <motion.div {...fadeUp(0.5)} style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 48 }}>
+          <motion.button
             onClick={() => setShowChat(true)}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.12 }}
             style={{
               background: 'var(--gold)', color: 'var(--bg)', border: 'none',
               borderRadius: 4, padding: '14px 28px',
@@ -136,10 +187,13 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
               boxShadow: 'var(--shadow-gold)',
             }}
           >
-            Yes — let's do it →
-          </button>
-          <button
+            Yes — let&apos;s do it →
+          </motion.button>
+          <motion.button
             onClick={() => setShowChat(true)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.12 }}
             style={{
               background: 'transparent', color: 'var(--cream-70)',
               border: '1px solid var(--border)', borderRadius: 4,
@@ -147,8 +201,8 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
             }}
           >
             I have questions — chat with Lauren
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
         {/* Nathan contact */}
         <div style={{
@@ -208,9 +262,9 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
   );
 }
 
-function DataRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
-  return (
-    <tr>
+function DataRow({ label, value, highlight, asFragment }: { label: string; value: string; highlight?: boolean; asFragment?: boolean }) {
+  const cells = (
+    <>
       <td style={{ padding: '6px 0', color: 'var(--cream-45)', width: '50%' }}>{label}</td>
       <td style={{
         padding: '6px 0',
@@ -218,6 +272,8 @@ function DataRow({ label, value, highlight }: { label: string; value: string; hi
         fontWeight: highlight ? 700 : 400,
         fontFamily: highlight ? 'var(--mono)' : 'inherit',
       }}>{value}</td>
-    </tr>
+    </>
   );
+  if (asFragment) return cells;
+  return <tr>{cells}</tr>;
 }

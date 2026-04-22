@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { SearchResult, ForeclosureCase } from '@/lib/supabase';
 
 const SEARCH_STEPS = [
@@ -14,6 +15,22 @@ function fmt(n: number) {
   return '$' + n.toLocaleString();
 }
 
+// Staggered row container variant
+const rowContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } },
+};
+const rowItem = {
+  hidden: { opacity: 0, x: -8 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
+const resultEnter = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+};
+
 function ResultConfirmed({ result, onClaim, onChat }: {
   result: SearchResult;
   onClaim: () => void;
@@ -21,34 +38,37 @@ function ResultConfirmed({ result, onClaim, onChat }: {
 }) {
   const fc = result.case as ForeclosureCase;
   return (
-    <div style={{ marginTop: 32 }}>
+    <motion.div {...resultEnter} style={{ marginTop: 32 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
         <span style={{ fontSize: 20 }}>✓</span>
         <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--cream)' }}>We found it.</span>
       </div>
-      <div style={{
-        border: '1px solid rgba(201,162,74,.35)', borderRadius: 6,
-        padding: '20px 22px', marginBottom: 20, background: 'rgba(201,162,74,.05)',
-      }}>
-        <Row label="Property" value={fc.property_address} />
-        <Row label="County" value={fc.county} />
+      <motion.div
+        variants={rowContainer} initial="hidden" animate="show"
+        style={{
+          border: '1px solid rgba(201,162,74,.35)', borderRadius: 6,
+          padding: '20px 22px', marginBottom: 20, background: 'rgba(201,162,74,.05)',
+        }}
+      >
+        <motion.div variants={rowItem}><Row label="Property" value={fc.property_address} /></motion.div>
+        <motion.div variants={rowItem}><Row label="County" value={fc.county} /></motion.div>
         {fc.defendant_names?.[0] && (
-          <Row label="Former owner" value={`${fc.defendant_names[0]} (confirm this is you)`} muted />
+          <motion.div variants={rowItem}><Row label="Former owner" value={`${fc.defendant_names[0]} (confirm this is you)`} muted /></motion.div>
         )}
         {result.estimated_surplus && (
-          <Row label="Amount held" value={fmt(result.estimated_surplus.low)} highlight />
+          <motion.div variants={rowItem}><Row label="Amount held" value={fmt(result.estimated_surplus.low)} highlight /></motion.div>
         )}
-        {fc.sale_date && <Row label="Filed" value={fc.sale_date} />}
-        <Row label="Status" value="Unclaimed" highlight />
-      </div>
+        {fc.sale_date && <motion.div variants={rowItem}><Row label="Filed" value={fc.sale_date} /></motion.div>}
+        <motion.div variants={rowItem}><Row label="Status" value="Unclaimed" highlight /></motion.div>
+      </motion.div>
       <p style={{ fontSize: 14, color: 'var(--cream-45)', marginBottom: 20, lineHeight: 1.6 }}>
         You have a statutory right to claim this money. Our attorneys handle the legal filing on your behalf for 20% of recovered funds. Zero upfront cost.
       </p>
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-        <button onClick={onClaim} style={btnPrimary}>That's my property — help me claim it →</button>
-        <button onClick={onChat} style={btnSecondary}>I have questions first</button>
+        <AnimatedButton onClick={onClaim} primary>That&apos;s my property — help me claim it →</AnimatedButton>
+        <AnimatedButton onClick={onChat}>I have questions first</AnimatedButton>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -59,37 +79,38 @@ function ResultLikely({ result, onClaim, onChat }: {
 }) {
   const fc = result.case as ForeclosureCase;
   return (
-    <div style={{ marginTop: 32 }}>
+    <motion.div {...resultEnter} style={{ marginTop: 32 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
         <span style={{ fontSize: 20 }}>◐</span>
         <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--cream)' }}>
-          There's a very good chance you have surplus waiting.
+          There&apos;s a very good chance you have surplus waiting.
         </span>
       </div>
-      <div style={{
-        border: '1px solid var(--border)', borderRadius: 6,
-        padding: '20px 22px', marginBottom: 20, background: 'rgba(255,255,255,.03)',
-      }}>
-        <Row label="Property" value={fc.property_address} />
-        {fc.sale_date && <Row label="Sale date" value={fc.sale_date} />}
-        {fc.sale_price && <Row label="Sale price" value={fmt(fc.sale_price)} />}
-        {fc.judgment_amount && <Row label="Known debt" value={`${fmt(fc.judgment_amount)} (from court records)`} />}
+      <motion.div
+        variants={rowContainer} initial="hidden" animate="show"
+        style={{
+          border: '1px solid var(--border)', borderRadius: 6,
+          padding: '20px 22px', marginBottom: 20, background: 'rgba(255,255,255,.03)',
+        }}
+      >
+        <motion.div variants={rowItem}><Row label="Property" value={fc.property_address} /></motion.div>
+        {fc.sale_date && <motion.div variants={rowItem}><Row label="Sale date" value={fc.sale_date} /></motion.div>}
+        {fc.sale_price && <motion.div variants={rowItem}><Row label="Sale price" value={fmt(fc.sale_price)} /></motion.div>}
+        {fc.judgment_amount && <motion.div variants={rowItem}><Row label="Known debt" value={`${fmt(fc.judgment_amount)} (from court records)`} /></motion.div>}
         {result.estimated_surplus && (
-          <Row
-            label="Estimated surplus"
-            value={`~${fmt(result.estimated_surplus.low)} – ${fmt(result.estimated_surplus.high)}`}
-            highlight
-          />
+          <motion.div variants={rowItem}>
+            <Row label="Estimated surplus" value={`~${fmt(result.estimated_surplus.low)} – ${fmt(result.estimated_surplus.high)}`} highlight />
+          </motion.div>
         )}
-      </div>
+      </motion.div>
       <p style={{ fontSize: 14, color: 'var(--cream-45)', marginBottom: 20, lineHeight: 1.6 }}>
         The money typically sits with the county Clerk of Courts for 5 years after the sale. If nobody claims it, it escheats to the state. Our attorney files the motion — we cover the filing fees. You pay 20% only if we recover.
       </p>
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-        <button onClick={onClaim} style={btnPrimary}>Help me claim this surplus →</button>
-        <button onClick={onChat} style={btnSecondary}>I have questions — chat with Lauren</button>
+        <AnimatedButton onClick={onClaim} primary>Help me claim this surplus →</AnimatedButton>
+        <AnimatedButton onClick={onChat}>I have questions — chat with Lauren</AnimatedButton>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -122,72 +143,60 @@ function ResultNeedsVerification({ result, address }: { result: SearchResult; ad
 
   if (submitted) {
     return (
-      <div style={{ marginTop: 32 }}>
+      <motion.div {...resultEnter} style={{ marginTop: 32 }}>
         <p style={{ fontSize: 18, fontWeight: 600, color: 'var(--cream)', marginBottom: 8 }}>
-          Got it. We're on it.
+          Got it. We&apos;re on it.
         </p>
         <p style={{ fontSize: 14, color: 'var(--cream-45)', lineHeight: 1.6 }}>
-          We'll pull {result.county ? `${result.county} County` : 'your county'}'s records by hand and text you back within 24 hours. No charge either way.
+          We&apos;ll pull {result.county ? `${result.county} County` : 'your county'}&apos;s records by hand and text you back within 24 hours. No charge either way.
         </p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div style={{ marginTop: 32 }}>
+    <motion.div {...resultEnter} style={{ marginTop: 32 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
         <span style={{ fontSize: 20 }}>○</span>
         <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--cream)' }}>
-          We need to pull your county's records by hand.
+          We need to pull your county&apos;s records by hand.
         </span>
       </div>
       <p style={{ fontSize: 14, color: 'var(--cream-45)', marginBottom: 20, lineHeight: 1.6 }}>
         {result.county
           ? `${result.county} County isn't in our live data feed yet.`
           : `Your county isn't in our live data feed yet.`}{' '}
-        We'll verify manually and text you back within 24 hours. Still free — we don't charge unless we recover.
+        We&apos;ll verify manually and text you back within 24 hours. Still free — we don&apos;t charge unless we recover.
       </p>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <input
-          value={name} onChange={e => setName(e.target.value)}
-          placeholder="Your name" required
-          style={inputStyle}
-        />
-        <input
-          value={phone} onChange={e => setPhone(e.target.value)}
-          placeholder="Phone (text only, no calls unless you ask)"
-          type="tel" required
-          style={inputStyle}
-        />
-        <input
-          value={address} readOnly
-          style={{ ...inputStyle, opacity: 0.6 }}
-        />
-        <button type="submit" disabled={loading} style={{ ...btnPrimary, marginTop: 4 }}>
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Your name" required style={inputStyle} />
+        <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone (text only)" type="tel" required style={inputStyle} />
+        <input value={address} readOnly style={{ ...inputStyle, opacity: 0.6 }} />
+        <AnimatedButton primary submit disabled={loading}>
           {loading ? 'Sending…' : 'Check my case →'}
-        </button>
+        </AnimatedButton>
       </form>
-    </div>
+    </motion.div>
   );
 }
 
 function ResultNoMatch({ onChat, onRetry }: { onChat: () => void; onRetry: () => void }) {
   return (
-    <div style={{ marginTop: 32 }}>
+    <motion.div {...resultEnter} style={{ marginTop: 32 }}>
       <p style={{ fontSize: 18, fontWeight: 600, color: 'var(--cream)', marginBottom: 12 }}>
-        We don't see a surplus fund situation on this property.
+        We don&apos;t see a surplus fund situation on this property.
       </p>
       <p style={{ fontSize: 14, color: 'var(--cream-45)', marginBottom: 16, lineHeight: 1.6 }}>
-        That could mean the property didn't go to auction, the sale didn't generate surplus, the records haven't posted yet, or the address didn't quite match.
+        That could mean the property didn&apos;t go to auction, the sale didn&apos;t generate surplus, the records haven&apos;t posted yet, or the address didn&apos;t quite match.
       </p>
       <p style={{ fontSize: 14, color: 'var(--cream-45)', marginBottom: 20, lineHeight: 1.6 }}>
         If something recently changed with this property — or if the home is still in trouble — Lauren can walk through your options.
       </p>
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-        <button onClick={onChat} style={btnPrimary}>Ask Lauren →</button>
-        <button onClick={onRetry} style={btnSecondary}>Search another address</button>
+        <AnimatedButton onClick={onChat} primary>Ask Lauren →</AnimatedButton>
+        <AnimatedButton onClick={onRetry}>Search another address</AnimatedButton>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -204,6 +213,31 @@ function Row({ label, value, highlight, muted }: {
         fontWeight: highlight ? 600 : 400,
       }}>{value}</span>
     </div>
+  );
+}
+
+// Animated button with whileHover underline + whileTap press
+function AnimatedButton({
+  children, onClick, primary, submit, disabled,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  primary?: boolean;
+  submit?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <motion.button
+      type={submit ? 'submit' : 'button'}
+      onClick={onClick}
+      disabled={disabled}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.12 }}
+      style={primary ? { ...btnPrimary, position: 'relative', overflow: 'hidden' } : btnSecondary}
+    >
+      {children}
+    </motion.button>
   );
 }
 
@@ -374,23 +408,25 @@ export default function HeroSearch({ onChatOpen }: { onChatOpen: () => void }) {
         </div>
       )}
 
-      {/* Results */}
-      {phase === 'result' && result && (
-        <>
-          {result.status === 'confirmed' && (
-            <ResultConfirmed result={result} onClaim={onChatOpen} onChat={onChatOpen} />
-          )}
-          {result.status === 'likely' && (
-            <ResultLikely result={result} onClaim={onChatOpen} onChat={onChatOpen} />
-          )}
-          {result.status === 'needs_verification' && (
-            <ResultNeedsVerification result={result} address={address} />
-          )}
-          {result.status === 'no_match' && (
-            <ResultNoMatch onChat={onChatOpen} onRetry={handleRetry} />
-          )}
-        </>
-      )}
+      {/* Results — wrapped in AnimatePresence so they mount with animation */}
+      <AnimatePresence mode="wait">
+        {phase === 'result' && result && (
+          <motion.div key={result.status}>
+            {result.status === 'confirmed' && (
+              <ResultConfirmed result={result} onClaim={onChatOpen} onChat={onChatOpen} />
+            )}
+            {result.status === 'likely' && (
+              <ResultLikely result={result} onClaim={onChatOpen} onChat={onChatOpen} />
+            )}
+            {result.status === 'needs_verification' && (
+              <ResultNeedsVerification result={result} address={address} />
+            )}
+            {result.status === 'no_match' && (
+              <ResultNoMatch onChat={onChatOpen} onRetry={handleRetry} />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
