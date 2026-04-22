@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Protect /admin/* routes
-  if (pathname.startsWith('/admin')) {
+  // Protect /admin/* routes (except /admin/login itself)
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     const token = req.cookies.get('admin_token')?.value;
     const expected = process.env.ADMIN_SECRET;
     if (!expected || token !== expected) {
