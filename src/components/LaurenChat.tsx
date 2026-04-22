@@ -85,12 +85,12 @@ export default function LaurenChat({
       });
       const data = await res.json();
       if (data.session_id) { setSessionId(data.session_id); setSession(data.session_id); }
-      const reply = data.reply || "Sorry, I had trouble with that. Call Nathan directly at (513) 951-8855.";
+      const reply = data.reply || "Sorry, I had trouble with that. Call Nathan directly at (513) 516-2306.";
       const assistantMsg: Message = { role: 'assistant', content: reply };
       setMessages(prev => [...prev, assistantMsg]);
       setHistory(prev => [...prev, assistantMsg]);
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: "I'm having connection issues. Call Nathan at (513) 951-8855." }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "I'm having connection issues. Call Nathan at (513) 516-2306." }]);
     }
     setBusy(false);
     setTimeout(() => inputRef.current?.focus(), 50);

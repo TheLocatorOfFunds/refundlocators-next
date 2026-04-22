@@ -32,11 +32,11 @@ export default function LeadForm({ counties }: { counties: string[] }) {
         form.reset();
       } else {
         setStatus('error');
-        setMsg('Something went wrong. Call Nathan directly at (513) 951-8855.');
+        setMsg('Something went wrong. Call Nathan directly at (513) 516-2306.');
       }
     } catch {
       setStatus('error');
-      setMsg('Network error. Call Nathan directly at (513) 951-8855.');
+      setMsg('Network error. Call Nathan directly at (513) 516-2306.');
     }
   };
 

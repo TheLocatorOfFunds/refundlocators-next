@@ -64,11 +64,11 @@ export default function Home() {
             padding: '5px 12px', borderRadius: 'var(--r-pill)',
             fontFamily: 'var(--mono)',
           }}>Ohio · AI-Powered</span>
-          <a href="tel:+15139518855" style={{
+          <a href="tel:+15135162306" style={{
             fontSize: 13, fontWeight: 600, color: 'var(--gold)', textDecoration: 'none',
             padding: '7px 14px', border: '1px solid var(--border-g)', borderRadius: 'var(--r-pill)',
             transition: 'background .15s',
-          }}>(513) 951‑8855</a>
+          }}>(513) 516‑2306</a>
         </div>
       </nav>
 
@@ -195,7 +195,7 @@ export default function Home() {
                 </div>
               </div>
               <div style={{ borderTop: '1px solid var(--border)', padding: '18px 28px', background: 'rgba(255,255,255,.02)', display: 'flex', gap: 12 }}>
-                <a href="tel:+15139518855" style={{
+                <a href="tel:+15135162306" style={{
                   flex: 1, background: 'var(--gold)', color: 'var(--bg)',
                   fontWeight: 700, fontSize: 14, textDecoration: 'none',
                   padding: '12px 20px', borderRadius: 'var(--r-md)',
@@ -203,7 +203,7 @@ export default function Home() {
                   boxShadow: 'var(--shadow-gold)',
                 }}>
                   <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
-                  (513) 951‑8855
+                  (513) 516‑2306
                 </a>
                 <ScrollToTopButton />
               </div>
@@ -281,7 +281,7 @@ export default function Home() {
           <p style={{ fontSize: 12, color: 'var(--cream-20)', lineHeight: 1.75 }}>
             RefundLocators is a trade name of FundLocators LLC, a private company registered in Indiana, operating in Ohio.
             We are not attorneys and do not provide legal advice. We are not affiliated with any government agency or court.<br />
-            Nathan Johnson, CEO · <a href="tel:+15139518855" style={{ color: 'var(--gold)', textDecoration: 'none' }}>(513) 951‑8855</a>
+            Nathan Johnson, CEO · <a href="tel:+15135162306" style={{ color: 'var(--gold)', textDecoration: 'none' }}>(513) 516‑2306</a>
           </p>
         </footer>
       </main>

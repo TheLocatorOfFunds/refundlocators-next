@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PersonalizedLink } from '@/lib/supabase';
 import LaurenChat from '@/components/LaurenChat';
@@ -41,6 +41,17 @@ function formatDate(d: string) {
 
 export default function PersonalizedClient({ link }: { link: PersonalizedLink }) {
   const [showChat, setShowChat] = useState(false);
+
+  // Fire-and-forget — notifies DCC that the homeowner responded.
+  // Opens Lauren chat regardless of whether the POST succeeds.
+  const handleYes = useCallback(() => {
+    setShowChat(true);
+    fetch('/api/s/respond', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token: link.token }),
+    }).catch(() => { /* non-critical */ });
+  }, [link.token]);
   const hasSurplus = link.estimated_surplus_low && link.estimated_surplus_high;
   const surplusRange = hasSurplus
     ? `${fmt(link.estimated_surplus_low!)} – ${fmt(link.estimated_surplus_high!)}`
@@ -61,10 +72,10 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
         <span style={{ fontWeight: 700, fontSize: 16, letterSpacing: '-.02em' }}>
           RefundLocators
         </span>
-        <a href="tel:+15139518855" style={{
+        <a href="tel:+15135162306" style={{
           fontSize: 13, color: 'var(--gold)', textDecoration: 'none', fontWeight: 600,
         }}>
-          (513) 951-8855
+          (513) 516-2306
         </a>
       </nav>
 
@@ -176,7 +187,7 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
         {/* CTAs */}
         <motion.div {...fadeUp(0.5)} style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 48 }}>
           <motion.button
-            onClick={() => setShowChat(true)}
+            onClick={handleYes}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.12 }}
@@ -214,8 +225,8 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
           <p style={{ fontSize: 15, color: 'var(--cream)', fontWeight: 600 }}>
             Nathan Johnson (CEO)
           </p>
-          <a href="tel:+15139518855" style={{ color: 'var(--gold)', textDecoration: 'none', fontSize: 15 }}>
-            (513) 951-8855
+          <a href="tel:+15135162306" style={{ color: 'var(--gold)', textDecoration: 'none', fontSize: 15 }}>
+            (513) 516-2306
           </a>
           <p style={{ fontSize: 12, color: 'var(--cream-20)', marginTop: 4 }}>
             Text or call, Mon–Sat

@@ -97,7 +97,7 @@ export default function HeroSection() {
           style={{ marginTop: 28, fontSize: 13, color: 'var(--cream-45)', textAlign: 'center' }}
         >
           Prefer to talk?{' '}
-          <a href="tel:+15139518855" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 600 }}>
+          <a href="tel:+15135162306" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 600 }}>
             Call Nathan
           </a>{' '}
           · CEO · Ohio-based

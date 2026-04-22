@@ -17,7 +17,7 @@ export default function StickyBar() {
           font: '600 14px var(--font)', cursor: 'pointer',
         }}
       >💬 Ask Lauren</button>
-      <a href="tel:+15139518855" style={{
+      <a href="tel:+15135162306" style={{
         flex: 1, minHeight: 46, background: 'var(--gold)', color: 'var(--bg)',
         border: 'none', borderRadius: 'var(--r-md)',
         font: '700 14px var(--font)', cursor: 'pointer', textDecoration: 'none',
