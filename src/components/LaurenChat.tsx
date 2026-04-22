@@ -9,7 +9,7 @@ interface Message {
   content: string;
 }
 
-const GREETING = `Hi! I'm Lauren — the AI for RefundLocators.\n\nI can pull up your Ohio foreclosure case right now and tell you exactly what surplus the county may be holding for you. Just so you know, I'm an AI — Nathan built me to know every case. I hand off to him when things get complicated.\n\nWhat's your name?`;
+const DEFAULT_GREETING = `Hi! I'm Lauren — the AI for RefundLocators.\n\nI can pull up your Ohio foreclosure case right now and tell you exactly what surplus the county may be holding for you. Just so you know, I'm an AI — Nathan built me to know every case. I hand off to him when things get complicated.\n\nWhat's your name?`;
 
 function getVisitorId(): string {
   if (typeof window === 'undefined') return '';
@@ -28,7 +28,13 @@ function setSessionId(id: string) {
   localStorage.setItem('lauren_session_home', id);
 }
 
-export default function LaurenChat() {
+export default function LaurenChat({
+  personalizationContext,
+  greeting,
+}: {
+  personalizationContext?: string;
+  greeting?: string;
+} = {}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -43,7 +49,7 @@ export default function LaurenChat() {
     if (!greeted.current) {
       greeted.current = true;
       const timer = setTimeout(() => {
-        setMessages([{ role: 'assistant', content: GREETING }]);
+        setMessages([{ role: 'assistant', content: greeting ?? DEFAULT_GREETING }]);
       }, 700);
       return () => clearTimeout(timer);
     }
@@ -74,6 +80,7 @@ export default function LaurenChat() {
           messages: newHistory,
           session_id: sessionId,
           visitor_id: getVisitorId(),
+          ...(personalizationContext ? { personalization_context: personalizationContext } : {}),
         }),
       });
       const data = await res.json();

@@ -1,5 +1,5 @@
 import HeroOrbs from '@/components/HeroOrbs';
-import LaurenChat from '@/components/LaurenChat';
+import HeroSection from '@/components/HeroSection';
 import StatsBar from '@/components/StatsBar';
 import ScrollReveal from '@/components/ScrollReveal';
 import LeadForm from '@/components/LeadForm';
@@ -72,65 +72,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section style={{
-        position: 'relative', zIndex: 1,
-        minHeight: '100dvh',
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        padding: '100px 20px 80px', textAlign: 'center',
-      }}>
-        {/* Eyebrow */}
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase',
-          color: 'var(--gold)', background: 'var(--gold-bg)', border: '1px solid var(--border-g)',
-          padding: '6px 14px', borderRadius: 'var(--r-pill)', marginBottom: 28,
-        }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--gold)', animation: 'pulse-dot 2s ease-in-out infinite' }} />
-          Surplus Fund Intelligence · Ohio
-        </div>
-
-        <h1 style={{
-          fontSize: 'clamp(34px, 6vw, 66px)', fontWeight: 900,
-          lineHeight: 1.05, letterSpacing: '-.04em', color: 'var(--cream)',
-          marginBottom: 18, maxWidth: 820,
-        }}>
-          The AI that already<br />
-          <span style={{ color: 'var(--gold)' }}>knows your case.</span>
-        </h1>
-
-        <p style={{
-          fontSize: 'clamp(15px, 2vw, 18px)', color: 'var(--cream-70)',
-          maxWidth: 520, margin: '0 auto 40px', lineHeight: 1.65,
-        }}>
-          Ask Lauren anything about your foreclosure surplus. She reads Ohio court records in real time and tells you exactly what you&apos;re owed — free, no signup.
-        </p>
-
-        <LaurenChat />
-
-        <p style={{ marginTop: 20, fontSize: 13, color: 'var(--cream-45)' }}>
-          Prefer to talk?{' '}
-          <a href="tel:+15139518855" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 600 }}>
-            Call Nathan
-          </a>{' '}
-          · CEO · Ohio-based
-        </p>
-
-        {/* Scroll cue */}
-        <div style={{
-          position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-          color: 'var(--cream-20)', fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase',
-        }}>
-          <span>scroll</span>
-          <div style={{
-            width: 1, height: 36,
-            background: 'linear-gradient(to bottom, var(--cream-20), transparent)',
-            animation: 'scroll-line 2s ease-in-out infinite',
-          }} />
-        </div>
-      </section>
+      <HeroSection />
 
       {/* ── Main content ── */}
       <main style={{ position: 'relative', zIndex: 1, maxWidth: 720, margin: '0 auto', padding: '0 20px 120px' }}>
