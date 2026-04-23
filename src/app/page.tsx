@@ -46,14 +46,23 @@ export default function Home() {
         borderBottom: '1px solid var(--border)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* New mark: radar/target — "we lock onto your surplus funds".
+              Concentric rings + crosshairs + center dot in the navy foreground,
+              set on the existing gold rounded-square background. */}
           <div style={{
-            width: 28, height: 28, borderRadius: 7,
+            width: 30, height: 30, borderRadius: 8,
             background: 'var(--gold)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            boxShadow: '0 0 0 1px rgba(251, 191, 36, 0.2), 0 4px 12px rgba(251, 191, 36, 0.25)',
           }}>
-            <svg viewBox="0 0 20 20" width="14" height="14" fill="#05111f">
-              <circle cx="10" cy="10" r="8"/>
-              <path d="M6 10h8M10 6v8" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#05111f" strokeWidth="1.8" strokeLinecap="round">
+              <circle cx="12" cy="12" r="9.5" strokeWidth="1" strokeDasharray="2.2 2.2" opacity="0.45"/>
+              <circle cx="12" cy="12" r="5.5" strokeWidth="1.8"/>
+              <circle cx="12" cy="12" r="1.8" fill="#05111f" stroke="none"/>
+              <line x1="12" y1="0.5" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23.5"/>
+              <line x1="0.5" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23.5" y2="12"/>
             </svg>
           </div>
           <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--cream)', letterSpacing: '-.01em' }}>
@@ -61,12 +70,26 @@ export default function Home() {
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          {/* Ohio · AI-Powered — louder + branded. Gold text, warm background tint,
+              live pulse dot to read "active / always on". */}
           <span style={{
-            fontSize: 11, fontWeight: 600, color: 'var(--cream-45)',
-            background: 'var(--glass)', border: '1px solid var(--border)',
-            padding: '5px 12px', borderRadius: 'var(--r-pill)',
+            display: 'inline-flex', alignItems: 'center', gap: 7,
+            fontSize: 11, fontWeight: 700,
+            color: 'var(--gold)', background: 'var(--gold-bg)',
+            border: '1px solid var(--border-g)',
+            padding: '6px 14px', borderRadius: 'var(--r-pill)',
             fontFamily: 'var(--mono)',
-          }}>Ohio · AI-Powered</span>
+            letterSpacing: '0.04em', textTransform: 'uppercase',
+            boxShadow: '0 0 24px rgba(251, 191, 36, 0.12)',
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: '50%',
+              background: 'var(--gold)',
+              boxShadow: '0 0 0 2px rgba(251, 191, 36, 0.25), 0 0 8px var(--gold)',
+              animation: 'pulse-dot 2.4s ease-in-out infinite',
+            }} />
+            Ohio · AI-Powered
+          </span>
           <a href="tel:+15135162306" style={{
             fontSize: 13, fontWeight: 600, color: 'var(--gold)', textDecoration: 'none',
             padding: '7px 14px', border: '1px solid var(--border-g)', borderRadius: 'var(--r-pill)',
