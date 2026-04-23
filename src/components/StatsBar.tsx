@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 function StatCounter({ target, prefix = '', suffix = '', abbr = false }: {
   target: number; prefix?: string; suffix?: string; abbr?: boolean;
@@ -54,9 +54,9 @@ export default function StatsBar() {
         { target: 47000, label: 'avg Ohio surplus', abbr: true },
         { target: 25, suffix: '%', label: 'fee · zero upfront' },
       ].map((s, i) => (
-        <>
-          {i > 0 && <div key={`div-${i}`} style={{ width: 1, background: 'var(--border)', flexShrink: 0 }} />}
-          <div key={i} style={{ flex: 1, textAlign: 'center', padding: '24px 16px' }}>
+        <React.Fragment key={i}>
+          {i > 0 && <div style={{ width: 1, background: 'var(--border)', flexShrink: 0 }} />}
+          <div style={{ flex: 1, textAlign: 'center', padding: '24px 16px' }}>
             <div style={{ fontSize: 32, fontWeight: 900, letterSpacing: '-.04em', color: 'var(--cream)' }}>
               <StatCounter target={s.target} suffix={s.suffix} abbr={s.abbr} />
             </div>
@@ -64,7 +64,7 @@ export default function StatsBar() {
               {s.label}
             </div>
           </div>
-        </>
+        </React.Fragment>
       ))}
     </div>
   );

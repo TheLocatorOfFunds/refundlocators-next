@@ -90,3 +90,67 @@ body {
 /* FAQ */
 details summary::-webkit-details-marker { display: none; }
 details summary { list-style: none; }
+
+/* ── Marquee ticker ───────────────────────────────────────────────────────── */
+@keyframes ticker-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes ticker-right {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* ── Gold shimmer text utility ───────────────────────────────────────────── */
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--gold-d) 0%,
+    var(--gold-l) 40%,
+    var(--gold)   60%,
+    var(--gold-d) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3.5s linear infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 250% center; }
+  to   { background-position: -250% center; }
+}
+
+/* ── CSS scroll-progress bar (progressive enhancement — Chrome/Edge/FF) ──── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-d), var(--gold), var(--gold-l));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 9999;
+  animation: grow-progress linear both;
+  animation-timeline: scroll();
+}
+
+@keyframes grow-progress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Grain texture overlay ───────────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.026;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+}

@@ -1,5 +1,8 @@
 import HeroOrbs from '@/components/HeroOrbs';
 import HeroSection from '@/components/HeroSection';
+import WinTicker from '@/components/WinTicker';
+import ScrollRevealText from '@/components/ScrollRevealText';
+import TiltCard from '@/components/TiltCard';
 import StatsBar from '@/components/StatsBar';
 import ScrollReveal from '@/components/ScrollReveal';
 import LeadForm from '@/components/LeadForm';
@@ -74,6 +77,12 @@ export default function Home() {
 
       <HeroSection />
 
+      {/* ── Win ticker — full-width, between hero and content ── */}
+      <WinTicker />
+
+      {/* ── Scroll-reveal manifesto — sticky Apple-style section ── */}
+      <ScrollRevealText />
+
       {/* ── Main content ── */}
       <main style={{ position: 'relative', zIndex: 1, maxWidth: 720, margin: '0 auto', padding: '0 20px 120px' }}>
 
@@ -104,36 +113,38 @@ export default function Home() {
               },
             ].map((step, i) => (
               <ScrollReveal key={step.num} delay={0.1 * (i + 1)}>
-                <div style={{
-                  background: 'var(--glass)', border: '1px solid var(--border)',
-                  borderRadius: 'var(--r-lg)', padding: 24,
-                  transition: 'border-color .2s, background .2s',
-                }}>
-                  <span style={{
-                    fontSize: 11, fontWeight: 700, letterSpacing: '.14em', fontFamily: 'var(--mono)',
-                    color: 'var(--gold)', background: 'var(--gold-bg)', border: '1px solid var(--border-g)',
-                    padding: '3px 9px', borderRadius: 'var(--r-pill)', display: 'inline-block', marginBottom: 14,
-                  }}>{step.num}</span>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--cream)', marginBottom: 8 }}>{step.title}</div>
-                  <div style={{ fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.65 }}>{step.body}</div>
-                  {step.chips && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14 }}>
-                      {step.chips.map(c => (
-                        <span key={c} style={{ fontSize: 11, fontWeight: 600, color: 'var(--cream-45)', background: 'rgba(255,255,255,.05)', border: '1px solid var(--border)', padding: '4px 10px', borderRadius: 'var(--r-pill)' }}>{c}</span>
-                      ))}
-                    </div>
-                  )}
-                  {step.checks && (
-                    <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
-                      {step.checks.map(c => (
-                        <li key={c} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.5 }}>
-                          <CheckIcon />
-                          <span dangerouslySetInnerHTML={{ __html: c.replace(/^([^—]+—)/, '<strong>$1</strong>') }} />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                <TiltCard>
+                  <div style={{
+                    background: 'var(--glass)', border: '1px solid var(--border)',
+                    borderRadius: 'var(--r-lg)', padding: 24,
+                    transition: 'border-color .2s, background .2s',
+                  }}>
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, letterSpacing: '.14em', fontFamily: 'var(--mono)',
+                      color: 'var(--gold)', background: 'var(--gold-bg)', border: '1px solid var(--border-g)',
+                      padding: '3px 9px', borderRadius: 'var(--r-pill)', display: 'inline-block', marginBottom: 14,
+                    }}>{step.num}</span>
+                    <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--cream)', marginBottom: 8 }}>{step.title}</div>
+                    <div style={{ fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.65 }}>{step.body}</div>
+                    {step.chips && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14 }}>
+                        {step.chips.map(c => (
+                          <span key={c} style={{ fontSize: 11, fontWeight: 600, color: 'var(--cream-45)', background: 'rgba(255,255,255,.05)', border: '1px solid var(--border)', padding: '4px 10px', borderRadius: 'var(--r-pill)' }}>{c}</span>
+                        ))}
+                      </div>
+                    )}
+                    {step.checks && (
+                      <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
+                        {step.checks.map(c => (
+                          <li key={c} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.5 }}>
+                            <CheckIcon />
+                            <span dangerouslySetInnerHTML={{ __html: c.replace(/^([^—]+—)/, '<strong>$1</strong>') }} />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </TiltCard>
               </ScrollReveal>
             ))}
 
@@ -165,11 +176,13 @@ export default function Home() {
               { icon: '🚀', title: 'Quickest to file', body: 'Filed within 7 business days of signing. No uploads or phone tag. Your case moves before others have called you back.' },
             ].map((p, i) => (
               <ScrollReveal key={p.title} delay={0.1 * (i + 1)}>
-                <div style={{ background: 'var(--glass)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', padding: 24, height: '100%' }}>
-                  <div style={{ fontSize: 28, marginBottom: 14 }}>{p.icon}</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--cream)', marginBottom: 8 }}>{p.title}</div>
-                  <div style={{ fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.65 }}>{p.body}</div>
-                </div>
+                <TiltCard style={{ height: '100%' }}>
+                  <div style={{ background: 'var(--glass)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', padding: 24, height: '100%' }}>
+                    <div style={{ fontSize: 28, marginBottom: 14 }}>{p.icon}</div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--cream)', marginBottom: 8 }}>{p.title}</div>
+                    <div style={{ fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.65 }}>{p.body}</div>
+                  </div>
+                </TiltCard>
               </ScrollReveal>
             ))}
           </div>
