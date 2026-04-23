@@ -114,7 +114,7 @@ export default function Home() {
         {/* ── How it works ── */}
         <section style={{ marginBottom: 80 }}>
           <ScrollReveal><span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold)', display: 'block', marginBottom: 10 }}>The process</span></ScrollReveal>
-          <ScrollReveal delay={0.1}><h2 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.03em', color: 'var(--cream)', marginBottom: 14, lineHeight: 1.15 }}>How this works</h2></ScrollReveal>
+          <ScrollReveal delay={0.1}><h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.02em', color: 'var(--cream)', marginBottom: 14, lineHeight: 1.15 }}>How this works</h2></ScrollReveal>
           <ScrollReveal delay={0.2}><p style={{ fontSize: 15, color: 'var(--cream-70)', marginBottom: 32, maxWidth: 520 }}>Three steps. Starts with a conversation. Ends with money.</p></ScrollReveal>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -189,7 +189,7 @@ export default function Home() {
         {/* ── Why us ── */}
         <section style={{ marginBottom: 80 }}>
           <ScrollReveal><span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold)', display: 'block', marginBottom: 10 }}>The difference</span></ScrollReveal>
-          <ScrollReveal delay={0.1}><h2 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.03em', color: 'var(--cream)', marginBottom: 14, lineHeight: 1.15 }}>Why us vs. everyone<br/>else calling you right now.</h2></ScrollReveal>
+          <ScrollReveal delay={0.1}><h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.02em', color: 'var(--cream)', marginBottom: 14, lineHeight: 1.15 }}>Why us vs. everyone<br/>else calling you right now.</h2></ScrollReveal>
           <ScrollReveal delay={0.2}><p style={{ fontSize: 15, color: 'var(--cream-70)', marginBottom: 32, maxWidth: 520 }}>Every company pulls names from the same public records. Most dial a thousand phones a day and read from a script. We built an AI and put her to work.</p></ScrollReveal>
 
           <div style={{ display: 'grid', gap: 14, gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
@@ -214,7 +214,7 @@ export default function Home() {
         {/* ── Nathan's story ── */}
         <section style={{ marginBottom: 80 }}>
           <ScrollReveal><span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold)', display: 'block', marginBottom: 10 }}>Why this exists</span></ScrollReveal>
-          <ScrollReveal delay={0.1}><h2 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.03em', color: 'var(--cream)', marginBottom: 32, lineHeight: 1.15 }}>This happened to me.</h2></ScrollReveal>
+          <ScrollReveal delay={0.1}><h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.02em', color: 'var(--cream)', marginBottom: 32, lineHeight: 1.15 }}>This happened to me.</h2></ScrollReveal>
 
           <ScrollReveal delay={0.2}>
             <div style={{ background: 'var(--glass)', border: '1px solid var(--border)', borderRadius: 'var(--r-xl)', overflow: 'hidden' }}>
@@ -250,7 +250,7 @@ export default function Home() {
         {/* ── Trust ── */}
         <section style={{ marginBottom: 80 }}>
           <ScrollReveal><span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold)', display: 'block', marginBottom: 10 }}>Proof</span></ScrollReveal>
-          <ScrollReveal delay={0.1}><h2 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.03em', color: 'var(--cream)', marginBottom: 32, lineHeight: 1.15 }}>You can verify everything we say.</h2></ScrollReveal>
+          <ScrollReveal delay={0.1}><h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.02em', color: 'var(--cream)', marginBottom: 32, lineHeight: 1.15 }}>You can verify everything we say.</h2></ScrollReveal>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {[
@@ -279,7 +279,7 @@ export default function Home() {
         {/* ── FAQ ── */}
         <section style={{ marginBottom: 80 }}>
           <ScrollReveal><span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold)', display: 'block', marginBottom: 10 }}>FAQ</span></ScrollReveal>
-          <ScrollReveal delay={0.1}><h2 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.03em', color: 'var(--cream)', marginBottom: 32, lineHeight: 1.15 }}>Questions people always ask.</h2></ScrollReveal>
+          <ScrollReveal delay={0.1}><h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.02em', color: 'var(--cream)', marginBottom: 32, lineHeight: 1.15 }}>Questions people always ask.</h2></ScrollReveal>
 
           <ScrollReveal delay={0.2}>
             <div style={{ borderRadius: 'var(--r-lg)', overflow: 'hidden', border: '1px solid var(--border)' }}>
@@ -306,7 +306,7 @@ export default function Home() {
         {/* ── Form ── */}
         <section id="check-form" style={{ marginBottom: 80 }}>
           <ScrollReveal><span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold)', display: 'block', marginBottom: 10 }}>Prefer a form?</span></ScrollReveal>
-          <ScrollReveal delay={0.1}><h2 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.03em', color: 'var(--cream)', marginBottom: 14, lineHeight: 1.15 }}>Submit your information</h2></ScrollReveal>
+          <ScrollReveal delay={0.1}><h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, letterSpacing: '-.02em', color: 'var(--cream)', marginBottom: 14, lineHeight: 1.15 }}>Submit your information</h2></ScrollReveal>
           <ScrollReveal delay={0.2}><p style={{ fontSize: 15, color: 'var(--cream-70)', marginBottom: 32, maxWidth: 520 }}>Fill this out and we&apos;ll text you what we find. Same free lookup — no obligation.</p></ScrollReveal>
           <ScrollReveal delay={0.3}><LeadForm counties={OHIO_COUNTIES} /></ScrollReveal>
         </section>

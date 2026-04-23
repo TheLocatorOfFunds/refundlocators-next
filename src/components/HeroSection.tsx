@@ -48,8 +48,9 @@ export default function HeroSection() {
         {/* H1 line 1 */}
         <motion.h1
           style={{
+            fontFamily: 'var(--display)',
             fontSize: 'clamp(32px, 5.5vw, 62px)', fontWeight: 900,
-            lineHeight: 1.07, letterSpacing: '-.04em', color: 'var(--cream)',
+            lineHeight: 1.07, letterSpacing: '-.02em', color: 'var(--cream)',
             marginBottom: 18, maxWidth: 700, textAlign: 'center',
           }}
         >
