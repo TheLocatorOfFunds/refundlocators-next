@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
+import { Suspense } from 'react';
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
+import TrafficBeacon from '@/components/TrafficBeacon';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -38,6 +40,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="scroll-progress" aria-hidden="true" />
         {children}
         <Analytics />
+        <Suspense fallback={null}>
+          <TrafficBeacon />
+        </Suspense>
       </body>
     </html>
   );
