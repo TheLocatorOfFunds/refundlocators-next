@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: 'RefundLocators — Surplus Fund AI',
   description: 'The AI that already knows your Ohio foreclosure surplus case. Ask Lauren anything — she reads court records in real time. Free, no signup.',
   keywords: 'Ohio foreclosure surplus funds, surplus fund recovery, foreclosure auction, Ohio homeowner',
+  verification: {
+    google: '_iV9yFBAH51XWoNz8C7DsMZUGZPyFQuAgpDuw13LSeo',
+  },
   openGraph: {
     title: 'RefundLocators — The AI that already knows your case.',
     description: 'Ask Lauren about your Ohio foreclosure surplus. Real court records, real answers, free.',
