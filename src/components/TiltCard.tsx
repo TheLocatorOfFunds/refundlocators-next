@@ -52,6 +52,7 @@ export default function TiltCard({ children, style, maxTilt = 5 }: TiltCardProps
           rotateY,
           transformStyle: 'preserve-3d',
           willChange: 'transform',
+          height: '100%',
         }}
       >
         {children}

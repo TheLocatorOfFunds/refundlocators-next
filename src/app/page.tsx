@@ -190,9 +190,9 @@ export default function Home() {
               { icon: '⚡', title: 'Most available', body: '4-hour response window, any day. Text, email, chat, or call. Ohio-based. We\'ll drive to you.' },
               { icon: '🚀', title: 'Quickest to file', body: 'Filed within 7 business days of signing. No uploads or phone tag. Your case moves before others have called you back.' },
             ].map((p, i) => (
-              <ScrollReveal key={p.title} delay={0.1 * (i + 1)}>
+              <ScrollReveal key={p.title} delay={0.1 * (i + 1)} style={{ height: '100%' }}>
                 <TiltCard style={{ height: '100%' }}>
-                  <div style={{ background: 'var(--glass)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', padding: 24, height: '100%' }}>
+                  <div style={{ background: 'var(--glass)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', padding: 24, height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <div style={{ fontSize: 28, marginBottom: 14 }}>{p.icon}</div>
                     <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--cream)', marginBottom: 8 }}>{p.title}</div>
                     <div style={{ fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.65 }}>{p.body}</div>
