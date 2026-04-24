@@ -102,44 +102,6 @@ export default function Home() {
       {/* ── Main content ── */}
       <main style={{ position: 'relative', zIndex: 1, maxWidth: 720, margin: '0 auto', padding: '0 20px 120px' }}>
 
-        {/* ── Is this a scam? — public-service notice ── */}
-        <section style={{ marginBottom: 80, marginTop: 40 }}>
-          <ScrollReveal>
-            <div style={{
-              border: '1px solid var(--border)',
-              borderLeft: '3px solid var(--gold)',
-              borderRadius: 'var(--r-md)',
-              padding: '28px 28px 24px',
-              background: 'rgba(255,255,255,.02)',
-            }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--cream-45)', marginBottom: 14 }}>
-                Before you keep reading
-              </div>
-              <h2 style={{
-                fontFamily: 'var(--display)',
-                fontSize: 'clamp(22px,3.5vw,30px)', fontWeight: 700,
-                letterSpacing: '-.01em', color: 'var(--cream)',
-                marginBottom: 16, lineHeight: 1.2,
-              }}>
-                Is this a scam?
-              </h2>
-              <p style={{ fontSize: 15, color: 'var(--cream-70)', lineHeight: 1.7, marginBottom: 18 }}>
-                Fair question. Ohio foreclosure surplus funds are real money held by the county — <a href="https://codes.ohio.gov/ohio-revised-code/section-2329.44" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', textDecoration: 'underline', textDecorationThickness: 1, textUnderlineOffset: 3 }}>ORC § 2329.44</a> requires the court to return excess proceeds to the former owner. You can file the claim yourself for free. You do not need us. If you do want help, here is how to verify us before signing anything:
-              </p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.6 }}>
-                <li>• <strong style={{ color: 'var(--cream)' }}>Our entity:</strong> FundLocators LLC, registered in Indiana, operating in Ohio.</li>
-                <li>• <strong style={{ color: 'var(--cream)' }}>Claims are filed</strong> by a licensed Ohio attorney on our panel. Ask for the name and bar number before you sign — we will put it in writing.</li>
-                <li>• <strong style={{ color: 'var(--cream)' }}>Zero upfront.</strong> Our 25% fee is deducted from what we recover. No recovery, no bill.</li>
-                <li>• <strong style={{ color: 'var(--cream)' }}>Verify the process yourself</strong> with the Ohio Attorney General Consumer Protection line: <a href="tel:18002823784" style={{ color: 'var(--gold)', textDecoration: 'none' }}>1-800-282-3784</a>.</li>
-                <li>• <strong style={{ color: 'var(--cream)' }}>Nathan Johnson, CEO</strong> — <a href="tel:+15135162306" style={{ color: 'var(--gold)', textDecoration: 'none' }}>(513) 516-2306</a>. Direct line, not a call center.</li>
-              </ul>
-              <p style={{ fontSize: 12, color: 'var(--cream-45)', lineHeight: 1.6, marginTop: 18, marginBottom: 0 }}>
-                We are not a government agency. We are not attorneys. This is not legal advice.
-              </p>
-            </div>
-          </ScrollReveal>
-        </section>
-
         <ScrollReveal><StatsBar /></ScrollReveal>
 
         {/* ── How it works ── */}
