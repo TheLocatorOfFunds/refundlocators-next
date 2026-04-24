@@ -1,14 +1,25 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const service = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const service = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-// Client-side anon client (safe to use in components)
-export const supabase = createClient(url, anon);
+// Client-side anon client (safe to use in components) — lazy to survive build-time
+// env-collection without credentials.
+let _supabase: SupabaseClient | null = null;
+export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
+  get(_t, prop) {
+    if (!_supabase) {
+      if (!url || !anon) throw new Error('Supabase anon env vars missing');
+      _supabase = createClient(url, anon);
+    }
+    return (_supabase as unknown as Record<string | symbol, unknown>)[prop as string];
+  },
+});
 
 // Server-side service-role client (API routes only — never import in client components)
 export function getServiceClient() {
+  if (!url || !service) throw new Error('Supabase service-role env vars missing');
   return createClient(url, service, {
     auth: { persistSession: false },
   });
