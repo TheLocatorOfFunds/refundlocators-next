@@ -1,4 +1,5 @@
 import HeroOrbs from '@/components/HeroOrbs';
+import { ScrollChip, ScrollCTA } from '@/components/ScrollToTop';
 import HeroSection from '@/components/HeroSection';
 import WinTicker from '@/components/WinTicker';
 import ScrollRevealText from '@/components/ScrollRevealText';
@@ -151,24 +152,10 @@ export default function Home() {
                     <div style={{ fontSize: 14, color: 'var(--cream-70)', lineHeight: 1.65 }}>{step.body}</div>
                     {step.chips && (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14 }}>
-                        {step.chips.map(c => (
-                          <button key={c} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ fontSize: 11, fontWeight: 600, color: 'var(--cream-45)', background: 'rgba(255,255,255,.05)', border: '1px solid var(--border)', padding: '4px 10px', borderRadius: 'var(--r-pill)', cursor: 'pointer' }}>{c}</button>
-                        ))}
+                        {step.chips.map(c => <ScrollChip key={c} label={c} />)}
                       </div>
                     )}
-                    {step.chips && (
-                      <button
-                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        style={{
-                          marginTop: 18, display: 'inline-flex', alignItems: 'center', gap: 6,
-                          fontSize: 13, fontWeight: 700, color: 'var(--gold)',
-                          background: 'var(--gold-bg)', border: '1px solid var(--border-g)',
-                          padding: '8px 16px', borderRadius: 'var(--r-pill)', cursor: 'pointer',
-                        }}
-                      >
-                        Start your free lookup →
-                      </button>
-                    )}
+                    {step.chips && <ScrollCTA />}
                     {step.checks && (
                       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
                         {step.checks.map(c => (
