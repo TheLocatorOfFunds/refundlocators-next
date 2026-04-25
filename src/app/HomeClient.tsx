@@ -10,18 +10,42 @@
  * the address pre-filled.
  */
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SearchResult } from '@/lib/supabase';
 
 const PHONE_DISPLAY = '(513) 516-2306';
 const PHONE_SMS = '+15135162306';
+
+// Format a recovery total as "$2.1M" / "$425k" / "$8,420"
+function fmtRecoveryTotal(n: number): string {
+  if (n >= 1_000_000) {
+    const m = n / 1_000_000;
+    return `$${m >= 10 ? Math.round(m) : m.toFixed(1)}M`;
+  }
+  if (n >= 1_000) return `$${Math.round(n / 1000)}k`;
+  return `$${n.toLocaleString('en-US')}`;
+}
 
 export default function HomeClient() {
   const [address, setAddress] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<SearchResult | null>(null);
+  const [recoveryTotal, setRecoveryTotal] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch real recovery total from /api/ticker — quietly drop if it fails or is 0
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/ticker')
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => {
+        if (cancelled || !d) return;
+        if (typeof d.total === 'number' && d.total > 0) setRecoveryTotal(d.total);
+      })
+      .catch(() => { /* silent — we have a fallback line */ });
+    return () => { cancelled = true; };
+  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,6 +215,17 @@ export default function HomeClient() {
           >
             Text Nathan · {PHONE_DISPLAY}
           </a>
+
+          <div className="home-availability">
+            <span className="home-availability-dot" aria-hidden="true" />
+            Usually replies in under 4 hours · Ohio-based
+          </div>
+
+          {recoveryTotal !== null && (
+            <div className="home-recovery">
+              <strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to Ohio homeowners
+            </div>
+          )}
 
           <div className="pass-legal home-legal">
             FundLocators LLC · Filed by a licensed Ohio attorney

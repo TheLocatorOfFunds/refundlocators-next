@@ -1042,5 +1042,44 @@
 
 .home-legal { margin-top: 4px; }
 
+/* Live availability dot near the SMS CTA */
+.home-availability {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--pass-cream-45);
+  letter-spacing: 0;
+  margin-top: 2px;
+}
+.home-availability-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #3ecf8e;
+  box-shadow: 0 0 0 2px rgba(62,207,142,0.18), 0 0 6px rgba(62,207,142,0.55);
+  animation: home-availability-pulse 2.4s ease-in-out infinite;
+}
+@keyframes home-availability-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .55; }
+}
+
+/* Recovery total — single quiet credibility line */
+.home-recovery {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--pass-cream-10);
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--pass-cream-70);
+  letter-spacing: -0.005em;
+}
+.home-recovery strong {
+  color: var(--pass-gold);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin-right: 4px;
+}
+
 /* ── Utility ──────────────────────────────────────────────────────────────── */
 .pass-root a { color: inherit; }
