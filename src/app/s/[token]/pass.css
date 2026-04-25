@@ -900,9 +900,30 @@
 
 /* ── Homepage salvage ─────────────────────────────────────────────────────── */
 .home-root { min-height: 100vh; min-height: 100svh; }
-.home-hero { padding-bottom: 40px; }
 
-.home-center { gap: 22px; }
+/* Mobile: full-bleed, same hero padding as the pass surface */
+.home-hero {
+  padding: 56px 22px 40px;
+  min-height: 100vh;
+  min-height: 100svh;
+  align-items: center;          /* center the column on desktop */
+}
+
+/* The actual content column — phone-width, centered on every viewport.
+   Vertical centering inside the hero. */
+.home-center {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  gap: 18px;
+  padding: 8px 0 16px;
+}
+
+/* Desktop polish — slightly tighter top, give the content room to breathe */
+@media (min-width: 720px) {
+  .home-hero { padding: 80px 24px 64px; }
+  .home-center { gap: 22px; }
+}
 
 .home-eyebrow {
   font-family: var(--pass-mono);
