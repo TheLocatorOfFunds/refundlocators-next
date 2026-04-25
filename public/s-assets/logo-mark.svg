@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#0b1f3a"></rect>
+
+  
+  <rect x="0.5" y="0.5" width="63" height="63" rx="13.5" fill="none" stroke="#17355e" stroke-width="1"></rect>
+
+  
+  
+  <path d="M32 12&#xA;           C 23.7 12, 17 18.7, 17 27&#xA;           C 17 36.5, 26 44.8, 30.6 51.2&#xA;           C 31.3 52.2, 32.7 52.2, 33.4 51.2&#xA;           C 38 44.8, 47 36.5, 47 27&#xA;           C 47 18.7, 40.3 12, 32 12 Z" fill="#c9a24a"></path>
+
+  
+  <g fill="#0b1f3a">
+    
+    <rect x="26" y="19" width="3.2" height="16" rx="0.4"></rect>
+    
+    <path d="M29.2 19 h4.8 a4.6 4.6 0 0 1 0 9.2 h-4.8 Z&#xA;             M29.2 21.4 v4.4 h4.6 a2.2 2.2 0 0 0 0 -4.4 Z"></path>
+    
+    <path d="M32.1 28.2 l5 6.8 h-3.8 l-4.4 -6 Z"></path>
+  </g>
+</svg>

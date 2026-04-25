@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import type { Metadata } from 'next';
 import PersonalizedClient from './PersonalizedClient';
 import type { PersonalizedLink } from '@/lib/supabase';
+import './pass.css';
+import './lauren-ai.css';
 
 // Server-side fetch — uses service role key
 function getDB() {
