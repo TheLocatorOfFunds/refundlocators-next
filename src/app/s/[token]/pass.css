@@ -921,8 +921,61 @@
 
 /* Desktop polish — slightly tighter top, give the content room to breathe */
 @media (min-width: 720px) {
-  .home-hero { padding: 80px 24px 64px; }
-  .home-center { gap: 22px; }
+  .home-hero {
+    padding: 80px 24px 64px;
+    /* Single ambient gold glow behind the centered card.
+       Two layers: a soft warm focal radial, plus a subtle vignette. */
+    background:
+      radial-gradient(
+        ellipse 720px 420px at 50% 38%,
+        rgba(201, 162, 74, 0.085) 0%,
+        rgba(201, 162, 74, 0.035) 35%,
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 1200px 600px at 50% 50%,
+        rgba(255, 255, 255, 0.018) 0%,
+        transparent 65%
+      );
+  }
+  .home-center {
+    gap: 22px;
+    /* The centered column becomes an intentional object on desktop —
+       glassy frame + hairline border + warm inner shimmer. */
+    padding: 36px 36px 32px;
+    background: rgba(240, 236, 228, 0.018);
+    border: 1px solid rgba(240, 236, 228, 0.06);
+    border-radius: 22px;
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 24px 60px -20px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(201, 162, 74, 0.04);
+    position: relative;
+  }
+  /* Hairline gold accent at top edge of the card */
+  .home-center::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 22%; right: 22%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(201, 162, 74, 0.35),
+      transparent
+    );
+    pointer-events: none;
+  }
+}
+
+/* Wider desktop — let the card breathe a touch more */
+@media (min-width: 1024px) {
+  .home-center {
+    max-width: 480px;
+    padding: 40px 40px 36px;
+  }
 }
 
 .home-eyebrow {
