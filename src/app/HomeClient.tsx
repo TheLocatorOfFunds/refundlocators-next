@@ -245,23 +245,45 @@ export default function HomeClient() {
             <div className="home-trust">
               <strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to{' '}
               <span className="home-buckeye" aria-hidden="true">
-                <svg viewBox="0 0 16 16" width="13" height="13" xmlns="http://www.w3.org/2000/svg">
-                  {/* Buckeye nut: deep mahogany body with cream eye spot */}
+                <svg viewBox="0 0 16 16" width="14" height="14" xmlns="http://www.w3.org/2000/svg">
+                  {/* Single buckeye leaf — OSU helmet sticker style: pointed
+                      almond shape, slightly serrated edge, deep green. */}
                   <defs>
-                    <radialGradient id="bk-body" cx="38%" cy="35%" r="80%">
-                      <stop offset="0%"   stopColor="#8a4a26" />
-                      <stop offset="55%"  stopColor="#5a2d18" />
-                      <stop offset="100%" stopColor="#3a1d10" />
-                    </radialGradient>
-                    <radialGradient id="bk-eye" cx="50%" cy="40%" r="60%">
-                      <stop offset="0%"   stopColor="#f4e3c1" />
-                      <stop offset="100%" stopColor="#d8c096" />
-                    </radialGradient>
+                    <linearGradient id="bk-leaf-grad" x1="50%" y1="0%" x2="50%" y2="100%">
+                      <stop offset="0%"   stopColor="#5d8a3a" />
+                      <stop offset="55%"  stopColor="#3d6e2c" />
+                      <stop offset="100%" stopColor="#1f3e15" />
+                    </linearGradient>
                   </defs>
-                  <circle cx="8" cy="8" r="7" fill="url(#bk-body)" />
-                  <ellipse cx="8" cy="9.2" rx="3.4" ry="3" fill="url(#bk-eye)" />
-                  {/* Subtle highlight */}
-                  <ellipse cx="5.5" cy="5.2" rx="1.6" ry="0.9" fill="rgba(255,255,255,0.22)" />
+                  {/* Leaf body: pointed top, rounded shoulders, narrow base */}
+                  <path
+                    d="M8 0.5
+                       C 9.8 2.5, 11.5 5, 12 8.5
+                       C 12.3 11, 11.2 13.5, 8 15.5
+                       C 4.8 13.5, 3.7 11, 4 8.5
+                       C 4.5 5, 6.2 2.5, 8 0.5 Z"
+                    fill="url(#bk-leaf-grad)"
+                  />
+                  {/* Center vein */}
+                  <path
+                    d="M8 1.5 L 8 14.5"
+                    stroke="rgba(255,255,255,0.28)"
+                    strokeWidth="0.5"
+                    strokeLinecap="round"
+                  />
+                  {/* Side veins */}
+                  <path d="M8 5.5 L 5.5 7"   stroke="rgba(255,255,255,0.18)" strokeWidth="0.4" strokeLinecap="round" />
+                  <path d="M8 5.5 L 10.5 7"  stroke="rgba(255,255,255,0.18)" strokeWidth="0.4" strokeLinecap="round" />
+                  <path d="M8 9 L 5 10.5"    stroke="rgba(255,255,255,0.15)" strokeWidth="0.4" strokeLinecap="round" />
+                  <path d="M8 9 L 11 10.5"   stroke="rgba(255,255,255,0.15)" strokeWidth="0.4" strokeLinecap="round" />
+                  {/* Small highlight at the top for dimension */}
+                  <path
+                    d="M7.5 2.5 C 8.4 3.2, 9 4.2, 9.4 5.4"
+                    stroke="rgba(255,255,255,0.22)"
+                    strokeWidth="0.4"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
                 </svg>
               </span>{' '}
               Ohio homeowners
