@@ -11,6 +11,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { CONFIG } from '@/lib/config';
 
+/** Persistent per-browser id so the LAUREN_URL endpoint can stitch sessions. */
+function getVisitorId(): string {
+  if (typeof window === 'undefined') return 'ssr';
+  let id = localStorage.getItem('lauren_visitor_id');
+  if (!id) { id = crypto.randomUUID(); localStorage.setItem('lauren_visitor_id', id); }
+  return id;
+}
+
 export interface LaurenTokenContext {
   firstName?: string;
   lastName?: string;
@@ -102,6 +110,7 @@ export default function LaurenSheet({
         body: JSON.stringify({
           messages: next,
           session_id: sessionId,
+          visitor_id: getVisitorId(),
           ...(personalizationContext ? { personalization_context: personalizationContext } : {}),
         }),
       });
