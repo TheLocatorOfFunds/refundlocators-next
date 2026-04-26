@@ -10,7 +10,7 @@
  * the address pre-filled.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { SearchResult } from '@/lib/supabase';
 import LaurenSheet from '@/components/LaurenSheet';
 
@@ -29,22 +29,11 @@ export default function HomeClient() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<SearchResult | null>(null);
-  const [recoveryTotal, setRecoveryTotal] = useState<number | null>(null);
   const [laurenOpen, setLaurenOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch real recovery total from /api/ticker — quietly drop if it fails or is 0
-  useEffect(() => {
-    let cancelled = false;
-    fetch('/api/ticker')
-      .then((r) => r.ok ? r.json() : null)
-      .then((d) => {
-        if (cancelled || !d) return;
-        if (typeof d.total === 'number' && d.total > 0) setRecoveryTotal(d.total);
-      })
-      .catch(() => { /* silent — we have a fallback line */ });
-    return () => { cancelled = true; };
-  }, []);
+  // Public-facing recovery total — set by Nathan, not pulled from /api/ticker.
+  const recoveryTotal: number = 2_400_000;
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -254,7 +243,28 @@ export default function HomeClient() {
 
           {recoveryTotal !== null && (
             <div className="home-trust">
-              <strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to Ohio homeowners
+              <strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to{' '}
+              <span className="home-buckeye" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="13" height="13" xmlns="http://www.w3.org/2000/svg">
+                  {/* Buckeye nut: deep mahogany body with cream eye spot */}
+                  <defs>
+                    <radialGradient id="bk-body" cx="38%" cy="35%" r="80%">
+                      <stop offset="0%"   stopColor="#8a4a26" />
+                      <stop offset="55%"  stopColor="#5a2d18" />
+                      <stop offset="100%" stopColor="#3a1d10" />
+                    </radialGradient>
+                    <radialGradient id="bk-eye" cx="50%" cy="40%" r="60%">
+                      <stop offset="0%"   stopColor="#f4e3c1" />
+                      <stop offset="100%" stopColor="#d8c096" />
+                    </radialGradient>
+                  </defs>
+                  <circle cx="8" cy="8" r="7" fill="url(#bk-body)" />
+                  <ellipse cx="8" cy="9.2" rx="3.4" ry="3" fill="url(#bk-eye)" />
+                  {/* Subtle highlight */}
+                  <ellipse cx="5.5" cy="5.2" rx="1.6" ry="0.9" fill="rgba(255,255,255,0.22)" />
+                </svg>
+              </span>{' '}
+              Ohio homeowners
             </div>
           )}
 
