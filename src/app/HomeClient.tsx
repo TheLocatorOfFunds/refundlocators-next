@@ -52,8 +52,19 @@ export default function HomeClient() {
         setError('rate_limit');
         return;
       }
+      if (!res.ok) {
+        // 400 / 500 — server didn't give us a SearchResult. Don't try to
+        // render it; route to Lauren the same way a network failure does.
+        setError('network');
+        return;
+      }
 
       const data: SearchResult = await res.json();
+      // Defensive: if the JSON shape isn't what we expect, treat as error.
+      if (!data || typeof data.status !== 'string') {
+        setError('network');
+        return;
+      }
       setResult(data);
     } catch {
       setError('network');

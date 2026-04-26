@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServiceClient, SearchResult } from '@/lib/supabase';
 
-// Rate limit store (in-memory; upgrade to Upstash Redis for production scale)
+// Rate limit store (in-memory; upgrade to Upstash Redis for production scale).
+// Limits intentionally generous — a real homeowner might check 5+ addresses
+// (their own + relatives + comparing variants). The 5/hr cap from the
+// original launch was so aggressive Nathan was locking himself out testing.
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const HOURLY_LIMIT = 5;
-const DAILY_LIMIT = 20;
+const HOURLY_LIMIT = 60;
+const DAILY_LIMIT = 200;
 
 function getIP(req: NextRequest): string {
   return (
