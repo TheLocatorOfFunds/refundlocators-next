@@ -132,14 +132,23 @@ export default function HomeClient() {
   return (
     <div className="pass-root home-root" data-bg="flat" data-gold="full">
       <section className="pass-hero home-hero" data-loaded="1">
-        <header className="pass-top">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/s-assets/logo-mark.svg" alt="" width={20} height={20} />
-          <span className="pass-top-domain">refundlocators.com</span>
-        </header>
-
         <div className="pass-center home-center">
-          <div className="home-eyebrow">SURPLUS FUND INTELLIGENCE · OHIO ONLY</div>
+          {/* Brand block — gold radar mark + wordmark + tagline */}
+          <div className="home-brand">
+            <div className="home-brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0a0a0a" strokeWidth="1.8" strokeLinecap="round">
+                <circle cx="12" cy="12" r="9.5" strokeWidth="1" strokeDasharray="2.2 2.2" opacity="0.45" />
+                <circle cx="12" cy="12" r="5.5" strokeWidth="1.8" />
+                <circle cx="12" cy="12" r="1.8" fill="#0a0a0a" stroke="none" />
+                <line x1="12" y1="0.5" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23.5" />
+                <line x1="0.5" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23.5" y2="12" />
+              </svg>
+            </div>
+            <div className="home-brand-name">RefundLocators</div>
+            <div className="home-brand-tagline">Surplus fund intelligence · Ohio only</div>
+          </div>
 
           <h1 className="home-headline">
             Lost a home in Ohio?{' '}
@@ -149,13 +158,9 @@ export default function HomeClient() {
           </h1>
 
           <p className="home-sub">
-            When an Ohio foreclosure sale brings in more than the mortgage debt,
-            that leftover — the <strong>surplus</strong> — belongs to the
-            former owner by law. We read court records across all 88 Ohio
-            counties, find your case, and help you claim it.
-          </p>
-          <p className="home-sub home-sub-thin">
-            We work Ohio only. If your home was anywhere else, we can&apos;t help — yet.
+            When a foreclosure sells for more than the mortgage owed, the
+            leftover — the <strong>surplus</strong> — belongs to you by law.
+            We read every Ohio court record to find your case.
           </p>
 
           <form onSubmit={handleSearch} className="home-search" noValidate>
@@ -221,21 +226,19 @@ export default function HomeClient() {
             Text Nathan · {PHONE_DISPLAY}
           </a>
 
-          <div className="home-availability">
+          <div className="home-trust">
             <span className="home-availability-dot" aria-hidden="true" />
-            Usually replies in under 4 hours · Ohio-based
+            <span>Usually replies in under 4 hours</span>
+            {recoveryTotal !== null && (
+              <>
+                <span className="home-trust-sep" aria-hidden="true">·</span>
+                <span><strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to Ohio homeowners</span>
+              </>
+            )}
           </div>
 
-          {recoveryTotal !== null && (
-            <div className="home-recovery">
-              <strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to Ohio homeowners
-            </div>
-          )}
-
           <div className="pass-legal home-legal">
-            FundLocators LLC · Filed by a licensed Ohio attorney
-            <br />
-            25% of recovery · $0 upfront
+            FundLocators LLC · Licensed Ohio attorney files · 25% of recovery · $0 upfront
           </div>
         </div>
       </section>
