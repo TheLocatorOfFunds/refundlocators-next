@@ -56,49 +56,72 @@ export default function LaurenSheet({
   const inputRef = useRef<HTMLInputElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
 
-  // ── Mobile-keyboard handling ───────────────────────────────────────────
-  // iOS Safari shrinks the visual viewport when the keyboard appears.
-  // We track that and resize the sheet to fit so the input is always
-  // visible above the keyboard, and we lock body scroll so the page
-  // underneath can't drift while the sheet is open.
+  // ── Mobile-keyboard + body-scroll lock ───────────────────────────────
+  // We do two different things depending on whether we're on a phone or
+  // a desktop, since they have different failure modes:
+  //  - Mobile: iOS Safari shrinks visualViewport when the keyboard
+  //    appears; we resize the sheet to fit above the keyboard so the
+  //    input stays visible.
+  //  - Desktop: the sheet is a centered modal sized by CSS; we just lock
+  //    body scroll so the page underneath can't drift, and compensate
+  //    for the scrollbar disappearance so the page doesn't shift.
   useEffect(() => {
     if (!open) return;
 
-    const previousOverflow = document.body.style.overflow;
-    const previousPosition = document.body.style.position;
-    const previousTop = document.body.style.top;
+    const isMobile = window.matchMedia('(max-width: 719px)').matches;
     const scrollY = window.scrollY;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = '100%';
-
-    const vv = window.visualViewport;
-    const updateHeight = () => {
-      const sheet = sheetRef.current;
-      if (!sheet) return;
-      const h = vv?.height ?? window.innerHeight;
-      sheet.style.height = `${h}px`;
-      // Keep the message list scrolled to the latest content as the
-      // viewport changes (e.g. keyboard appearing).
-      if (endRef.current) {
-        endRef.current.scrollTop = endRef.current.scrollHeight;
-      }
+    const previous = {
+      overflow:  document.body.style.overflow,
+      position:  document.body.style.position,
+      top:       document.body.style.top,
+      width:     document.body.style.width,
+      paddingR:  document.body.style.paddingRight,
     };
 
-    updateHeight();
-    vv?.addEventListener('resize', updateHeight);
-    vv?.addEventListener('scroll', updateHeight);
+    document.body.style.overflow = 'hidden';
+    if (isMobile) {
+      // Hard lock: prevents iOS rubber-banding behind the sheet.
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    } else if (scrollbarWidth > 0) {
+      // Desktop: keep the scrollbar gutter so the page doesn't jump
+      // sideways when overflow:hidden hides the scrollbar.
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    let cleanup: (() => void) | undefined;
+    if (isMobile) {
+      const vv = window.visualViewport;
+      const updateHeight = () => {
+        const sheet = sheetRef.current;
+        if (!sheet) return;
+        const h = vv?.height ?? window.innerHeight;
+        sheet.style.height = `${h}px`;
+        if (endRef.current) {
+          endRef.current.scrollTop = endRef.current.scrollHeight;
+        }
+      };
+      updateHeight();
+      vv?.addEventListener('resize', updateHeight);
+      vv?.addEventListener('scroll', updateHeight);
+      cleanup = () => {
+        vv?.removeEventListener('resize', updateHeight);
+        vv?.removeEventListener('scroll', updateHeight);
+      };
+    }
+    // Desktop: do nothing — let CSS size the sheet via min(720px, 92dvh).
 
     return () => {
-      vv?.removeEventListener('resize', updateHeight);
-      vv?.removeEventListener('scroll', updateHeight);
-      document.body.style.overflow = previousOverflow;
-      document.body.style.position = previousPosition;
-      document.body.style.top = previousTop;
-      document.body.style.width = '';
-      window.scrollTo(0, scrollY);
+      cleanup?.();
+      document.body.style.overflow = previous.overflow;
+      document.body.style.position = previous.position;
+      document.body.style.top = previous.top;
+      document.body.style.width = previous.width;
+      document.body.style.paddingRight = previous.paddingR;
+      if (isMobile) window.scrollTo(0, scrollY);
     };
   }, [open]);
 
@@ -128,12 +151,14 @@ export default function LaurenSheet({
   useEffect(() => {
     if (open && messages.length === 0) {
       setMessages([{ role: 'assistant', content: greeting }]);
-      setTimeout(() => inputRef.current?.focus(), 350);
+      const focusT = setTimeout(() => inputRef.current?.focus(), 350);
       // If a seed message is supplied, send it on the user's behalf so
       // Lauren picks up the conversation immediately with full context.
+      let seedT: ReturnType<typeof setTimeout> | undefined;
       if (seed && seed.trim()) {
-        setTimeout(() => { void send(seed); }, 600);
+        seedT = setTimeout(() => { void send(seed); }, 600);
       }
+      return () => { clearTimeout(focusT); if (seedT) clearTimeout(seedT); };
     }
     if (!open) {
       setMessages([]);
@@ -211,7 +236,13 @@ export default function LaurenSheet({
       ];
 
   return (
-    <div className="la-scrim" role="dialog" aria-modal="true" aria-label="Chat with Lauren">
+    <div
+      className="la-scrim"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Chat with Lauren"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
       <div className="la-sheet" ref={sheetRef}>
         <header className="la-header">
           <div className="la-header-left">

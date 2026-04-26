@@ -14,8 +14,9 @@
 
 .la-sheet {
   width: 100%;
-  /* Height is set inline by JS to visualViewport.height so the iOS
-     keyboard doesn't push our input out of view. Fallback for desktop / no-JS: */
+  /* Mobile: height is set inline by JS to visualViewport.height so the
+     iOS keyboard doesn't push our input out of view. Fallback for
+     desktop / no-JS: */
   height: 100dvh;
   max-height: 100dvh;
   background: linear-gradient(180deg, #0c0f14 0%, #070a10 100%);
@@ -27,7 +28,6 @@
   animation: laSheetIn 320ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   transform: translateY(100%);
   border-top: 1px solid rgba(240, 236, 228, 0.08);
-  overscroll-behavior: contain;
 }
 @keyframes laSheetIn { to { transform: translateY(0); } }
 
@@ -98,6 +98,10 @@
 .la-body {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Contain scrolling so reaching the top doesn't trigger iOS pull-to-refresh
+     on the page underneath. */
+  overscroll-behavior: contain;
   padding: 20px 16px 12px;
   display: flex;
   flex-direction: column;
