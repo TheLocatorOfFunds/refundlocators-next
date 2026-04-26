@@ -16,7 +16,7 @@ export const dynamic = 'force-dynamic';
  *  4. Insert an activity row for the DCC timeline
  */
 export async function POST(req: NextRequest) {
-  let body: { token?: string; name?: string; address?: string; phone?: string };
+  let body: { token?: string; name?: string; address?: string; phone?: string; visitor_id?: string };
   try {
     body = await req.json();
   } catch {
@@ -90,6 +90,19 @@ export async function POST(req: NextRequest) {
       metadata: { token, name, address, phone, source: 'personalized_page_claim_modal' },
       created_at: now,
     });
+  }
+
+  // Flag any in-progress Lauren conversation from this same browser as
+  // converted. Best-effort, ignored if the table doesn't exist yet.
+  const visitorId = (body.visitor_id || '').trim();
+  if (visitorId) {
+    try {
+      await db
+        .from('lauren_conversations')
+        .update({ submitted_claim: true })
+        .eq('visitor_id', visitorId)
+        .gte('started_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+    } catch { /* table may not exist yet — silent */ }
   }
 
   return NextResponse.json({ ok: true });

@@ -456,6 +456,11 @@ function ClaimModal({
 
     setStage('submitting');
     try {
+      // visitor_id lets the server flag any in-progress Lauren conversation
+      // from this same browser as having converted to a claim.
+      let visitorId: string | null = null;
+      try { visitorId = localStorage.getItem('lauren_visitor_id'); } catch { /* private mode */ }
+
       await fetch('/api/s/claim', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -464,6 +469,7 @@ function ClaimModal({
           name: name.trim(),
           address: address.trim(),
           phone: digits,
+          visitor_id: visitorId,
         }),
       });
     } catch {

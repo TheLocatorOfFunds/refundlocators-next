@@ -63,6 +63,10 @@ export default function LaurenSheet({
   // Mirror messages into a ref so async send() can read the latest list
   // without relying on closures that capture stale state.
   const messagesRef = useRef<ChatMsg[]>([]);
+  // Persistent conversation row id, returned by /api/lauren/log on first call
+  // and reused for subsequent updates.
+  const conversationIdRef = useRef<string | null>(null);
+  const logTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── Mobile-keyboard + body-scroll lock ───────────────────────────────
   // We do two different things depending on whether we're on a phone or
@@ -169,13 +173,27 @@ export default function LaurenSheet({
       return () => { clearTimeout(focusT); if (seedT) clearTimeout(seedT); };
     }
     if (!open) {
+      // One last log flush before we tear down — sendBeacon survives the
+      // close even if the user is also navigating away.
+      if (conversationIdRef.current && messagesRef.current.length > 0) {
+        const blob = new Blob([JSON.stringify({
+          conversation_id: conversationIdRef.current,
+          visitor_id: getVisitorId(),
+          transcript: messagesRef.current,
+        })], { type: 'application/json' });
+        try { navigator.sendBeacon('/api/lauren/log', blob); } catch { /* silent */ }
+      }
+      if (logTimerRef.current) { clearTimeout(logTimerRef.current); logTimerRef.current = null; }
+
       setMessages([]);
       setInput('');
       setThinking(false);
       setSessionId(null);
-      // Reset the in-flight lock + session ref so a re-open starts clean.
+      // Reset all refs so a re-open starts clean.
       inFlightRef.current = false;
       sessionRef.current = null;
+      conversationIdRef.current = null;
+      messagesRef.current = [];
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -184,7 +202,40 @@ export default function LaurenSheet({
     if (endRef.current) {
       endRef.current.scrollTop = endRef.current.scrollHeight;
     }
-  }, [messages, thinking]);
+
+    // Debounced log write. Only fires when the chat actually has user
+    // content (skip the auto-greeting alone). Fire-and-forget — if the
+    // log endpoint is down or the table doesn't exist yet, we silently
+    // ignore so the user's chat is never affected.
+    if (!open) return;
+    const hasUserContent = messages.some(m => m.role === 'user');
+    if (!hasUserContent) return;
+
+    if (logTimerRef.current) clearTimeout(logTimerRef.current);
+    logTimerRef.current = setTimeout(() => {
+      const body = {
+        conversation_id: conversationIdRef.current,
+        visitor_id: getVisitorId(),
+        page_origin: typeof window !== 'undefined' ? window.location.pathname : null,
+        token: token ? token.propertyAddress : null, // best-effort identifier
+        seed_message: seed || null,
+        transcript: messagesRef.current,
+      };
+      fetch('/api/lauren/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        keepalive: true, // survive page unload
+      })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data && data.id && !conversationIdRef.current) {
+            conversationIdRef.current = data.id;
+          }
+        })
+        .catch(() => { /* silent */ });
+    }, 1500);
+  }, [messages, thinking, open, seed, token]);
 
   const send = async (overrideText?: string) => {
     const text = (overrideText ?? input).trim();
