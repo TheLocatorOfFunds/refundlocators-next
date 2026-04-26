@@ -54,6 +54,53 @@ export default function LaurenSheet({
   const [sessionId, setSessionId] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+
+  // ── Mobile-keyboard handling ───────────────────────────────────────────
+  // iOS Safari shrinks the visual viewport when the keyboard appears.
+  // We track that and resize the sheet to fit so the input is always
+  // visible above the keyboard, and we lock body scroll so the page
+  // underneath can't drift while the sheet is open.
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const previousPosition = document.body.style.position;
+    const previousTop = document.body.style.top;
+    const scrollY = window.scrollY;
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+
+    const vv = window.visualViewport;
+    const updateHeight = () => {
+      const sheet = sheetRef.current;
+      if (!sheet) return;
+      const h = vv?.height ?? window.innerHeight;
+      sheet.style.height = `${h}px`;
+      // Keep the message list scrolled to the latest content as the
+      // viewport changes (e.g. keyboard appearing).
+      if (endRef.current) {
+        endRef.current.scrollTop = endRef.current.scrollHeight;
+      }
+    };
+
+    updateHeight();
+    vv?.addEventListener('resize', updateHeight);
+    vv?.addEventListener('scroll', updateHeight);
+
+    return () => {
+      vv?.removeEventListener('resize', updateHeight);
+      vv?.removeEventListener('scroll', updateHeight);
+      document.body.style.overflow = previousOverflow;
+      document.body.style.position = previousPosition;
+      document.body.style.top = previousTop;
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+    };
+  }, [open]);
 
   // Build personalization_context only when we have a token
   const personalizationContext = token
@@ -165,7 +212,7 @@ export default function LaurenSheet({
 
   return (
     <div className="la-scrim" role="dialog" aria-modal="true" aria-label="Chat with Lauren">
-      <div className="la-sheet">
+      <div className="la-sheet" ref={sheetRef}>
         <header className="la-header">
           <div className="la-header-left">
             {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -26,6 +26,10 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  // iOS Safari: tell the on-screen keyboard to overlay (not resize) so our
+  // chat sheet can manage its own height via visualViewport. Prevents the
+  // whole page from jumping when the keyboard appears.
+  interactiveWidget: 'overlays-content',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
