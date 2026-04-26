@@ -49,21 +49,47 @@ export default function HomeClient() {
       });
 
       if (res.status === 429) {
-        setError('Too many searches. Try again in an hour, or text us directly.');
+        setError('rate_limit');
         return;
       }
 
       const data: SearchResult = await res.json();
       setResult(data);
     } catch {
-      setError('Something went wrong. Text us directly and we will help.');
+      setError('network');
     } finally {
       setBusy(false);
     }
   };
 
-  // Result tile copy — keep it factual, never overpromise.
+  // Result tile copy — keep it factual, never overpromise. Error states
+  // route to Lauren too so we never leave the user at a dead-end.
   const resultTile = (() => {
+    if (error === 'rate_limit') {
+      return {
+        title: 'You’ve hit our search limit for now.',
+        body: (
+          <>
+            Lauren can pick up the search by hand — no rate limits, no waiting.
+            Tell her your address and what you remember about the sale.
+          </>
+        ),
+        cta: 'Ask Lauren instead',
+      };
+    }
+    if (error === 'network') {
+      return {
+        title: 'The address search hiccupped.',
+        body: (
+          <>
+            No problem — Lauren can take over from here. She works the public
+            court records directly and can look up your case on the spot.
+          </>
+        ),
+        cta: 'Ask Lauren instead',
+      };
+    }
+
     if (!result) return null;
 
     if (result.status === 'confirmed' || result.status === 'likely') {
@@ -115,18 +141,22 @@ export default function HomeClient() {
   })();
 
   // Build a context-aware seed message Lauren can run with
-  const laurenSeed = result
-    ? (() => {
-        const addr = address.trim();
-        if (result.status === 'confirmed' || result.status === 'likely') {
-          return `I just searched my address — ${addr} — and your system found a match. Can you tell me about my case?`;
-        }
-        if (result.status === 'needs_verification') {
-          return `I searched ${addr} and got partial matches. Can you help me figure out which case is mine?`;
-        }
-        return `I searched ${addr} and got no match. Can you help me search differently — maybe by my name or a previous spelling of the address?`;
-      })()
-    : undefined;
+  const laurenSeed = (() => {
+    const addr = address.trim();
+    if (error) {
+      return addr
+        ? `Your address-search system was down for me. Can you help me look up surplus funds for ${addr}?`
+        : undefined;
+    }
+    if (!result) return undefined;
+    if (result.status === 'confirmed' || result.status === 'likely') {
+      return `I just searched my address — ${addr} — and your system found a match. Can you tell me about my case?`;
+    }
+    if (result.status === 'needs_verification') {
+      return `I searched ${addr} and got partial matches. Can you help me figure out which case is mine?`;
+    }
+    return `I searched ${addr} and got no match. Can you help me search differently — maybe by my name or a previous spelling of the address?`;
+  })();
 
   return (
     <div className="pass-root home-root" data-bg="flat" data-gold="full">
@@ -210,7 +240,7 @@ export default function HomeClient() {
               )}
             </button>
 
-            {error && <div className="claim-err">{error}</div>}
+            {/* Errors render inside the result tile below — no dead-end strings. */}
           </form>
 
           {resultTile && (
