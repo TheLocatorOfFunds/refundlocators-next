@@ -1,0 +1,1306 @@
+/* pass.css — Core styling for the /s/{token} pass */
+
+:root {
+  /* Fonts — brief says SF Pro Display / Inter for UI, system serif for number */
+  --pass-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+               'Inter', 'Segoe UI', system-ui, sans-serif;
+  --pass-serif: 'New York', 'Charter', 'Iowan Old Style', 'Apple Garamond',
+                'Söhne Breit', Georgia, Times, serif;
+  --pass-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, monospace;
+
+  /* Cream text tiers */
+  --pass-cream: #f0ece4;
+  --pass-cream-70: rgba(240, 236, 228, 0.70);
+  --pass-cream-45: rgba(240, 236, 228, 0.45);
+  --pass-cream-20: rgba(240, 236, 228, 0.20);
+  --pass-cream-10: rgba(240, 236, 228, 0.10);
+
+  /* Gold — desaturated ~30% from #c9a24a → something like #b89a5f */
+  /* oklch equivalents for fine-tuning */
+  --pass-gold: #b89a5f;         /* default desaturated */
+  --pass-gold-hover: #c9a86a;
+  --pass-gold-press: #9c8349;
+  --pass-gold-on: #0a0a0a;
+}
+
+/* ── Pass root + background variants ─────────────────────────────────────── */
+.pass-root {
+  min-height: 100%;
+  color: var(--pass-cream);
+  font-family: var(--pass-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.pass-root[data-bg="flat"] {
+  background: #0a0a0a;
+}
+.pass-root[data-bg="fade"] {
+  background: linear-gradient(180deg, #0f1419 0%, #0a0d11 50%, #05080c 100%);
+}
+.pass-root[data-bg="navy"] {
+  background: linear-gradient(180deg, #0b1f3a 0%, #071528 100%);
+}
+
+/* Gold saturation variants — driven by data-gold attr */
+.pass-root[data-gold="desat"] { --pass-gold: #b89a5f; --pass-gold-hover: #c9a86a; --pass-gold-press: #9c8349; }
+.pass-root[data-gold="mid"]   { --pass-gold: #c1a259; --pass-gold-hover: #d4b368; --pass-gold-press: #a3894a; }
+.pass-root[data-gold="full"]  { --pass-gold: #c9a24a; --pass-gold-hover: #d8b560; --pass-gold-press: #b08535; }
+
+/* ── HERO ─────────────────────────────────────────────────────────────────── */
+.pass-hero {
+  position: relative;
+  min-height: 844px;
+  display: flex;
+  flex-direction: column;
+  /* Top padding clears the iOS status bar (~54px) + breathing room */
+  padding: 64px 24px 32px;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+/* When rendered outside a device frame / artboard, fill the actual viewport */
+.view-mobile-frame .pass-hero { min-height: 844px; }
+.home-root .pass-hero { min-height: 100%; }
+.pass-hero[data-loaded="1"] { opacity: 1; }
+
+.pass-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  /* Push to the left edge, leaving dynamic island clear in the center */
+  margin-bottom: 48px;
+}
+.pass-top img { display: block; opacity: 0.85; }
+.pass-top-domain {
+  font-family: var(--pass-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--pass-cream-45);
+  text-transform: lowercase;
+}
+
+/* Recipient block — name (bold) over property address (quieter) */
+.pass-recipient {
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 32px;
+  margin-bottom: 24px;
+}
+.pass-recipient-name {
+  font-family: var(--pass-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--pass-cream-70);
+  text-transform: uppercase;
+}
+.pass-recipient-addr {
+  font-family: var(--pass-sans);
+  font-size: 13px;
+  color: var(--pass-cream-45);
+  margin-top: 6px;
+  letter-spacing: 0;
+}
+
+.pass-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding: 16px 0;
+  min-height: 0;
+}
+
+/* Address eyebrow */
+.pass-address {
+  font-family: var(--pass-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--pass-cream-45);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Hero number stack */
+.pass-number-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.pass-number {
+  /* Sized to fit a 7-character max ($000,000) within ~340px content width */
+  font-size: 84px;
+  line-height: 0.95;
+  color: var(--pass-cream);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.04em;
+  margin: 0;
+  max-width: 100%;
+  text-rendering: geometricPrecision;
+  white-space: nowrap;
+}
+
+/* ── Hero count-up amount ──────────────────────────────────────────────── */
+.hero-amount {
+  display: inline-block;
+  font-variant-numeric: tabular-nums lining-nums;
+  will-change: filter, opacity;
+}
+.hero-amount.spinning {
+  filter: blur(0.5px);
+  opacity: 0.92;
+  transition: none;
+}
+.hero-amount.done {
+  filter: blur(0);
+  opacity: 1;
+  transition: filter 280ms ease-out, opacity 280ms ease-out;
+}
+/* Scale down when the number is longer (e.g. $1,280,000) */
+.pass-number-wrap { max-width: 100%; }
+
+.pass-confidence {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pass-cream-70);
+  letter-spacing: -0.01em;
+  margin-top: 2px;
+}
+.pass-confidence.confirmed {
+  color: var(--pass-gold);
+  font-weight: 600;
+}
+
+.pass-range {
+  font-size: 11.5px;
+  color: var(--pass-cream-45);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+.pass-range.in { opacity: 1; transform: translateY(0); }
+
+/* Actions */
+.pass-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pass-cta-primary {
+  appearance: none;
+  border: 0;
+  width: 100%;
+  height: 56px;
+  background: var(--pass-gold);
+  color: var(--pass-gold-on);
+  font-family: var(--pass-sans);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.1) inset;
+}
+.pass-cta-primary:hover { background: var(--pass-gold-hover); }
+.pass-cta-primary:active { background: var(--pass-gold-press); transform: scale(0.99); }
+
+.pass-arrow {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 400;
+  transform: translateY(-0.5px);
+}
+
+.pass-cta-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  background: transparent;
+  color: var(--pass-cream);
+  font-family: var(--pass-sans);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border: 1px solid var(--pass-cream-20);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.pass-cta-secondary:hover { border-color: var(--pass-cream-45); background: rgba(240,236,228,0.03); }
+.pass-cta-secondary:active { background: rgba(240,236,228,0.06); }
+
+.pass-legal {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--pass-cream-45);
+  text-align: center;
+  letter-spacing: 0;
+}
+
+.pass-scroll-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--pass-cream-20);
+  animation: scroll-nudge 2.6s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+@keyframes scroll-nudge {
+  0%, 80%, 100% { transform: translate(-50%, 0); opacity: 0.35; }
+  40% { transform: translate(-50%, 3px); opacity: 0.7; }
+}
+
+/* ── Sections after the fold ─────────────────────────────────────────────── */
+.pass-section {
+  padding: 48px 24px 32px;
+  border-top: 1px solid var(--pass-cream-10);
+}
+
+.pass-section-eyebrow {
+  font-family: var(--pass-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--pass-cream-45);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* ── Case card (wallet-pass-back style) ──────────────────────────────────── */
+.pass-case-card {
+  background: rgba(240, 236, 228, 0.03);
+  border: 1px solid var(--pass-cream-10);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.pass-case-rows {
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pass-case-row {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  align-items: baseline;
+  gap: 16px;
+}
+.pass-case-k {
+  font-family: var(--pass-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--pass-cream-45);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pass-case-v {
+  font-size: 14.5px;
+  color: var(--pass-cream);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.005em;
+  line-height: 1.35;
+}
+
+/* Perforated divider */
+.pass-case-perf {
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    var(--pass-cream-20) 0,
+    var(--pass-cream-20) 4px,
+    transparent 4px,
+    transparent 10px
+  );
+  background-size: 10px 1px;
+  background-repeat: repeat-x;
+  position: relative;
+}
+.pass-case-perf::before,
+.pass-case-perf::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  background: #0a0a0a;
+  border-radius: 50%;
+}
+.pass-root[data-bg="fade"] .pass-case-perf::before,
+.pass-root[data-bg="fade"] .pass-case-perf::after { background: #0a0c10; }
+.pass-root[data-bg="navy"] .pass-case-perf::before,
+.pass-root[data-bg="navy"] .pass-case-perf::after { background: #081a30; }
+.pass-case-perf::before { left: -8px; }
+.pass-case-perf::after { right: -8px; }
+
+/* ── Receipt / court-record case card ────────────────────────────────────── */
+.cc-receipt {
+  background: rgba(240, 236, 228, 0.03);
+  border: 1px solid var(--pass-cream-10);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.cc-receipt-head {
+  padding: 20px 22px 14px;
+  text-align: center;
+}
+.cc-receipt-title {
+  font-family: var(--pass-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pass-cream);
+}
+.cc-receipt-sub {
+  margin-top: 4px;
+  font-family: var(--pass-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  color: var(--pass-cream-45);
+  text-transform: uppercase;
+}
+.cc-receipt-perf {
+  position: relative;
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    var(--pass-cream-20) 0,
+    var(--pass-cream-20) 4px,
+    transparent 4px,
+    transparent 10px
+  );
+  background-size: 10px 1px;
+  background-repeat: repeat-x;
+}
+.cc-receipt-perf::before,
+.cc-receipt-perf::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  background: #0a0a0a;
+  border-radius: 50%;
+}
+.cc-receipt-perf::before { left: -8px; }
+.cc-receipt-perf::after  { right: -8px; }
+.pass-root[data-bg="fade"] .cc-receipt-perf::before,
+.pass-root[data-bg="fade"] .cc-receipt-perf::after { background: #0a0c10; }
+.pass-root[data-bg="navy"] .cc-receipt-perf::before,
+.pass-root[data-bg="navy"] .cc-receipt-perf::after { background: #081a30; }
+
+.cc-receipt-rows {
+  padding: 18px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cc-receipt-row {
+  display: grid;
+  grid-template-columns: minmax(0,auto) 1fr minmax(0,auto);
+  align-items: baseline;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(2px);
+  animation: cc-row-in 360ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes cc-row-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+.cc-receipt-k {
+  font-family: var(--pass-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--pass-cream-45);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.cc-receipt-dot {
+  border-bottom: 1px dotted var(--pass-cream-20);
+  align-self: end;
+  height: 0;
+  transform: translateY(-4px);
+}
+.cc-receipt-v {
+  font-family: var(--pass-mono);
+  font-size: 13.5px;
+  color: var(--pass-cream);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.005em;
+  text-align: right;
+  white-space: nowrap;
+}
+.cc-receipt-row.total .cc-receipt-k {
+  color: var(--pass-cream);
+  font-weight: 600;
+}
+.cc-receipt-row.total .cc-receipt-v {
+  color: var(--pass-gold);
+  font-size: 16px;
+  font-weight: 600;
+}
+.cc-receipt-row.total {
+  padding-top: 8px;
+  border-top: 1px solid var(--pass-cream-10);
+  margin-top: 4px;
+}
+.cc-receipt-foot {
+  border-top: 1px dashed var(--pass-cream-10);
+  padding: 12px 22px 16px;
+  font-family: var(--pass-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  color: var(--pass-cream-45);
+  text-align: center;
+}
+
+.pass-case-attorney {
+  padding: 18px 22px 20px;
+}
+.pass-case-attorney-label {
+  font-family: var(--pass-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--pass-cream-45);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.pass-case-attorney-name {
+  font-size: 15px;
+  color: var(--pass-cream);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.pass-case-attorney-bar {
+  font-size: 12px;
+  color: var(--pass-cream-45);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Nathan card */
+.pass-nathan {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: rgba(240, 236, 228, 0.03);
+  border: 1px solid var(--pass-cream-10);
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 120ms ease;
+}
+.pass-nathan:hover { background: rgba(240, 236, 228, 0.05); }
+
+.pass-nathan-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(155deg, rgba(184,154,95,0.25), rgba(184,154,95,0.08));
+  border: 1px solid var(--pass-cream-10);
+  display: grid;
+  place-items: center;
+  font-family: var(--pass-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pass-gold);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.pass-nathan-avatar-img {
+  display: block;
+  object-fit: cover;
+  border: 1px solid var(--pass-gold);
+  background: transparent;
+  /* Subtle gold inner glow to match brand */
+  box-shadow: 0 0 0 1px rgba(184,154,95,0.18) inset;
+}
+
+.pass-nathan-text { flex: 1; min-width: 0; }
+.pass-nathan-name { font-size: 15px; font-weight: 600; color: var(--pass-cream); letter-spacing: -0.01em; }
+.pass-nathan-sub { font-size: 12.5px; color: var(--pass-cream-45); margin-top: 1px; font-variant-numeric: tabular-nums; }
+
+.pass-nathan-chevron {
+  color: var(--pass-cream-45);
+  flex-shrink: 0;
+}
+
+/* ── FAQ ──────────────────────────────────────────────────────────────────── */
+.pass-faq {
+  display: flex;
+  flex-direction: column;
+}
+
+.pass-faq-item {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--pass-cream-10);
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+.pass-faq-item:first-child { border-top: 1px solid var(--pass-cream-10); }
+
+.pass-faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 4px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--pass-cream);
+  letter-spacing: -0.01em;
+}
+
+.pass-faq-plus {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--pass-cream-45);
+  transition: transform 200ms ease, color 200ms ease;
+  line-height: 1;
+  width: 14px;
+  text-align: center;
+}
+.pass-faq-item[data-open="1"] .pass-faq-plus {
+  transform: rotate(45deg);
+  color: var(--pass-gold);
+}
+
+.pass-faq-a-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease;
+}
+.pass-faq-item[data-open="1"] .pass-faq-a-wrap { grid-template-rows: 1fr; }
+
+.pass-faq-a {
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--pass-cream-70);
+  letter-spacing: -0.005em;
+}
+.pass-faq-item[data-open="1"] .pass-faq-a {
+  padding: 0 4px 20px;
+}
+
+/* Footer */
+.pass-footer {
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--pass-cream-10);
+  text-align: center;
+}
+.pass-footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--pass-cream-70);
+  font-family: var(--pass-mono);
+  letter-spacing: 0.05em;
+}
+.pass-footer-logo img { opacity: 0.8; }
+.pass-footer-legal {
+  margin-top: 12px;
+  font-size: 11px;
+  line-height: 1.65;
+  color: var(--pass-cream-45);
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Claim modal ──────────────────────────────────────────────────────────── */
+.claim-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.62);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: claim-scrim-in 300ms ease-out;
+}
+@keyframes claim-scrim-in { from { opacity: 0; } to { opacity: 1; } }
+
+.claim-modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: 92vh;
+  background: #0c0c0c;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  border: 1px solid var(--pass-cream-10);
+  border-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: claim-slide-up 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes claim-slide-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.claim-header {
+  display: grid;
+  grid-template-columns: 32px 1fr 32px;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--pass-cream-10);
+  flex-shrink: 0;
+}
+.claim-close {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 32px; height: 32px;
+  color: var(--pass-cream-70);
+  border-radius: 8px;
+  cursor: pointer;
+  display: grid; place-items: center;
+}
+.claim-close:hover { background: rgba(240,236,228,0.05); color: var(--pass-cream); }
+.claim-header-title {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pass-cream);
+  letter-spacing: -0.01em;
+}
+.claim-header-spacer { width: 32px; }
+
+.claim-body {
+  padding: 20px 24px 28px;
+  overflow-y: auto;
+}
+
+.claim-intro {
+  text-align: center;
+  padding: 4px 0 24px;
+}
+.claim-intro-k {
+  font-family: var(--pass-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--pass-cream-45);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.claim-intro-v {
+  font-size: 14px;
+  color: var(--pass-cream);
+  margin-top: 4px;
+  letter-spacing: -0.005em;
+}
+.claim-intro-amt {
+  font-size: 13px;
+  color: var(--pass-cream-70);
+  margin-top: 6px;
+}
+.claim-intro-amt strong {
+  color: var(--pass-gold);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.claim-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.claim-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.claim-field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pass-cream-70);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.claim-field-hint {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--pass-cream-45);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.claim-input {
+  appearance: none;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  background: rgba(240,236,228,0.04);
+  border: 1px solid var(--pass-cream-10);
+  border-radius: 12px;
+  color: var(--pass-cream);
+  font-family: var(--pass-sans);
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  outline: none;
+  transition: border-color 120ms ease, background 120ms ease;
+  box-sizing: border-box;
+}
+.claim-input::placeholder { color: var(--pass-cream-45); }
+.claim-input:focus {
+  border-color: var(--pass-gold);
+  background: rgba(240,236,228,0.06);
+}
+.claim-input[data-error="1"] {
+  border-color: #a5654a;
+}
+.claim-err {
+  font-size: 12px;
+  color: #d08a6a;
+  margin-top: -2px;
+}
+
+.claim-submit {
+  appearance: none;
+  border: 0;
+  width: 100%;
+  height: 56px;
+  background: var(--pass-gold);
+  color: var(--pass-gold-on);
+  font-family: var(--pass-sans);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 120ms ease;
+}
+.claim-submit:hover { background: var(--pass-gold-hover); }
+.claim-submit:disabled { opacity: 0.8; cursor: default; }
+
+.claim-spin {
+  width: 18px; height: 18px;
+  border: 2px solid var(--pass-gold-on);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.claim-privacy {
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--pass-cream-45);
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* Done state */
+.claim-done {
+  padding: 48px 28px 36px;
+  text-align: center;
+}
+.claim-done-seal {
+  color: var(--pass-gold);
+  display: inline-flex;
+  margin-bottom: 20px;
+}
+.claim-done-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--pass-cream);
+  letter-spacing: -0.02em;
+}
+.claim-done-body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--pass-cream-70);
+  margin-top: 10px;
+}
+.claim-done-body a { color: var(--pass-gold); text-decoration: none; font-weight: 500; }
+.claim-done-card {
+  margin-top: 28px;
+  padding: 16px 18px;
+  background: rgba(240,236,228,0.03);
+  border: 1px solid var(--pass-cream-10);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.claim-done-k {
+  font-family: var(--pass-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--pass-cream-45);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.claim-done-v {
+  font-family: var(--pass-mono);
+  font-size: 13px;
+  color: var(--pass-cream);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.claim-done-close {
+  appearance: none;
+  width: 100%;
+  height: 48px;
+  margin-top: 24px;
+  background: transparent;
+  border: 1px solid var(--pass-cream-20);
+  border-radius: 12px;
+  color: var(--pass-cream);
+  font-family: var(--pass-sans);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.claim-done-close:hover { background: rgba(240,236,228,0.03); border-color: var(--pass-cream-45); }
+
+/* ── Homepage salvage ─────────────────────────────────────────────────────── */
+.home-root { min-height: 100vh; min-height: 100svh; }
+
+/* Mobile: full-bleed, slim padding, no top header */
+.home-hero {
+  padding: 40px 22px 32px;
+  min-height: 100vh;
+  min-height: 100svh;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The actual content column — phone-width, centered on every viewport. */
+.home-center {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  gap: 16px;
+  padding: 6px 0 14px;
+}
+
+/* ── Brand block ─────────────────────────────────────────────────────────── */
+.home-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.home-brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--pass-gold);
+  display: grid;
+  place-items: center;
+  box-shadow:
+    0 0 0 1px rgba(201, 162, 74, 0.25),
+    0 6px 20px rgba(201, 162, 74, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.18) inset;
+}
+/* Map-pin brand mark — pin IS the mark, no container */
+.home-brand-pin {
+  display: inline-flex;
+  filter:
+    drop-shadow(0 4px 14px rgba(201, 162, 74, 0.35))
+    drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+.home-brand-name {
+  font-family: var(--pass-serif);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--pass-cream);
+  line-height: 1;
+}
+.home-brand-tagline {
+  font-family: var(--pass-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pass-gold);
+}
+
+/* ── Trust line (combined dot + recovery) ────────────────────────────────── */
+.home-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--pass-cream-70);
+  text-align: center;
+}
+.home-trust strong {
+  color: var(--pass-gold);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.home-trust-sep {
+  color: var(--pass-cream-20);
+}
+
+/* ── Lauren pitch (homepage) ─────────────────────────────────────────────── */
+.home-lauren-pitch {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(201, 162, 74, 0.05);
+  border: 1px solid rgba(201, 162, 74, 0.18);
+  border-radius: 14px;
+}
+.home-lauren-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--pass-gold);
+  box-shadow: 0 0 0 1px rgba(201, 162, 74, 0.18) inset;
+  flex-shrink: 0;
+}
+.home-lauren-copy { min-width: 0; }
+.home-lauren-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pass-gold);
+  letter-spacing: -0.005em;
+  margin-bottom: 4px;
+}
+.home-lauren-blurb {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--pass-cream-70);
+  letter-spacing: 0;
+}
+
+/* Primary-looking secondary — Lauren is the most desirable next step */
+.home-lauren-cta {
+  height: 52px;
+  border: 1px solid rgba(201, 162, 74, 0.35);
+  background: rgba(201, 162, 74, 0.08);
+  color: var(--pass-cream);
+  font-weight: 600;
+  gap: 10px;
+}
+.home-lauren-cta:hover {
+  border-color: var(--pass-gold);
+  background: rgba(201, 162, 74, 0.14);
+}
+.home-lauren-cta-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #3ecf8e;
+  box-shadow: 0 0 0 2px rgba(62,207,142,0.20), 0 0 8px rgba(62,207,142,0.55);
+  animation: home-availability-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* Tiny human-fallback line under legal — always available, never primary */
+.home-human-fallback {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--pass-cream-45);
+}
+.home-human-fallback a {
+  color: var(--pass-gold);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Desktop polish — fit on one screen, prominent brand, glassy card frame */
+@media (min-width: 720px) {
+  .home-hero {
+    padding: 32px 24px;
+    /* Single ambient gold glow behind the centered card.
+       Two layers: a soft warm focal radial, plus a subtle vignette. */
+    background:
+      radial-gradient(
+        ellipse 720px 420px at 50% 38%,
+        rgba(201, 162, 74, 0.085) 0%,
+        rgba(201, 162, 74, 0.035) 35%,
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 1200px 600px at 50% 50%,
+        rgba(255, 255, 255, 0.018) 0%,
+        transparent 65%
+      );
+  }
+  .home-center {
+    gap: 12px;
+    /* The centered column becomes an intentional object on desktop —
+       glassy frame + hairline border + warm inner shimmer. */
+    padding: 22px 32px 18px;
+    background: rgba(240, 236, 228, 0.018);
+    border: 1px solid rgba(240, 236, 228, 0.06);
+    border-radius: 22px;
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 24px 60px -20px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(201, 162, 74, 0.04);
+    position: relative;
+  }
+  /* Hairline gold accent at top edge of the card */
+  .home-center::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 22%; right: 22%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(201, 162, 74, 0.35),
+      transparent
+    );
+    pointer-events: none;
+  }
+}
+
+/* Wider desktop — bigger brand, slightly more padding, still single screen */
+@media (min-width: 1024px) {
+  .home-center {
+    max-width: 500px;
+    padding: 26px 36px 22px;
+    gap: 14px;
+  }
+  .home-brand-mark { width: 52px; height: 52px; border-radius: 14px; }
+  .home-brand-mark svg { width: 26px; height: 26px; }
+  .home-brand-pin svg { width: 40px; height: 56px; }
+  .home-brand-name { font-size: 30px; }
+  .home-brand-tagline { font-size: 11px; }
+  .home-headline { font-size: 28px; }
+  .home-sub { font-size: 13.5px; }
+}
+
+/* Short laptops (≤768px tall): trim further */
+@media (min-width: 720px) and (max-height: 800px) {
+  .home-hero { padding: 18px 24px; }
+  .home-center { padding: 18px 28px 14px; gap: 10px; }
+  .home-brand { gap: 4px; margin-bottom: 0; }
+  .home-brand-pin svg { width: 32px; height: 44px; }
+  .home-brand-name { font-size: 22px; }
+  .home-brand-tagline { font-size: 9.5px; }
+  .home-headline { font-size: 24px; }
+  .home-sub { font-size: 13px; line-height: 1.45; }
+  .home-lauren-pitch { padding: 10px 12px; }
+  .home-lauren-avatar { width: 40px; height: 40px; }
+  .home-lauren-pitch { grid-template-columns: 40px 1fr; }
+  .home-lauren-blurb { font-size: 12px; line-height: 1.4; }
+  .home-or { margin: 2px 0; }
+}
+
+.home-eyebrow {
+  font-family: var(--pass-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--pass-gold);
+  text-align: center;
+}
+.home-headline {
+  font-family: var(--pass-sans);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--pass-cream);
+  text-align: center;
+  margin: 0;
+  text-wrap: pretty;
+}
+.home-headline-accent {
+  font-family: var(--pass-serif);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--pass-gold);
+  letter-spacing: -0.03em;
+}
+.home-sub {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--pass-cream-70);
+  text-align: center;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.home-sub strong {
+  color: var(--pass-gold);
+  font-weight: 600;
+  font-style: italic;
+}
+.home-sub-thin {
+  margin-top: -4px;
+  font-size: 12.5px;
+  color: var(--pass-cream-45);
+  font-style: italic;
+  max-width: 320px;
+}
+
+.home-search {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+.home-search-field {
+  position: relative;
+}
+.home-search-icon {
+  position: absolute;
+  left: 16px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--pass-cream-45);
+}
+.home-search-input {
+  appearance: none;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px 0 42px;
+  background: rgba(240,236,228,0.04);
+  border: 1px solid var(--pass-cream-10);
+  border-radius: 14px;
+  color: var(--pass-cream);
+  font-family: var(--pass-sans);
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.home-search-input::placeholder { color: var(--pass-cream-45); }
+.home-search-input:focus {
+  border-color: var(--pass-gold);
+  background: rgba(240,236,228,0.06);
+}
+.home-submit { height: 52px; font-size: 16px; border-radius: 14px; }
+
+.home-or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--pass-cream-45);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  margin: 6px 0;
+}
+.home-or::before, .home-or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--pass-cream-10);
+}
+
+.home-sms { margin-top: 0; }
+
+.home-found {
+  padding: 16px 14px;
+  background: rgba(240,236,228,0.03);
+  border: 1px solid var(--pass-cream-10);
+  border-radius: 14px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.home-found-seal { color: var(--pass-gold); flex-shrink: 0; padding-top: 2px; }
+.home-found-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--pass-cream);
+  letter-spacing: -0.01em;
+}
+.home-found-body {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--pass-cream-70);
+  margin-top: 3px;
+}
+.home-found-body strong { color: var(--pass-cream); font-weight: 600; }
+
+.home-legal { margin-top: 4px; }
+
+/* Live availability dot near the SMS CTA */
+.home-availability {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--pass-cream-45);
+  letter-spacing: 0;
+  margin-top: 2px;
+}
+.home-availability-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #3ecf8e;
+  box-shadow: 0 0 0 2px rgba(62,207,142,0.18), 0 0 6px rgba(62,207,142,0.55);
+  animation: home-availability-pulse 2.4s ease-in-out infinite;
+}
+@keyframes home-availability-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .55; }
+}
+
+/* Recovery total — single quiet credibility line */
+.home-recovery {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--pass-cream-10);
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--pass-cream-70);
+  letter-spacing: -0.005em;
+}
+.home-recovery strong {
+  color: var(--pass-gold);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin-right: 4px;
+}
+
+/* ── Utility ──────────────────────────────────────────────────────────────── */
+.pass-root a { color: inherit; }

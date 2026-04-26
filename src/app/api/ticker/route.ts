@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase';
 
-export const revalidate = 300; // ISR: refresh every 5 minutes
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const db = getServiceClient();

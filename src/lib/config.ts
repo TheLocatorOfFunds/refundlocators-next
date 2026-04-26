@@ -1,7 +1,12 @@
+// NEXT_PUBLIC_* vars are inlined at build time. Vercel preview deploys
+// don't always have them set, so we hard-code public fallbacks (these
+// URLs are already exposed in the client bundle — not secrets).
+const SUPABASE_FN = 'https://rcfaashkfpurkvtmsmeb.supabase.co/functions/v1';
+
 export const CONFIG = {
-  LAUREN_URL: process.env.NEXT_PUBLIC_LAUREN_URL!,
-  SUBMIT_LEAD_URL: process.env.NEXT_PUBLIC_SUBMIT_LEAD_URL!,
-  GET_CASE_URL: process.env.NEXT_PUBLIC_GET_CASE_URL!,
+  LAUREN_URL:      process.env.NEXT_PUBLIC_LAUREN_URL      || `${SUPABASE_FN}/lauren-chat`,
+  SUBMIT_LEAD_URL: process.env.NEXT_PUBLIC_SUBMIT_LEAD_URL || `${SUPABASE_FN}/submit-lead`,
+  GET_CASE_URL:    process.env.NEXT_PUBLIC_GET_CASE_URL    || `${SUPABASE_FN}/get-case`,
   NATHAN_PHONE: '+15135162306',
   NATHAN_PHONE_DISPLAY: '(513) 516-2306',
 };

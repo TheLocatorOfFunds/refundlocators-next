@@ -58,13 +58,13 @@ export default function HeroSection() {
             {...fadeUp(0.18)}
             style={{ display: 'block' }}
           >
-            You lost a home in Ohio.
+            Your name might be on a check
           </motion.span>
           <motion.span
             {...fadeUp(0.30)}
             style={{ display: 'block', color: 'var(--gold)' }}
           >
-            The bank may owe you money.
+            at the county courthouse.
           </motion.span>
         </motion.h1>
 
@@ -76,7 +76,7 @@ export default function HeroSection() {
             maxWidth: 500, margin: '0 auto 36px', lineHeight: 1.65, textAlign: 'center',
           }}
         >
-          Type the property address. In 10 seconds we&apos;ll tell you if there&apos;s surplus waiting — and roughly how much.
+          When a home sells at foreclosure for more than the debt, the leftover money is yours by Ohio law. Most people never hear about it. Type the address — we&apos;ll tell you in 10 seconds.
         </motion.p>
 
         {/* Search box */}
