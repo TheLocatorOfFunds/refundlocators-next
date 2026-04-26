@@ -60,6 +60,9 @@ export default function LaurenSheet({
   // wedge the send button.
   const inFlightRef = useRef(false);
   const sessionRef = useRef<string | null>(null);
+  // Mirror messages into a ref so async send() can read the latest list
+  // without relying on closures that capture stale state.
+  const messagesRef = useRef<ChatMsg[]>([]);
 
   // ── Mobile-keyboard + body-scroll lock ───────────────────────────────
   // We do two different things depending on whether we're on a phone or
@@ -177,6 +180,7 @@ export default function LaurenSheet({
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    messagesRef.current = messages;
     if (endRef.current) {
       endRef.current.scrollTop = endRef.current.scrollHeight;
     }
@@ -192,14 +196,11 @@ export default function LaurenSheet({
     setThinking(true);
 
     const userMsg: ChatMsg = { role: 'user', content: text };
-    // Snapshot the message list synchronously inside the updater so we
-    // don't depend on closed-over state. The full transcript we send to
-    // the API is composed from `prev` at the moment of update.
-    let snapshot: ChatMsg[] = [];
-    setMessages(prev => {
-      snapshot = [...prev, userMsg];
-      return snapshot;
-    });
+    // Snapshot synchronously from the ref (always current), then push it
+    // into both React state and the API request body.
+    const snapshot: ChatMsg[] = [...messagesRef.current, userMsg];
+    messagesRef.current = snapshot;
+    setMessages(snapshot);
     setInput('');
 
     // 25 s hard ceiling — abort the request rather than leaving the user
@@ -208,7 +209,9 @@ export default function LaurenSheet({
     const timeoutId = setTimeout(() => controller.abort(), 25_000);
 
     const finishWith = (replyContent: string) => {
-      setMessages(prev => [...prev, { role: 'assistant', content: replyContent }]);
+      const next = [...messagesRef.current, { role: 'assistant' as const, content: replyContent }];
+      messagesRef.current = next;
+      setMessages(next);
     };
 
     try {
