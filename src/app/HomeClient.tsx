@@ -124,17 +124,29 @@ export default function HomeClient() {
     <div className="pass-root home-root" data-bg="flat" data-gold="full">
       <section className="pass-hero home-hero" data-loaded="1">
         <div className="pass-center home-center">
-          {/* Brand block — gold radar mark + wordmark + tagline */}
+          {/* Brand block — Google-Maps-style pin with R, wordmark + tagline */}
           <div className="home-brand">
-            <div className="home-brand-mark" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0a0a0a" strokeWidth="1.8" strokeLinecap="round">
-                <circle cx="12" cy="12" r="9.5" strokeWidth="1" strokeDasharray="2.2 2.2" opacity="0.45" />
-                <circle cx="12" cy="12" r="5.5" strokeWidth="1.8" />
-                <circle cx="12" cy="12" r="1.8" fill="#0a0a0a" stroke="none" />
-                <line x1="12" y1="0.5" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23.5" />
-                <line x1="0.5" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23.5" y2="12" />
+            <div className="home-brand-pin" aria-hidden="true">
+              <svg viewBox="0 0 32 44" width="36" height="50" xmlns="http://www.w3.org/2000/svg">
+                {/* Pin body: classic teardrop */}
+                <path
+                  d="M16 0C7.16 0 0 7.16 0 16c0 11.2 14.24 26.16 14.85 26.79a1.6 1.6 0 0 0 2.3 0C17.76 42.16 32 27.2 32 16 32 7.16 24.84 0 16 0z"
+                  fill="var(--pass-gold)"
+                />
+                {/* Inner dark circle */}
+                <circle cx="16" cy="16" r="9" fill="#0a0a0a" />
+                {/* Letter R */}
+                <text
+                  x="16" y="20.4"
+                  textAnchor="middle"
+                  fontFamily="-apple-system, 'SF Pro Display', system-ui, sans-serif"
+                  fontSize="13"
+                  fontWeight="700"
+                  fill="var(--pass-gold)"
+                  letterSpacing="-0.02em"
+                >R</text>
+                {/* Subtle highlight for dimension */}
+                <ellipse cx="11" cy="9" rx="4" ry="2.2" fill="rgba(255,255,255,0.18)" />
               </svg>
             </div>
             <div className="home-brand-name">RefundLocators</div>
@@ -225,10 +237,8 @@ export default function HomeClient() {
                 Meet Lauren · your AI surplus-funds agent
               </div>
               <div className="home-lauren-blurb">
-                Trained on every Ohio foreclosure case in the public record.
-                She knows surplus law, the Revised Code, every county&apos;s
-                procedure, and every scenario you might walk into. Free,
-                instant, and private.
+                Trained on every Ohio foreclosure case, the Revised Code, and
+                every county&apos;s procedure. Free, instant, and private.
               </div>
             </div>
           </div>
@@ -242,16 +252,11 @@ export default function HomeClient() {
             Chat with Lauren now
           </button>
 
-          <div className="home-trust">
-            <span className="home-availability-dot" aria-hidden="true" />
-            <span>Usually replies in under 4 hours</span>
-            {recoveryTotal !== null && (
-              <>
-                <span className="home-trust-sep" aria-hidden="true">·</span>
-                <span><strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to Ohio homeowners</span>
-              </>
-            )}
-          </div>
+          {recoveryTotal !== null && (
+            <div className="home-trust">
+              <strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to Ohio homeowners
+            </div>
+          )}
 
           <div className="pass-legal home-legal">
             FundLocators LLC · Licensed Ohio attorney files · 25% of recovery · $0 upfront
