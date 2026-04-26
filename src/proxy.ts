@@ -15,8 +15,9 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  // Protect /api/admin/* routes
-  if (pathname.startsWith('/api/admin')) {
+  // Protect /api/admin/* routes — except /api/admin/auth itself, which IS
+  // the login endpoint. Without this exception, no one could ever log in.
+  if (pathname.startsWith('/api/admin') && pathname !== '/api/admin/auth') {
     const token = req.cookies.get('admin_token')?.value;
     const expected = process.env.ADMIN_SECRET;
     if (!expected || token !== expected) {
