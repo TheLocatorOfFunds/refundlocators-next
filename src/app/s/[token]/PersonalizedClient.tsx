@@ -153,6 +153,33 @@ function CountUp({
   return <span>{sign}{prefix}{shown.toLocaleString('en-US')}</span>;
 }
 
+// ── Property photo (Street View) ────────────────────────────────────────────
+
+function PropertyPhoto({ address }: { address: string }) {
+  const [state, setState] = useState<'loading' | 'ok' | 'fail'>('loading');
+  const src = `/api/streetview?address=${encodeURIComponent(address)}&w=640&h=400`;
+  return (
+    <div
+      className="pass-photo"
+      data-state={state}
+      // Reserve space immediately so the page doesn't reflow when the
+      // image loads (or doesn't).
+      style={{ display: state === 'fail' ? 'none' : undefined }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt=""
+        onLoad={() => setState('ok')}
+        onError={() => setState('fail')}
+        loading="eager"
+        decoding="async"
+      />
+      <div className="pass-photo-shade" aria-hidden="true" />
+    </div>
+  );
+}
+
 // ── Pass hero (first screen) ─────────────────────────────────────────────────
 
 function PassHero({
@@ -204,6 +231,14 @@ function PassHero({
         <img src="/s-assets/logo-mark.svg" alt="" width={20} height={20} />
         <span className="pass-top-domain">refundlocators.com</span>
       </header>
+
+      {/* Property photo — Google Street View, served via /api/streetview.
+          If the API key isn't set or no imagery exists for the address,
+          the <img> 404s and we just hide it gracefully. */}
+      <PropertyPhoto address={token.city
+        ? `${token.propertyAddress}, ${token.city}, OH ${token.zip || ''}`.trim()
+        : `${token.propertyAddress}, ${token.county} County, OH`}
+      />
 
       <div className="pass-recipient">
         {fullName && <div className="pass-recipient-name">{fullName}</div>}
