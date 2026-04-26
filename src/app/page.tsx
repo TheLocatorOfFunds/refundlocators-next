@@ -12,6 +12,7 @@
 
 import HomeClient from './HomeClient';
 import './s/[token]/pass.css';
+import './s/[token]/lauren-ai.css';
 
 export default function Home() {
   return <HomeClient />;

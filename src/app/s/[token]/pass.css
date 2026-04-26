@@ -976,6 +976,73 @@
   color: var(--pass-cream-20);
 }
 
+/* ── Lauren pitch (homepage) ─────────────────────────────────────────────── */
+.home-lauren-pitch {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(201, 162, 74, 0.05);
+  border: 1px solid rgba(201, 162, 74, 0.18);
+  border-radius: 14px;
+}
+.home-lauren-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--pass-gold);
+  box-shadow: 0 0 0 1px rgba(201, 162, 74, 0.18) inset;
+  flex-shrink: 0;
+}
+.home-lauren-copy { min-width: 0; }
+.home-lauren-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pass-gold);
+  letter-spacing: -0.005em;
+  margin-bottom: 4px;
+}
+.home-lauren-blurb {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--pass-cream-70);
+  letter-spacing: 0;
+}
+
+/* Primary-looking secondary — Lauren is the most desirable next step */
+.home-lauren-cta {
+  height: 52px;
+  border: 1px solid rgba(201, 162, 74, 0.35);
+  background: rgba(201, 162, 74, 0.08);
+  color: var(--pass-cream);
+  font-weight: 600;
+  gap: 10px;
+}
+.home-lauren-cta:hover {
+  border-color: var(--pass-gold);
+  background: rgba(201, 162, 74, 0.14);
+}
+.home-lauren-cta-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #3ecf8e;
+  box-shadow: 0 0 0 2px rgba(62,207,142,0.20), 0 0 8px rgba(62,207,142,0.55);
+  animation: home-availability-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* Tiny human-fallback line under legal — always available, never primary */
+.home-human-fallback {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--pass-cream-45);
+}
+.home-human-fallback a {
+  color: var(--pass-gold);
+  text-decoration: none;
+  font-weight: 500;
+}
+
 /* Desktop polish — fit on one screen, prominent brand, glassy card frame */
 @media (min-width: 720px) {
   .home-hero {

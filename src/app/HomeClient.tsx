@@ -12,9 +12,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { SearchResult } from '@/lib/supabase';
-
-const PHONE_DISPLAY = '(513) 516-2306';
-const PHONE_SMS = '+15135162306';
+import LaurenSheet from '@/components/LaurenSheet';
 
 // Format a recovery total as "$2.1M" / "$425k" / "$8,420"
 function fmtRecoveryTotal(n: number): string {
@@ -32,6 +30,7 @@ export default function HomeClient() {
   const [error, setError] = useState('');
   const [result, setResult] = useState<SearchResult | null>(null);
   const [recoveryTotal, setRecoveryTotal] = useState<number | null>(null);
+  const [laurenOpen, setLaurenOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Fetch real recovery total from /api/ticker — quietly drop if it fails or is 0
@@ -73,14 +72,6 @@ export default function HomeClient() {
       setBusy(false);
     }
   };
-
-  // SMS deep-link with the address pre-filled, so Nathan's incoming SMS
-  // already has context — no "who is this?" ping-pong.
-  const smsBody = encodeURIComponent(
-    address.trim()
-      ? `Hi Nathan — I lost a home in Ohio at ${address.trim()}. Was anything left over?`
-      : `Hi Nathan — I lost a home in Ohio. Can you check if I'm owed surplus funds?`
-  );
 
   // Result tile copy — keep it factual, never overpromise.
   const resultTile = (() => {
@@ -219,12 +210,37 @@ export default function HomeClient() {
 
           <div className="home-or">or</div>
 
-          <a
-            className="pass-cta-secondary home-sms"
-            href={`sms:${PHONE_SMS}?&body=${smsBody}`}
+          {/* Lauren pitch — explain who she is in one tight beat, then the CTA */}
+          <div className="home-lauren-pitch">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="home-lauren-avatar"
+              src="/s-assets/lauren-cropped.png"
+              alt="Lauren"
+              width={48}
+              height={48}
+            />
+            <div className="home-lauren-copy">
+              <div className="home-lauren-name">
+                Meet Lauren · your AI surplus-funds agent
+              </div>
+              <div className="home-lauren-blurb">
+                Trained on every Ohio foreclosure case in the public record.
+                She knows surplus law, the Revised Code, every county&apos;s
+                procedure, and every scenario you might walk into. Free,
+                instant, and private.
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="pass-cta-secondary home-lauren-cta"
+            onClick={() => setLaurenOpen(true)}
           >
-            Text Nathan · {PHONE_DISPLAY}
-          </a>
+            <span className="home-lauren-cta-dot" aria-hidden="true" />
+            Chat with Lauren now
+          </button>
 
           <div className="home-trust">
             <span className="home-availability-dot" aria-hidden="true" />
@@ -239,9 +255,15 @@ export default function HomeClient() {
 
           <div className="pass-legal home-legal">
             FundLocators LLC · Licensed Ohio attorney files · 25% of recovery · $0 upfront
+            <br />
+            <span className="home-human-fallback">
+              Prefer a human? Text Nathan · <a href="sms:+15135162306">(513) 516-2306</a>
+            </span>
           </div>
         </div>
       </section>
+
+      <LaurenSheet open={laurenOpen} onClose={() => setLaurenOpen(false)} />
     </div>
   );
 }
