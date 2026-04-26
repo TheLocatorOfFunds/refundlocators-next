@@ -301,10 +301,6 @@ export default function HomeClient() {
 
           <div className="pass-legal home-legal">
             FundLocators LLC · Licensed Ohio attorney files · 25% of recovery · $0 upfront
-            <br />
-            <span className="home-human-fallback">
-              Prefer a human? Text Nathan · <a href="sms:+15135162306">(513) 516-2306</a>
-            </span>
           </div>
         </div>
       </section>
