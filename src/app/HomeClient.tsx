@@ -125,7 +125,7 @@ export default function HomeClient() {
 
     if (result.status === 'needs_verification') {
       return {
-        title: "Close — let's narrow it down.",
+        title: "Possible match — let's confirm yours.",
         body: (
           <>
             The address turned up partial matches in Ohio court records. Lauren
