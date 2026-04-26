@@ -900,19 +900,18 @@
 
 /* ── Homepage salvage ─────────────────────────────────────────────────────── */
 .home-root {
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;          /* never scrolls — content is sized to fit */
+  min-height: 100vh;
+  min-height: 100svh;
+  /* Mobile: scroll naturally. Desktop overrides further down. */
 }
 
-/* Mobile: full-bleed, slim padding, no top header */
+/* Mobile: full-bleed, comfortable breathing room, scroll allowed */
 .home-hero {
-  padding: 16px 18px;
-  height: 100vh;
-  height: 100svh;
-  min-height: 0;
+  padding: 32px 20px 40px;
+  min-height: 100vh;
+  min-height: 100svh;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 /* The actual content column — phone-width, centered on every viewport. */
@@ -920,9 +919,16 @@
   width: 100%;
   max-width: 440px;
   margin: 0 auto;
-  gap: 12px;
-  padding: 4px 0 8px;
+  gap: 18px;
+  padding: 8px 0 16px;
 }
+
+/* Mobile-specific brand sizing — pin proportional to phone screen */
+.home-brand-pin svg { width: 30px; height: 42px; }
+.home-brand-name { font-size: 22px; }
+.home-brand-tagline { font-size: 10px; letter-spacing: 0.14em; }
+.home-headline { font-size: 26px; line-height: 1.15; }
+.home-sub { font-size: 14px; line-height: 1.5; }
 
 /* ── Brand block ─────────────────────────────────────────────────────────── */
 .home-brand {
@@ -990,8 +996,8 @@
 /* Buckeye ornament — sits inline next to "Ohio" */
 .home-buckeye {
   display: inline-flex;
-  vertical-align: -3px;
-  margin: 0 2px;
+  vertical-align: -5px;
+  margin: 0 3px;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 
@@ -1064,8 +1070,19 @@
 
 /* Desktop polish — fit on one screen, prominent brand, glassy card frame */
 @media (min-width: 720px) {
+  /* Lock to viewport — no scroll on desktop */
+  .home-root {
+    height: 100vh;
+    height: 100svh;
+    min-height: 0;
+    overflow: hidden;
+  }
   .home-hero {
     padding: 20px 24px;
+    height: 100vh;
+    height: 100svh;
+    min-height: 0;
+    justify-content: center;
     /* Single ambient gold glow behind the centered card.
        Two layers: a soft warm focal radial, plus a subtle vignette. */
     background:

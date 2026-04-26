@@ -305,7 +305,7 @@ export default function HomeClient() {
                 {/* Classic Ohio buckeye composition: brown nut with cream eye
                     on the left, palmate green leaf with 5 leaflets fanning up
                     on the right. No sticker outline. */}
-                <svg viewBox="0 0 24 16" width="22" height="15" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 24 16" width="28" height="19" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <radialGradient id="bk-nut-body" cx="38%" cy="32%" r="80%">
                       <stop offset="0%"   stopColor="#9a5530" />
