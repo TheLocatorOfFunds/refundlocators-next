@@ -77,37 +77,56 @@ export default function HomeClient() {
         body: (
           <>
             <strong>{c?.county || 'The county'} County</strong> court records show
-            a sheriff&apos;s sale that may have left a surplus.{rangeStr} Text us
-            and we will pull your case file and walk you through it — free.
+            a sheriff&apos;s sale that may have left a surplus.{rangeStr} Ask
+            Lauren below — she&apos;ll pull your case file and walk you through
+            it.
           </>
         ),
+        cta: 'Ask Lauren about my case',
       };
     }
 
     if (result.status === 'needs_verification') {
       return {
-        title: 'Maybe — we need a closer look.',
+        title: 'Close — let&apos;s narrow it down.',
         body: (
           <>
-            The address turned up partial matches in the public court records.
-            Text us the address as it appeared on the deed and we&apos;ll
-            confirm in minutes.
+            The address turned up partial matches in Ohio court records. Lauren
+            can ask a couple of follow-up questions — sale year, name on the
+            deed, exact street formatting — and pin down your case.
           </>
         ),
+        cta: 'Help me find my case',
       };
     }
 
     return {
-      title: 'No match in the public court records yet.',
+      title: 'No exact match yet — but Lauren can dig deeper.',
       body: (
         <>
-          That could mean the property didn&apos;t go to auction, the sale
-          didn&apos;t generate surplus, or the records haven&apos;t posted yet.
-          Text us the address and we&apos;ll dig deeper by hand.
+          That could mean the property hasn&apos;t posted to public records,
+          the address needs reformatting, or the sale didn&apos;t leave a
+          surplus. Lauren can run a wider search — different spellings,
+          adjacent addresses, your name on prior deeds.
         </>
       ),
+      cta: 'Have Lauren dig deeper',
     };
   })();
+
+  // Build a context-aware seed message Lauren can run with
+  const laurenSeed = result
+    ? (() => {
+        const addr = address.trim();
+        if (result.status === 'confirmed' || result.status === 'likely') {
+          return `I just searched my address — ${addr} — and your system found a match. Can you tell me about my case?`;
+        }
+        if (result.status === 'needs_verification') {
+          return `I searched ${addr} and got partial matches. Can you help me figure out which case is mine?`;
+        }
+        return `I searched ${addr} and got no match. Can you help me search differently — maybe by my name or a previous spelling of the address?`;
+      })()
+    : undefined;
 
   return (
     <div className="pass-root home-root" data-bg="flat" data-gold="full">
@@ -202,9 +221,17 @@ export default function HomeClient() {
                   <path d="M7 11.5l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
-              <div>
+              <div className="home-found-content">
                 <div className="home-found-title">{resultTile.title}</div>
                 <div className="home-found-body">{resultTile.body}</div>
+                <button
+                  type="button"
+                  className="home-found-cta"
+                  onClick={() => setLaurenOpen(true)}
+                >
+                  <span className="home-lauren-cta-dot" aria-hidden="true" />
+                  {resultTile.cta} →
+                </button>
               </div>
             </div>
           )}
@@ -305,7 +332,11 @@ export default function HomeClient() {
         </div>
       </section>
 
-      <LaurenSheet open={laurenOpen} onClose={() => setLaurenOpen(false)} />
+      <LaurenSheet
+        open={laurenOpen}
+        onClose={() => setLaurenOpen(false)}
+        seed={laurenSeed}
+      />
     </div>
   );
 }

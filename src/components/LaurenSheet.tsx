@@ -37,12 +37,16 @@ export interface LaurenTokenContext {
 interface ChatMsg { role: 'user' | 'assistant'; content: string }
 
 export default function LaurenSheet({
-  open, onClose, token,
+  open, onClose, token, seed,
 }: {
   open: boolean;
   onClose: () => void;
   /** When omitted, Lauren acts as a general Ohio surplus-funds expert. */
   token?: LaurenTokenContext;
+  /** Optional first user message — auto-sent right after the greeting.
+      Used by the homepage when an address search comes back inconclusive
+      and we want Lauren to pick up the case in conversation. */
+  seed?: string;
 }) {
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState('');
@@ -78,6 +82,11 @@ export default function LaurenSheet({
     if (open && messages.length === 0) {
       setMessages([{ role: 'assistant', content: greeting }]);
       setTimeout(() => inputRef.current?.focus(), 350);
+      // If a seed message is supplied, send it on the user's behalf so
+      // Lauren picks up the conversation immediately with full context.
+      if (seed && seed.trim()) {
+        setTimeout(() => { void send(seed); }, 600);
+      }
     }
     if (!open) {
       setMessages([]);

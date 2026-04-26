@@ -1290,6 +1290,28 @@
   margin-top: 3px;
 }
 .home-found-body strong { color: var(--pass-cream); font-weight: 600; }
+.home-found-content { flex: 1; min-width: 0; }
+.home-found-cta {
+  appearance: none;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-family: var(--pass-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pass-cream);
+  background: rgba(201, 162, 74, 0.12);
+  border: 1px solid rgba(201, 162, 74, 0.45);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.home-found-cta:hover {
+  background: rgba(201, 162, 74, 0.20);
+  border-color: var(--pass-gold);
+}
 
 .home-legal { margin-top: 4px; }
 
