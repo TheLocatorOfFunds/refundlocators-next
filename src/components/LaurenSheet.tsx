@@ -55,6 +55,11 @@ export default function LaurenSheet({
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  // Ref-based concurrency lock — survives stale closures the way the
+  // `thinking` state alone doesn't, so a hung request can't permanently
+  // wedge the send button.
+  const inFlightRef = useRef(false);
+  const sessionRef = useRef<string | null>(null);
 
   // ── Mobile-keyboard + body-scroll lock ───────────────────────────────
   // We do two different things depending on whether we're on a phone or
@@ -165,6 +170,9 @@ export default function LaurenSheet({
       setInput('');
       setThinking(false);
       setSessionId(null);
+      // Reset the in-flight lock + session ref so a re-open starts clean.
+      inFlightRef.current = false;
+      sessionRef.current = null;
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -176,38 +184,66 @@ export default function LaurenSheet({
 
   const send = async (overrideText?: string) => {
     const text = (overrideText ?? input).trim();
-    if (!text || thinking) return;
+    // Use the ref (not state) for the lock — refs see writes immediately
+    // across closures, state doesn't until the next render.
+    if (!text || inFlightRef.current) return;
+
+    inFlightRef.current = true;
+    setThinking(true);
 
     const userMsg: ChatMsg = { role: 'user', content: text };
-    const next = [...messages, userMsg];
-    setMessages(next);
+    // Snapshot the message list synchronously inside the updater so we
+    // don't depend on closed-over state. The full transcript we send to
+    // the API is composed from `prev` at the moment of update.
+    let snapshot: ChatMsg[] = [];
+    setMessages(prev => {
+      snapshot = [...prev, userMsg];
+      return snapshot;
+    });
     setInput('');
-    setThinking(true);
+
+    // 25 s hard ceiling — abort the request rather than leaving the user
+    // staring at a dim send button forever.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25_000);
+
+    const finishWith = (replyContent: string) => {
+      setMessages(prev => [...prev, { role: 'assistant', content: replyContent }]);
+    };
 
     try {
       const res = await fetch(CONFIG.LAUREN_URL, {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: next,
-          session_id: sessionId,
+          messages: snapshot,
+          session_id: sessionRef.current,
           visitor_id: getVisitorId(),
           ...(personalizationContext ? { personalization_context: personalizationContext } : {}),
         }),
       });
-      const data = await res.json();
-      if (data.session_id) setSessionId(data.session_id);
-      const reply = (data.reply || '').trim()
-        || `Sorry — I'm having a hiccup on my end. You can text our team at (513) 516-2306 and we'll get right back to you.`;
-      setMessages([...next, { role: 'assistant', content: reply }]);
-    } catch {
-      setMessages([...next, {
-        role: 'assistant',
-        content: `Sorry — I'm having a hiccup on my end. You can text our team at (513) 516-2306 and we'll get right back to you.`,
-      }]);
+      const data = await res.json().catch(() => ({}));
+      if (data && data.session_id) {
+        sessionRef.current = data.session_id;
+        setSessionId(data.session_id);
+      }
+      const reply = ((data && typeof data.reply === 'string') ? data.reply : '').trim()
+        || `Sorry — I had trouble with that. You can text our team at (513) 516-2306 and we'll get right back to you.`;
+      finishWith(reply);
+    } catch (err) {
+      const aborted = (err as Error)?.name === 'AbortError';
+      finishWith(
+        aborted
+          ? `That took too long on my end. Try once more, or text our team at (513) 516-2306.`
+          : `Sorry — I'm having a hiccup on my end. You can text our team at (513) 516-2306 and we'll get right back to you.`
+      );
     } finally {
+      clearTimeout(timeoutId);
+      inFlightRef.current = false;
       setThinking(false);
-      setTimeout(() => inputRef.current?.focus(), 50);
+      // Re-focus only when we still have the input mounted.
+      requestAnimationFrame(() => inputRef.current?.focus());
     }
   };
 
@@ -296,11 +332,13 @@ export default function LaurenSheet({
             ref={inputRef}
             className="la-input"
             type="text"
-            placeholder="Ask Lauren anything…"
+            placeholder={thinking ? 'Lauren is typing…' : 'Ask Lauren anything…'}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={onKeyDown}
-            disabled={thinking}
+            /* Intentionally NOT disabled while thinking — let the user
+               type the next message in parallel. The send button gates
+               actually sending. */
           />
           <button
             type="button"
