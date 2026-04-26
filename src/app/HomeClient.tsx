@@ -139,18 +139,23 @@ export default function HomeClient() {
         </header>
 
         <div className="pass-center home-center">
-          <div className="home-eyebrow">SURPLUS FUND INTELLIGENCE · OHIO</div>
+          <div className="home-eyebrow">SURPLUS FUND INTELLIGENCE · OHIO ONLY</div>
 
           <h1 className="home-headline">
             Lost a home in Ohio?{' '}
             <span className="home-headline-accent">
-              The county may be holding your money.
+              The county may owe you money.
             </span>
           </h1>
 
           <p className="home-sub">
-            Type the former address. We read public court records and tell you
-            in seconds whether there&apos;s surplus waiting — and roughly how much.
+            When an Ohio foreclosure sale brings in more than the mortgage debt,
+            that leftover — the <strong>surplus</strong> — belongs to the
+            former owner by law. We read court records across all 88 Ohio
+            counties, find your case, and help you claim it.
+          </p>
+          <p className="home-sub home-sub-thin">
+            We work Ohio only. If your home was anywhere else, we can&apos;t help — yet.
           </p>
 
           <form onSubmit={handleSearch} className="home-search" noValidate>

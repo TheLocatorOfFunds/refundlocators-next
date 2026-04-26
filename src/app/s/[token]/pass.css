@@ -1009,8 +1009,20 @@
   line-height: 1.55;
   color: var(--pass-cream-70);
   text-align: center;
-  max-width: 320px;
+  max-width: 360px;
   margin: 0 auto;
+}
+.home-sub strong {
+  color: var(--pass-gold);
+  font-weight: 600;
+  font-style: italic;
+}
+.home-sub-thin {
+  margin-top: -4px;
+  font-size: 12.5px;
+  color: var(--pass-cream-45);
+  font-style: italic;
+  max-width: 320px;
 }
 
 .home-search {
