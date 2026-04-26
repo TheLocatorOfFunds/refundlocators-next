@@ -245,45 +245,54 @@ export default function HomeClient() {
             <div className="home-trust">
               <strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to{' '}
               <span className="home-buckeye" aria-hidden="true">
-                <svg viewBox="0 0 16 16" width="14" height="14" xmlns="http://www.w3.org/2000/svg">
-                  {/* Single buckeye leaf — OSU helmet sticker style: pointed
-                      almond shape, slightly serrated edge, deep green. */}
+                {/* Classic Ohio buckeye composition: brown nut with cream eye
+                    on the left, palmate green leaf with 5 leaflets fanning up
+                    on the right. No sticker outline. */}
+                <svg viewBox="0 0 24 16" width="22" height="15" xmlns="http://www.w3.org/2000/svg">
                   <defs>
-                    <linearGradient id="bk-leaf-grad" x1="50%" y1="0%" x2="50%" y2="100%">
-                      <stop offset="0%"   stopColor="#5d8a3a" />
+                    <radialGradient id="bk-nut-body" cx="38%" cy="32%" r="80%">
+                      <stop offset="0%"   stopColor="#9a5530" />
+                      <stop offset="55%"  stopColor="#5e2f19" />
+                      <stop offset="100%" stopColor="#371b0e" />
+                    </radialGradient>
+                    <radialGradient id="bk-nut-eye" cx="48%" cy="40%" r="65%">
+                      <stop offset="0%"   stopColor="#f4e3c1" />
+                      <stop offset="100%" stopColor="#cdae80" />
+                    </radialGradient>
+                    <linearGradient id="bk-leaf-fill" x1="50%" y1="100%" x2="50%" y2="0%">
+                      <stop offset="0%"   stopColor="#1f3e15" />
                       <stop offset="55%"  stopColor="#3d6e2c" />
-                      <stop offset="100%" stopColor="#1f3e15" />
+                      <stop offset="100%" stopColor="#6a9a40" />
                     </linearGradient>
                   </defs>
-                  {/* Leaf body: pointed top, rounded shoulders, narrow base */}
-                  <path
-                    d="M8 0.5
-                       C 9.8 2.5, 11.5 5, 12 8.5
-                       C 12.3 11, 11.2 13.5, 8 15.5
-                       C 4.8 13.5, 3.7 11, 4 8.5
-                       C 4.5 5, 6.2 2.5, 8 0.5 Z"
-                    fill="url(#bk-leaf-grad)"
-                  />
-                  {/* Center vein */}
-                  <path
-                    d="M8 1.5 L 8 14.5"
-                    stroke="rgba(255,255,255,0.28)"
-                    strokeWidth="0.5"
-                    strokeLinecap="round"
-                  />
-                  {/* Side veins */}
-                  <path d="M8 5.5 L 5.5 7"   stroke="rgba(255,255,255,0.18)" strokeWidth="0.4" strokeLinecap="round" />
-                  <path d="M8 5.5 L 10.5 7"  stroke="rgba(255,255,255,0.18)" strokeWidth="0.4" strokeLinecap="round" />
-                  <path d="M8 9 L 5 10.5"    stroke="rgba(255,255,255,0.15)" strokeWidth="0.4" strokeLinecap="round" />
-                  <path d="M8 9 L 11 10.5"   stroke="rgba(255,255,255,0.15)" strokeWidth="0.4" strokeLinecap="round" />
-                  {/* Small highlight at the top for dimension */}
-                  <path
-                    d="M7.5 2.5 C 8.4 3.2, 9 4.2, 9.4 5.4"
-                    stroke="rgba(255,255,255,0.22)"
-                    strokeWidth="0.4"
-                    strokeLinecap="round"
-                    fill="none"
-                  />
+
+                  {/* Nut — lower-left, partially behind the leaf cluster */}
+                  <g transform="translate(5.5 10.2)">
+                    <circle r="4.6" fill="url(#bk-nut-body)" />
+                    <ellipse cx="0.2" cy="1.1" rx="2.7" ry="2.3" fill="url(#bk-nut-eye)" />
+                    {/* highlight */}
+                    <ellipse cx="-2" cy="-2.2" rx="1.5" ry="0.8" fill="rgba(255,255,255,0.22)" />
+                  </g>
+
+                  {/* Leaf cluster — 5 leaflets fanning up from a center point on the right */}
+                  <g transform="translate(15 12)">
+                    {[-75, -37.5, 0, 37.5, 75].map((angle, i) => (
+                      <g key={i} transform={`rotate(${angle})`}>
+                        <path
+                          d="M0 0 C -1 -2, -1 -5, 0 -8 C 1 -5, 1 -2, 0 0 Z"
+                          fill="url(#bk-leaf-fill)"
+                        />
+                        <path
+                          d="M0 -0.5 L 0 -7.4"
+                          stroke="rgba(255,255,255,0.26)"
+                          strokeWidth="0.32"
+                          strokeLinecap="round"
+                        />
+                      </g>
+                    ))}
+                    {/* small dark center node where leaflets meet */}
+                    <circle cx="0" cy="0" r="0.65" fill="#2c5018" />
+                  </g>
                 </svg>
               </span>{' '}
               Ohio homeowners
