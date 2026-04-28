@@ -23,13 +23,16 @@ If you forget this, the live site stays on whatever was last deployed (which cou
 
 ## Fixing the auto-deploy (Nathan does this once, ~3 minutes)
 
-### Step 1 — Make sure the Vercel-for-GitHub app has access to your org
+### Step 1 — Make sure the Vercel-for-GitHub app has access to the account
 
-1. Open https://github.com/organizations/TheLocatorOfFunds/settings/installations
-2. Look for **Vercel** in the list
-3. If not present → install: https://github.com/apps/vercel → click **Install** → select **TheLocatorOfFunds**
-4. If present but limited → click **Configure** → under "Repository access" pick **All repositories** OR explicitly add `refundlocators-next`
-5. **Save**
+`TheLocatorOfFunds` on GitHub is a **personal user account, not an organization**. So app installations live at the user-settings URL, not an org-settings URL.
+
+1. **Sign into GitHub as `TheLocatorOfFunds`** (if you have multiple GitHub identities, switch profile first — `https://github.com/login` → make sure the avatar shows TheLocatorOfFunds in the top-right)
+2. Open https://github.com/settings/installations
+3. Look for **Vercel** in the list
+4. If not present → install: https://github.com/apps/vercel → click **Install** → select **TheLocatorOfFunds** (the user, not an org)
+5. If present but limited → click **Configure** → under "Repository access" pick **All repositories** OR explicitly add `refundlocators-next`
+6. **Save**
 
 ### Step 2 — Connect the project to the repo
 
