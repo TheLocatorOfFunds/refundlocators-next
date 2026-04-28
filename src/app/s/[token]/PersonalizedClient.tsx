@@ -322,7 +322,7 @@ function PassHero({
 // difficulty and explain why the county didn't tell them — the surplus
 // system is intentionally hard to navigate, and many families lose what
 // is rightfully theirs simply because no one told them.
-function WhyWeReachOut({ county }: { county: string }) {
+function WhyWeReachOut({ county, onStartClaim }: { county: string; onStartClaim: () => void }) {
   return (
     <section className="pass-section pass-empathy-section">
       <div className="pass-section-eyebrow">WHY YOU&apos;RE HEARING FROM US</div>
@@ -342,8 +342,11 @@ function WhyWeReachOut({ county }: { county: string }) {
         </p>
         <p className="pass-empathy-close">
           That&apos;s why we read the public court records and reach out directly —
-          to make sure you know, and to make it as easy as one click for you to
-          get it.
+          to make sure you know, and to make it as easy as{' '}
+          <button type="button" className="pass-empathy-link" onClick={onStartClaim}>
+            one click
+          </button>
+          {' '}for you to get it.
         </p>
       </div>
     </section>
@@ -903,7 +906,7 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
         onStartClaim={() => setModalOpen(true)}
         onTalkToLauren={() => setLaurenOpen(true)}
       />
-      <WhyWeReachOut county={token.county} />
+      <WhyWeReachOut county={token.county} onStartClaim={() => setModalOpen(true)} />
       <CaseCard token={token} />
       <FAQ token={token} />
 
