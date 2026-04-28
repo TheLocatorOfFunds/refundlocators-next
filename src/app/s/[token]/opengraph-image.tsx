@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { createClient } from '@supabase/supabase-js';
+import { copyFor, type Relationship } from './copy';
 
 // Per-token OpenGraph image — same design language as the site-wide
 // /opengraph-image, with the lead's name + amount + county dusted in.
@@ -33,22 +34,19 @@ export default async function OGImage({ params }: Props) {
   );
   const { data } = await db
     .from('personalized_links')
-    .select('first_name, last_name, property_address, county, estimated_surplus_low, estimated_surplus_high')
+    .select('first_name, last_name, property_address, county, estimated_surplus_low, estimated_surplus_high, relationship')
     .eq('token', token)
     .single();
 
-  const firstName = (data?.first_name || '').trim();
-  const fullName  = [firstName, (data?.last_name || '').trim()].filter(Boolean).join(' ');
-  const surplus   = data?.estimated_surplus_low ?? data?.estimated_surplus_high ?? null;
+  const surplus = data?.estimated_surplus_low ?? data?.estimated_surplus_high ?? null;
   const surplusFmt = surplus != null ? fmtMoney(surplus) : null;
-  const county    = (data?.county || '').trim();
-  const address   = (data?.property_address || '').trim();
+  const county = (data?.county || '').trim();
+  const address = (data?.property_address || '').trim();
 
   // Street View backdrop. Same idea as the website hero — the photo of
-  // their house, heavily darkened, behind the gold-on-cream text. Per
-  // Nathan 2026-04-28 he wants the photo IN the preview image too.
-  // Falls back to the plain dark background if no address (no fetch
-  // attempted) or if the Maps API can't find imagery.
+  // the property, heavily darkened, behind the gold-on-cream text. The
+  // photo is the same regardless of relationship (it's a deal-level
+  // fact). Falls back to the plain dark background if no address.
   const photoAddress = address && county
     ? `${address}, ${county} County, OH`
     : (address || '');
@@ -56,27 +54,21 @@ export default async function OGImage({ params }: Props) {
     ? `https://refundlocators.com/api/streetview?address=${encodeURIComponent(photoAddress)}&w=640&h=400`
     : null;
 
-  // Eyebrow text — county-specific if we have it, else fall back to the
-  // generic site eyebrow.
-  const eyebrow = county
-    ? `Surplus Fund Intelligence · ${county} County`
-    : 'Surplus Fund Intelligence · Ohio';
-
-  // Two-line headline. White line keeps the original cadence with name
-  // optionally swapped in; gold line surfaces the dollar amount when we
-  // have it (otherwise falls back to the original line so the design
-  // still reads if data is incomplete).
-  const headlineWhite = firstName
-    ? `${firstName}, you lost a home in Ohio.`
-    : 'You lost a home in Ohio.';
-  const headlineGold = surplusFmt
-    ? `${surplusFmt} may be owed to you.`
-    : 'The bank may owe you money.';
-
-  // Subtext line — personalized when we have the address.
-  const subtext = address
-    ? `${address}${county ? ' · ' + county + ' County' : ''}. Held by the Clerk of Courts.`
-    : `Type your address. In 10 seconds we'll tell you if there's surplus waiting — and exactly how much.`;
+  // Pull eyebrow / headline / subtext from the shared copy helper so all
+  // three render surfaces (page, OG image, iMessage title/description)
+  // stay aligned per relationship.
+  const copy = copyFor({
+    firstName: data?.first_name ?? null,
+    lastName: data?.last_name ?? null,
+    propertyAddress: data?.property_address ?? null,
+    county: data?.county ?? null,
+    surplusFmt,
+    relationship: ((data?.relationship as Relationship) || 'homeowner'),
+  });
+  const eyebrow = copy.ogEyebrow;
+  const headlineWhite = copy.headlineWhite;
+  const headlineGold = copy.headlineGold;
+  const subtext = copy.subtext;
 
   return new ImageResponse(
     (
