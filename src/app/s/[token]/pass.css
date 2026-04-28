@@ -358,6 +358,30 @@
   text-align: center;
 }
 
+/* ── Empathy section (between hero and CaseCard) ─────────────────────────── */
+.pass-empathy-section {
+  padding: 56px 24px 40px;
+}
+.pass-empathy-body {
+  max-width: 540px;
+  margin: 0 auto;
+  font-family: var(--pass-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--pass-cream-70);
+}
+.pass-empathy-body p {
+  margin: 0 0 14px;
+}
+.pass-empathy-body p:last-child {
+  margin-bottom: 0;
+}
+.pass-empathy-close {
+  color: var(--pass-cream);
+  font-weight: 500;
+  padding-top: 6px;
+}
+
 /* ── Case card (wallet-pass-back style) ──────────────────────────────────── */
 .pass-case-card {
   background: rgba(240, 236, 228, 0.03);

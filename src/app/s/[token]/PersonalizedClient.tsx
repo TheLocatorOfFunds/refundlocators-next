@@ -263,8 +263,9 @@ function PassHero({
       </div>
 
       <div className="pass-context">
-        Your home was sold at a sheriff&apos;s sale for <strong>more than what you owed</strong>.
-        That extra money belongs to you — held by the {token.county} County Clerk.
+        Your home was recently sold at a sheriff&apos;s sale. We believe it sold for{' '}
+        <strong>more than what you owed</strong> — and that extra money belongs to you,
+        held by the {token.county} County Clerk.
       </div>
 
       <div className="pass-center">
@@ -310,6 +311,41 @@ function PassHero({
         </svg>
       </div>
     </div>
+  );
+}
+
+// ── Why we reach out (empathy + advocacy beat after the hero) ────────────────
+//
+// Per Nathan 2026-04-28: the hero alone reads transactional ("you have
+// money waiting"). For people who just lost their home, that lands cold.
+// This section sits between hero and the case receipt to acknowledge the
+// difficulty and explain why the county didn't tell them — the surplus
+// system is intentionally hard to navigate, and many families lose what
+// is rightfully theirs simply because no one told them.
+function WhyWeReachOut({ county }: { county: string }) {
+  return (
+    <section className="pass-section pass-empathy-section">
+      <div className="pass-section-eyebrow">WHY YOU&apos;RE HEARING FROM US</div>
+      <div className="pass-empathy-body">
+        <p>Losing a home is hard. We know that, and we don&apos;t take it lightly.</p>
+        <p>
+          Here&apos;s what most people aren&apos;t told: when a home sells for more than
+          the debt, the leftover money — the surplus — sits at the {county}
+          {' '}County Clerk&apos;s office. The county is required to send only one
+          certified letter, usually to the foreclosed address the family no
+          longer lives at.
+        </p>
+        <p>
+          If no one claims it within the window, the money quietly stays with the
+          county. Many families lose what&apos;s rightfully theirs simply because they
+          were never told.
+        </p>
+        <p className="pass-empathy-close">
+          That&apos;s why we read the public court records and reach out directly. To make
+          sure you know.
+        </p>
+      </div>
+    </section>
   );
 }
 
@@ -862,6 +898,7 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
         onStartClaim={() => setModalOpen(true)}
         onTalkToLauren={() => setLaurenOpen(true)}
       />
+      <WhyWeReachOut county={token.county} />
       <CaseCard token={token} />
       <FAQ token={token} />
 
