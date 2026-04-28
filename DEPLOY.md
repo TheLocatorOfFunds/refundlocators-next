@@ -1,12 +1,16 @@
 # Deploying refundlocators-next
 
-## The current state (2026-04-28) — ⚠ auto-deploy is BROKEN
+## Current state (2026-04-28, 15:35 EDT) — ✅ auto-deploy WORKING
 
-**`refundlocators-next` is NOT auto-deploying on `git push`.**
+Both `refundlocators-next` AND `ohio-intel` Vercel projects are now connected to their GitHub repos. Pushes to `main` auto-deploy within ~30-60 seconds.
 
-Diagnosis from 2026-04-28: the Vercel project (`prj_hwJjpJj3n1SyVg2SE79HBg23HcAA`, owned by `thelocatoroffunds-projects`) has no Git integration configured. `vercel project inspect` shows no Git section, and `vercel git connect` fails with "make sure you have access" — meaning the Vercel-for-GitHub app needs to be installed/authorized for the `TheLocatorOfFunds` GitHub org. Only Nathan can do that.
+This doc is preserved as a reference in case the integration ever breaks again — see "Fixing the auto-deploy" below for the recovery path.
 
-**Until Nathan reconnects the integration (instructions below), every push by every agent or human needs a manual deploy.**
+## What was wrong (resolved)
+
+Earlier on 2026-04-28, Vercel had no Git integration configured for either project. `vercel project inspect` showed no Git section, and `vercel git connect` failed because the Vercel-for-GitHub app wasn't installed on the `TheLocatorOfFunds` GitHub user account. Pushes silently sat on `main` while production stayed on whatever was last `vercel --prod`-ed manually.
+
+**Resolution:** Nathan installed the Vercel GitHub App on `TheLocatorOfFunds` and clicked "Connect Git Repository" in each project's Vercel settings. Done in ~5 min.
 
 ## Manual deploy after every push (the workaround)
 
