@@ -153,29 +153,31 @@ function CountUp({
   return <span>{sign}{prefix}{shown.toLocaleString('en-US')}</span>;
 }
 
-// ── Property photo (Street View) ────────────────────────────────────────────
-
-function PropertyPhoto({ address }: { address: string }) {
-  const [state, setState] = useState<'loading' | 'ok' | 'fail'>('loading');
+// ── Hero background (Google Street View of the property) ───────────────────
+//
+// Per Nathan's call 2026-04-28: instead of a small thumbnail of the property,
+// fill the entire hero with the Street View image — heavily blurred and
+// darkened — so the lead's name + amount + CTAs sit on top of a photo of
+// their actual house. Atmospheric, not literal: the eye recognizes "my place"
+// without losing readability of the gold-on-cream type.
+//
+// Falls back silently if the Maps API key isn't set or there's no imagery
+// (the route returns 404 and we just keep the dark background).
+function HeroBackground({ address }: { address: string }) {
+  const [ok, setOk] = useState(false);
   const src = `/api/streetview?address=${encodeURIComponent(address)}&w=640&h=400`;
   return (
-    <div
-      className="pass-photo"
-      data-state={state}
-      // Reserve space immediately so the page doesn't reflow when the
-      // image loads (or doesn't).
-      style={{ display: state === 'fail' ? 'none' : undefined }}
-    >
+    <div className="pass-hero-bg" data-state={ok ? 'ok' : 'pending'} aria-hidden="true">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt=""
-        onLoad={() => setState('ok')}
-        onError={() => setState('fail')}
+        onLoad={() => setOk(true)}
+        onError={() => setOk(false)}
         loading="eager"
         decoding="async"
       />
-      <div className="pass-photo-shade" aria-hidden="true" />
+      <div className="pass-hero-bg-overlay" />
     </div>
   );
 }
@@ -224,21 +226,21 @@ function PassHero({
     ? `${token.propertyAddress} · ${token.city}, OH ${token.zip || ''}`.trim()
     : `${token.propertyAddress} · ${token.county} County OH`;
 
+  const photoAddress = token.city
+    ? `${token.propertyAddress}, ${token.city}, OH ${token.zip || ''}`.trim()
+    : `${token.propertyAddress}, ${token.county} County, OH`;
+
   return (
     <div className="pass-hero" data-loaded={loaded ? '1' : '0'}>
+      {/* Street View of the property, blurred + darkened. Sits behind the
+          rest of the hero. Falls back to plain background if no imagery. */}
+      <HeroBackground address={photoAddress} />
+
       <header className="pass-top">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/s-assets/logo-mark.svg" alt="" width={20} height={20} />
         <span className="pass-top-domain">refundlocators.com</span>
       </header>
-
-      {/* Property photo — Google Street View, served via /api/streetview.
-          If the API key isn't set or no imagery exists for the address,
-          the <img> 404s and we just hide it gracefully. */}
-      <PropertyPhoto address={token.city
-        ? `${token.propertyAddress}, ${token.city}, OH ${token.zip || ''}`.trim()
-        : `${token.propertyAddress}, ${token.county} County, OH`}
-      />
 
       <div className="pass-recipient">
         {fullName && <div className="pass-recipient-name">{fullName}</div>}

@@ -1419,18 +1419,59 @@
 /* ── Utility ──────────────────────────────────────────────────────────────── */
 .pass-root a { color: inherit; }
 
+/* ── Hero background — Street View of the lead's property ─────────────────────
+   Fills the entire .pass-hero, blurred + darkened so the gold-on-cream type
+   above stays legible. Image fades in on load (no flash); on error or when
+   the Maps API key is unset we just keep the existing dark background.
+   Per Nathan's call 2026-04-28. */
+.pass-hero { isolation: isolate; }
+.pass-hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+}
+.pass-hero-bg[data-state="ok"] { opacity: 1; }
+.pass-hero-bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Slight upscale + blur so the photo reads as atmosphere, not detail.
+     The lead recognizes their place without the type fighting for focus. */
+  transform: scale(1.06);
+  filter: blur(3px) brightness(0.42) saturate(0.85);
+}
+.pass-hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(10, 10, 10, 0.45) 0%,
+      rgba(10, 10, 10, 0.62) 55%,
+      rgba(10, 10, 10, 0.92) 100%),
+    radial-gradient(ellipse at 50% 40%, transparent 0%, rgba(0, 0, 0, 0.45) 100%);
+}
+/* Make sure the content paints above the background sibling. Children of
+   .pass-hero are static by default — give them positioning + z-index. */
+.pass-hero > :not(.pass-hero-bg) { position: relative; z-index: 1; }
+
 /* ── Lead page (/s/[token]) — desktop tighten ─────────────────────────────────
-   The pass-* layout was designed mobile-first (full-width buttons, full-width
-   receipt card). On desktop those stretched to the viewport edges, which felt
-   awkward and broke the wallet-pass aesthetic. Constrain to a centered ~640px
-   column so buttons / receipt / FAQ all line up and feel like one document.
+   pass-* was mobile-first, so on desktop the CTAs and receipt stretched
+   edge-to-edge. Constrain content to a centered ~640px column. The hero
+   itself stays full-width so the Street View background can span the
+   viewport — only the inner children are constrained.
    Per Nathan's call 2026-04-28. */
 @media (min-width: 720px) {
-  .pass-hero {
+  .pass-hero > :not(.pass-hero-bg) {
     max-width: 640px;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 48px;
+    width: 100%;
   }
   .pass-section {
     max-width: 640px;
