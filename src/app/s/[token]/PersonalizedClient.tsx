@@ -278,7 +278,9 @@ function PassHero({
           </div>
           {!token.confirmed && (
             <div className={`pass-range ${rangeLoaded ? 'in' : ''}`}>
-              Range {fmtK(token.estimatedLow)}–{fmtK(token.estimatedHigh)} · public court records
+              {token.estimatedLow === token.estimatedHigh
+                ? `Estimated ${fmtK(token.estimatedLow)} · public court records`
+                : `Range ${fmtK(token.estimatedLow)}–${fmtK(token.estimatedHigh)} · public court records`}
             </div>
           )}
           {token.confirmed && (
@@ -369,7 +371,9 @@ function CaseCard({ token }: { token: TokenView }) {
       token.confirmed ? 'Confirmed surplus' : 'Estimated surplus',
       token.confirmed
         ? fmtDollar(token.confirmedAmount ?? 0)
-        : `${fmtK(token.estimatedLow)}–${fmtK(token.estimatedHigh)}`,
+        : token.estimatedLow === token.estimatedHigh
+          ? fmtK(token.estimatedLow)
+          : `${fmtK(token.estimatedLow)}–${fmtK(token.estimatedHigh)}`,
       token.confirmed ? { num: token.confirmedAmount ?? 0, sign: '' } : null,
     ],
   ];
