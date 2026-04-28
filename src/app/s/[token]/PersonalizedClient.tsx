@@ -165,11 +165,23 @@ function CountUp({
 // (the route returns 404 and we just keep the dark background).
 function HeroBackground({ address }: { address: string }) {
   const [ok, setOk] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   const src = `/api/streetview?address=${encodeURIComponent(address)}&w=640&h=400`;
+
+  // If the browser cached the image and it's already complete by the time
+  // React attaches the onLoad listener, the event never fires and the
+  // background stays at opacity 0 forever. Re-check on mount via the ref.
+  useEffect(() => {
+    if (imgRef.current?.complete && (imgRef.current.naturalWidth || 0) > 0) {
+      setOk(true);
+    }
+  }, []);
+
   return (
     <div className="pass-hero-bg" data-state={ok ? 'ok' : 'pending'} aria-hidden="true">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
+        ref={imgRef}
         src={src}
         alt=""
         onLoad={() => setOk(true)}
