@@ -3,8 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Protect /admin/* routes (except /admin/login itself)
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+  // Protect /admin/* routes (except /admin/login itself, and except
+  // /admin/lauren which is a public redirect to DCC's Lauren Control
+  // Center — DCC has its own auth, no point gating the bounce-page).
+  const ADMIN_PUBLIC = new Set(['/admin/login', '/admin/lauren']);
+  if (pathname.startsWith('/admin') && !ADMIN_PUBLIC.has(pathname)) {
     const token = req.cookies.get('admin_token')?.value;
     const expected = process.env.ADMIN_SECRET;
     if (!expected || token !== expected) {
