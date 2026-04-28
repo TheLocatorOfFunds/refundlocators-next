@@ -250,13 +250,18 @@ function PassHero({
 
       <header className="pass-top">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/s-assets/logo-mark.svg" alt="" width={20} height={20} />
+        <img src="/s-assets/logo-mark.svg" alt="" width={32} height={32} />
         <span className="pass-top-domain">refundlocators.com</span>
       </header>
 
       <div className="pass-recipient">
         {fullName && <div className="pass-recipient-name">{fullName}</div>}
         <div className="pass-recipient-addr">{addressLine}</div>
+      </div>
+
+      <div className="pass-context">
+        Your home was sold at a sheriff&apos;s sale for <strong>more than what you owed</strong>.
+        That extra money belongs to you — held by the {token.county} County Clerk.
       </div>
 
       <div className="pass-center">

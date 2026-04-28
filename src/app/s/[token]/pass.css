@@ -70,18 +70,19 @@
 .pass-top {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
   /* Push to the left edge, leaving dynamic island clear in the center */
   margin-bottom: 48px;
 }
-.pass-top img { display: block; opacity: 0.85; }
+.pass-top img { display: block; opacity: 0.95; }
 .pass-top-domain {
   font-family: var(--pass-mono);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.04em;
-  color: var(--pass-cream-45);
+  color: var(--pass-cream-70);
   text-transform: lowercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 /* ── Property photo (Street View) ─────────────────────────────────────── */
@@ -129,7 +130,10 @@
   );
 }
 
-/* Recipient block — name (bold) over property address (quieter) */
+/* Recipient block — name (bold) over property address (quieter).
+   Bumped sizes per Nathan 2026-04-28 — felt small relative to the
+   viewport and was getting lost against the photo. Text-shadow keeps
+   it crisp over varied photo content. */
 .pass-recipient {
   text-align: center;
   flex-shrink: 0;
@@ -138,18 +142,39 @@
 }
 .pass-recipient-name {
   font-family: var(--pass-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  color: var(--pass-cream-70);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--pass-cream);
   text-transform: uppercase;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 .pass-recipient-addr {
   font-family: var(--pass-sans);
-  font-size: 13px;
-  color: var(--pass-cream-45);
-  margin-top: 6px;
+  font-size: 16px;
+  color: var(--pass-cream-70);
+  margin-top: 8px;
   letter-spacing: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+/* Eyebrow above the dollar amount — tells the lead WHAT this money is
+   and HOW it came to exist. Per Nathan 2026-04-28: without this the
+   page reads like a vague promise of cash and feels off. */
+.pass-context {
+  text-align: center;
+  flex-shrink: 0;
+  margin: 0 auto 14px;
+  max-width: 460px;
+  font-family: var(--pass-sans);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--pass-cream-70);
+  letter-spacing: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.pass-context strong {
+  color: var(--pass-cream);
+  font-weight: 600;
 }
 
 .pass-center {
@@ -193,6 +218,8 @@
   max-width: 100%;
   text-rendering: geometricPrecision;
   white-space: nowrap;
+  /* Crisp legibility over the property photo. */
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* ── Hero count-up amount ──────────────────────────────────────────────── */
@@ -1441,20 +1468,23 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Slight upscale + blur so the photo reads as atmosphere, not detail.
-     The lead recognizes their place without the type fighting for focus. */
-  transform: scale(1.06);
-  filter: blur(3px) brightness(0.42) saturate(0.85);
+  /* Lighter pass than the original — Nathan 2026-04-28: wanted the lead
+     to clearly recognize the photo of their property, not just feel a
+     dark atmosphere. Brightness 0.62 (was 0.42), full saturation, blur
+     reduced so house features read. */
+  transform: scale(1.04);
+  filter: blur(2px) brightness(0.62) saturate(1);
 }
 .pass-hero-bg-overlay {
   position: absolute;
   inset: 0;
+  /* Lighter top so the house is visible, darker bottom so the gold CTA
+     and fine print stay legible. */
   background:
     linear-gradient(180deg,
-      rgba(10, 10, 10, 0.45) 0%,
-      rgba(10, 10, 10, 0.62) 55%,
-      rgba(10, 10, 10, 0.92) 100%),
-    radial-gradient(ellipse at 50% 40%, transparent 0%, rgba(0, 0, 0, 0.45) 100%);
+      rgba(10, 10, 10, 0.20) 0%,
+      rgba(10, 10, 10, 0.38) 55%,
+      rgba(10, 10, 10, 0.85) 100%);
 }
 /* Make sure the content paints above the background sibling. Children of
    .pass-hero are static by default — give them positioning + z-index. */
@@ -1467,7 +1497,10 @@
    viewport — only the inner children are constrained.
    Per Nathan's call 2026-04-28. */
 @media (min-width: 720px) {
-  .pass-hero > :not(.pass-hero-bg) {
+  /* Constrain hero content to a centered ~640px column EXCEPT the brand
+     bar, which Nathan wants pinned to the actual top-left corner of the
+     viewport. */
+  .pass-hero > :not(.pass-hero-bg):not(.pass-top) {
     max-width: 640px;
     margin-left: auto;
     margin-right: auto;
