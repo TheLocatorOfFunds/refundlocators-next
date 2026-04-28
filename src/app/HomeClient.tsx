@@ -14,13 +14,14 @@ import { useRef, useState } from 'react';
 import type { SearchResult } from '@/lib/supabase';
 import LaurenSheet from '@/components/LaurenSheet';
 
-// Format a recovery total as "$2.1M" / "$425k" / "$8,420"
+// Format a recovery total — specific dollars win on trust over rounded
+// aggregates ("$334,217" beats "$334k" beats "$2.4M" for this audience).
+// Only round for amounts ≥$10M where digit-count would dominate the line.
 function fmtRecoveryTotal(n: number): string {
-  if (n >= 1_000_000) {
+  if (n >= 10_000_000) {
     const m = n / 1_000_000;
-    return `$${m >= 10 ? Math.round(m) : m.toFixed(1)}M`;
+    return `$${Math.round(m)}M`;
   }
-  if (n >= 1_000) return `$${Math.round(n / 1000)}k`;
   return `$${n.toLocaleString('en-US')}`;
 }
 
@@ -32,8 +33,11 @@ export default function HomeClient() {
   const [laurenOpen, setLaurenOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Public-facing recovery total — set by Nathan, not pulled from /api/ticker.
-  const recoveryTotal: number = 2_400_000;
+  // Real, specific recovery total — Visionary/Florida Claim Solutions
+  // research showed specific numbers ($64,527.46) outperform round
+  // aggregates ($2.4M) on trust. Update as new claims close.
+  const recoveryTotal: number = 334_217;
+  const familyCount = 12;
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -363,12 +367,22 @@ export default function HomeClient() {
                   </g>
                 </svg>
               </span>{' '}
-              Ohio homeowners
+              {familyCount} Ohio families
             </div>
           )}
 
           <div className="pass-legal home-legal">
             FundLocators LLC · Licensed Ohio attorney files · 25% of recovery · $0 upfront
+            <br />
+            <span style={{ fontSize: 10.5, color: 'var(--pass-cream-45)' }}>
+              <a href="/is-this-legit" style={{ color: 'var(--pass-gold)', textDecoration: 'none' }}>
+                Is this a scam? →
+              </a>
+              {' · '}
+              <a href="/story" style={{ color: 'var(--pass-gold)', textDecoration: 'none' }}>
+                Why Nathan built this →
+              </a>
+            </span>
           </div>
         </div>
       </section>
