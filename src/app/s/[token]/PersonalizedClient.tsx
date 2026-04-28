@@ -222,8 +222,11 @@ function PassHero({
     charCount >= 7  ? 88 :
                       96;
 
-  // Locked CTA copy: "Get my $X" (per design tweaks)
-  const ctaCopy = `Get my ${displayAmount}`;
+  // CTA copy: "File for my $X". Per Nathan 2026-04-28 — pairs with the
+  // explanatory line above ("That extra money belongs to you, held by
+  // the County Clerk") to make the action feel concrete: you're filing
+  // for money the court is already holding, not asking a stranger for cash.
+  const ctaCopy = `File for my ${displayAmount}`;
 
   const numberStyle: React.CSSProperties = {
     fontFamily: 'var(--pass-serif)',
