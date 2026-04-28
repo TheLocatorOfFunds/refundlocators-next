@@ -52,10 +52,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? `${data.property_address} · ${data.county} County, OH. The Clerk of Courts is holding ${surplusFmt} for you.`
     : `${data.property_address} · ${data.county} County, OH. We've been tracking your case.`;
 
-  const photoAddress = `${data.property_address}, ${data.county} County, OH`;
-  const ogImage = `https://refundlocators.com/api/streetview?address=${encodeURIComponent(photoAddress)}&w=640&h=400`;
   const pageUrl = `https://refundlocators.com/s/${token}`;
 
+  // Note: og:image is auto-wired by ./opengraph-image.tsx — a dynamic
+  // image route that bakes the lead's name + amount into the same gold-
+  // on-dark design as the site-wide preview. Don't set images here or
+  // it overrides Next.js's file-based detection.
   return {
     title,
     description,
@@ -66,13 +68,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: 'RefundLocators',
       title,
       description,
-      images: [{ url: ogImage, width: 640, height: 400, alt: `${data.property_address}, photo from public street view` }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: [ogImage],
     },
   };
 }
