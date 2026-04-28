@@ -271,7 +271,7 @@ function PassHero({
             <span className="pass-arrow" aria-hidden="true">→</span>
           </button>
           <button type="button" className="pass-cta-secondary" onClick={onTalkToLauren}>
-            Talk with Lauren, your case agent
+            Ask Lauren a question
           </button>
         </div>
 

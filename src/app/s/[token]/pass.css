@@ -1418,3 +1418,25 @@
 
 /* ── Utility ──────────────────────────────────────────────────────────────── */
 .pass-root a { color: inherit; }
+
+/* ── Lead page (/s/[token]) — desktop tighten ─────────────────────────────────
+   The pass-* layout was designed mobile-first (full-width buttons, full-width
+   receipt card). On desktop those stretched to the viewport edges, which felt
+   awkward and broke the wallet-pass aesthetic. Constrain to a centered ~640px
+   column so buttons / receipt / FAQ all line up and feel like one document.
+   Per Nathan's call 2026-04-28. */
+@media (min-width: 720px) {
+  .pass-hero {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 48px;
+  }
+  .pass-section {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 36px;
+    padding-bottom: 28px;
+  }
+}
