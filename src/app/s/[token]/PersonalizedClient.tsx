@@ -341,8 +341,9 @@ function WhyWeReachOut({ county }: { county: string }) {
           were never told.
         </p>
         <p className="pass-empathy-close">
-          That&apos;s why we read the public court records and reach out directly. To make
-          sure you know.
+          That&apos;s why we read the public court records and reach out directly —
+          to make sure you know, and to make it as easy as one click for you to
+          get it.
         </p>
       </div>
     </section>

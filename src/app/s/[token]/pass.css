@@ -53,7 +53,10 @@
 /* ── HERO ─────────────────────────────────────────────────────────────────── */
 .pass-hero {
   position: relative;
-  min-height: 844px;
+  /* Fill the actual viewport on first load — Street View + headline + CTA
+     own the entire first screen; the next section reveals on scroll. */
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   /* Top padding clears the iOS status bar (~54px) + breathing room */
@@ -62,7 +65,9 @@
   opacity: 0;
   transition: opacity 300ms ease-out;
 }
-/* When rendered outside a device frame / artboard, fill the actual viewport */
+/* Inside artboard/preview contexts the hero is sized to the iPhone frame
+   instead — 844px is iPhone 14 height. The marketing-home preview uses
+   100% so it fits its parent box. */
 .view-mobile-frame .pass-hero { min-height: 844px; }
 .home-root .pass-hero { min-height: 100%; }
 .pass-hero[data-loaded="1"] { opacity: 1; }
