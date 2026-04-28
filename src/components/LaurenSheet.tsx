@@ -155,10 +155,13 @@ export default function LaurenSheet({
       })()
     : undefined;
 
-  // Greeting differs by mode
+  // Greeting differs by mode. Generic mode used to lead with "AI surplus-funds
+  // agent" — the competitive research found that framing makes scam-wary,
+  // older audiences MORE anxious, not less. Same product, framed as a person
+  // who knows the answer.
   const greeting = token
-    ? `Hi ${token.firstName || 'there'}, I'm Lauren. I handle surplus funds cases like yours at ${token.propertyAddress}. What's on your mind?`
-    : `Hi, I'm Lauren — RefundLocators' AI surplus-funds agent. I've read every Ohio foreclosure case in the public record, and I know Ohio surplus law cold. Ask me anything: how the process works, what to expect, your specific scenario. What's on your mind?`;
+    ? `Hi ${token.firstName || 'there'}, I'm Lauren. I handle surplus funds cases like yours at ${token.propertyAddress}. What do you want to know?`
+    : `Hi, I'm Lauren. I've read every Ohio foreclosure case in the public record, so I can give you a straight answer about your situation — how the process works, what to expect, whether your address has surplus, anything. What's on your mind?`;
 
   useEffect(() => {
     if (open && messages.length === 0) {

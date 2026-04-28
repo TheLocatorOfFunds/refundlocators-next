@@ -108,11 +108,12 @@ export default function StoryPage() {
             owe $0.
           </li>
           <li>
-            <strong>An AI agent named Lauren who actually answers questions.</strong>{' '}
-            She&apos;s trained on Ohio surplus funds law and every county&apos;s
-            specific procedure. Free, private, instant. You can ask her at 11pm
-            when you&apos;re scared and Googling. She&apos;s the only consumer-facing
-            AI in this industry; every other shop wants you on a call.
+            <strong>A way to get your specific question answered instantly.</strong>{' '}
+            Lauren has read every Ohio foreclosure case in the public record. She
+            knows the Revised Code, every county&apos;s clerk procedure, and the
+            common scenarios. You can ask her at 11pm when you&apos;re scared and
+            Googling and get a straight, plain-English answer. Free, private, no
+            signup. Every other shop in this category wants you on a sales call.
           </li>
           <li>
             <strong>An address search that actually returns a result.</strong>{' '}

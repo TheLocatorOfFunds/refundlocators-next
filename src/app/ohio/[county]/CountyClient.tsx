@@ -76,7 +76,7 @@ export default function CountyClient({ countyName, countySeat, clerkUrl, hasVeri
               </svg>
             </div>
             <div className="home-brand-name">RefundLocators</div>
-            <div className="home-brand-tagline">{countyName.toUpperCase()} COUNTY · OHIO</div>
+            <div className="home-brand-tagline">Built for {countyName} County homeowners · not the leads list</div>
           </div>
 
           <h1 className="home-headline">
@@ -163,11 +163,12 @@ export default function CountyClient({ countyName, countySeat, clerkUrl, hasVeri
                  alt="Lauren" width={48} height={48} />
             <div className="home-lauren-copy">
               <div className="home-lauren-name">
-                Meet Lauren · {countyName} County surplus expert
+                {countyName} County surplus law, answered instantly
               </div>
               <div className="home-lauren-blurb">
-                Trained on every Ohio foreclosure case, the Revised Code, and {countyName}
-                County&apos;s clerk procedures. Free, instant, and private.
+                Lauren has read every {countyName} County foreclosure record and
+                knows the clerk&apos;s procedures cold. Ask her your specific
+                question and get a straight answer in seconds. Free, private.
               </div>
             </div>
           </div>
@@ -178,7 +179,7 @@ export default function CountyClient({ countyName, countySeat, clerkUrl, hasVeri
             onClick={() => setLaurenOpen(true)}
           >
             <span className="home-lauren-cta-dot" aria-hidden="true" />
-            Chat with Lauren now
+            Get my question answered
           </button>
 
           <div className="home-trust">

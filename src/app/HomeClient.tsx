@@ -204,7 +204,7 @@ export default function HomeClient() {
               </svg>
             </div>
             <div className="home-brand-name">RefundLocators</div>
-            <div className="home-brand-tagline">Surplus fund intelligence · Ohio only</div>
+            <div className="home-brand-tagline">Built for Ohio homeowners · not the leads list</div>
           </div>
 
           <h1 className="home-headline">
@@ -284,7 +284,9 @@ export default function HomeClient() {
 
           <div className="home-or">or</div>
 
-          {/* Lauren pitch — explain who she is in one tight beat, then the CTA */}
+          {/* Lauren pitch — sell the answer, not the AI. The category research
+              showed older / scam-wary audiences are made anxious by 'AI agent'
+              framing; same product, framed as 'instant answer' instead. */}
           <div className="home-lauren-pitch">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -296,11 +298,12 @@ export default function HomeClient() {
             />
             <div className="home-lauren-copy">
               <div className="home-lauren-name">
-                Meet Lauren · your AI surplus-funds agent
+                Ohio surplus law, answered instantly
               </div>
               <div className="home-lauren-blurb">
-                Trained on every Ohio foreclosure case, the Revised Code, and
-                every county&apos;s procedure. Free, instant, and private.
+                Lauren has read every Ohio foreclosure record and knows the
+                Revised Code cold. Ask her your specific question and get a
+                straight answer in seconds. Free, private, no signup.
               </div>
             </div>
           </div>
@@ -311,7 +314,7 @@ export default function HomeClient() {
             onClick={() => setLaurenOpen(true)}
           >
             <span className="home-lauren-cta-dot" aria-hidden="true" />
-            Chat with Lauren now
+            Get my question answered
           </button>
 
           {/* When real recoveries land, render: "$X returned to N Ohio families".
