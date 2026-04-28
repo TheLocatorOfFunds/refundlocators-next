@@ -182,9 +182,7 @@ export default function CountyClient({ countyName, countySeat, clerkUrl, hasVeri
           </button>
 
           <div className="home-trust">
-            <strong>$2.4M</strong> returned to{' '}
-            <span style={{ display: 'inline-block', verticalAlign: '-3px', margin: '0 2px' }}>🌰</span>{' '}
-            Ohio homeowners
+            Built for Ohio · headquartered in Cincinnati
           </div>
 
           <div className="pass-legal home-legal">

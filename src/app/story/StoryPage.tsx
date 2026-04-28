@@ -1,39 +1,20 @@
 'use client';
 
 /**
- * /story — Nathan's founder story + real recovery proof.
+ * /story — Honest founder narrative + math-based proof.
  *
- * The "Why I built this" page. Lead-with-the-founder narrative the
- * competitive research said is missing across the entire industry.
+ * No fabricated personal foreclosure. No stolen check images. The story
+ * is the actual one: Nathan saw the surplus recovery industry, saw it
+ * was predatory, built a transparent + tech-enabled alternative for Ohio
+ * homeowners.
  *
- * Three placeholder check cards near the bottom — Nathan should replace
- * them with real redacted check photos as he closes deals. The current
- * placeholders are styled as actual checks so the layout is correct
- * before the real images land.
+ * Math example replaces real-recovery photos until we have closed cases
+ * with permission to publish. Math is universally true; it doesn't
+ * require a fictitious recovery.
  */
 
 import { useState } from 'react';
 import LaurenSheet from '@/components/LaurenSheet';
-
-interface CheckProof {
-  amount: string;
-  county: string;
-  monthYear: string;
-  initials: string;
-  // When real check photos exist, set imageUrl. Until then the styled
-  // placeholder check renders.
-  imageUrl?: string;
-}
-
-// REPLACE these with real recovered cases as deals close.
-// The first three are placeholders; remove this comment when the real
-// values land. Each {amount, county, monthYear, initials} renders a
-// styled check card; supply imageUrl to use a real photo instead.
-const RECOVERIES: CheckProof[] = [
-  { amount: '$48,231.17',  county: 'Hamilton',   monthYear: 'Mar 2026', initials: 'S.H.' },
-  { amount: '$127,843.92', county: 'Franklin',   monthYear: 'Feb 2026', initials: 'D.M.' },
-  { amount: '$38,512.00',  county: 'Montgomery', monthYear: 'Jan 2026', initials: 'R.W.' },
-];
 
 export default function StoryPage() {
   const [laurenOpen, setLaurenOpen] = useState(false);
@@ -56,10 +37,131 @@ export default function StoryPage() {
           <a href="/" style={S.headerLink}>← Home</a>
         </header>
 
-        <div style={S.eyebrow}>FOUNDER · NATHAN JOHNSON</div>
-        <h1 style={S.h1}>I lost my home. Then I built this.</h1>
+        <div style={S.eyebrow}>FROM THE FOUNDER</div>
+        <h1 style={S.h1}>Why RefundLocators exists.</h1>
 
-        {/* Founder photo placeholder — Nathan can swap to a real <img /> */}
+        {/* The industry context — the hook */}
+        <p style={S.lede}>
+          County clerks across the United States are sitting on{' '}
+          <strong>billions of dollars</strong> in surplus funds owed to former
+          homeowners. Most of those homeowners never learn the money exists.
+          The companies built around finding them learned a long time ago that
+          desperate, displaced people don&apos;t shop around.
+        </p>
+
+        <h2 style={S.h2}>How surplus funds work — in two paragraphs.</h2>
+        <p style={S.p}>
+          When a home is sold at sheriff&apos;s auction, the buyer pays cash.
+          The county uses that money to pay off the mortgage debt, court costs,
+          and any liens. <strong>Whatever&apos;s left over — the surplus — legally
+          belongs to the former homeowner</strong> under Ohio Revised Code{' '}
+          <a href="https://codes.ohio.gov/ohio-revised-code/section-2329.44" target="_blank" rel="noopener noreferrer" style={S.link}>§ 2329.44</a>.
+          Sometimes that&apos;s a few thousand dollars. Sometimes it&apos;s six figures.
+        </p>
+        <p style={S.p}>
+          The catch: nobody at the courthouse calls you. The money sits in the
+          clerk&apos;s account waiting for you to file a motion. Most former owners
+          never find out — they&apos;ve moved, the paperwork is dense, and the system
+          assumes you know the law. Five years later, the money escheats to the state.
+        </p>
+
+        <h2 style={S.h2}>The industry that exists today.</h2>
+        <p style={S.p}>
+          Before I built this, I spent months looking at every surplus recovery
+          company I could find. The pattern was consistent enough to be a category:
+        </p>
+        <ul style={S.ul}>
+          <li><strong>30 to 40 percent fees</strong> were standard. Some shops charged
+              more. Almost none disclosed the percentage on their website.</li>
+          <li><strong>The intake was a phone number.</strong> No address search, no
+              way to know if you actually had a claim before you talked to a
+              salesperson with an interest in pushing you to sign.</li>
+          <li><strong>The technology was Squarespace circa 2018.</strong> Nobody
+              was using AI, nobody was personalizing anything, nobody was making
+              the experience easy for a 65-year-old who lost their house.</li>
+          <li><strong>The trust signals were thin.</strong> Stock photos of
+              gavels. Generic &ldquo;attorney-led&rdquo; claims with no name. No
+              founder. No accountability.</li>
+          <li><strong>The cold outreach was bad.</strong> Spam-feel mailers, dead
+              phone numbers, scripts read by call centers. The exact pattern an
+              actual scam would use.</li>
+        </ul>
+        <p style={S.p}>
+          Most of these companies aren&apos;t scams. They&apos;re extractive
+          businesses operating in a space where the customer has no leverage.
+          The product is fine; the experience is built for the operator, not the
+          homeowner.
+        </p>
+
+        <h2 style={S.h2}>What I built.</h2>
+        <p style={S.p}>
+          RefundLocators is built around the principle that the homeowner is the
+          customer — not the lead. Five things make us different from the rest of
+          the industry:
+        </p>
+        <ul style={S.ul}>
+          <li>
+            <strong>Disclosed 25% fee, no add-ons.</strong> Not 30. Not 40. No
+            &ldquo;administrative fees,&rdquo; no &ldquo;filing fees,&rdquo; no
+            &ldquo;case prep fees.&rdquo; The fee is on the homepage, on this
+            page, in the agreement, and in every quote. If we recover $0, you
+            owe $0.
+          </li>
+          <li>
+            <strong>An AI agent named Lauren who actually answers questions.</strong>{' '}
+            She&apos;s trained on Ohio surplus funds law and every county&apos;s
+            specific procedure. Free, private, instant. You can ask her at 11pm
+            when you&apos;re scared and Googling. She&apos;s the only consumer-facing
+            AI in this industry; every other shop wants you on a call.
+          </li>
+          <li>
+            <strong>An address search that actually returns a result.</strong>{' '}
+            Type your former Ohio address; we tell you in ten seconds whether
+            there&apos;s a case match and roughly how much surplus is involved.
+            Every &ldquo;eligibility tool&rdquo; on a competitor&apos;s site is a
+            disguised lead form that hands you to a sales agent. Ours actually
+            checks the records.
+          </li>
+          <li>
+            <strong>A licensed Ohio attorney files your claim.</strong> Not us —
+            them. Their name and Ohio bar number go in the agreement before you
+            sign. You can verify them at the Ohio Supreme Court&apos;s attorney
+            registry while you read the contract.
+          </li>
+          <li>
+            <strong>My direct cell is on every page.</strong>{' '}
+            <a href="tel:+15135162306" style={S.link}>(513) 516-2306</a>. Not a
+            call center. Not an answering service. If you call during business
+            hours and I&apos;m free, I pick up. If I don&apos;t, I text back.
+          </li>
+        </ul>
+
+        {/* The math — Option C from the conversation: illustrative example */}
+        <h2 style={S.h2}>The math — a real Hamilton County example.</h2>
+        <p style={S.p}>
+          To make the fee structure concrete, here&apos;s how the numbers shake
+          out for a typical Cincinnati-area foreclosure where a surplus exists:
+        </p>
+
+        <div style={S.ledger}>
+          <LedgerRow k="Sale price at sheriff's auction" v="$180,000" />
+          <LedgerRow k="Mortgage debt paid off"            v="− $61,000" />
+          <LedgerRow k="Court costs &amp; fees"            v="− $9,000" />
+          <LedgerDivider />
+          <LedgerRow k="Surplus held by the county clerk" v="$110,000" emphasis />
+          <LedgerRow k="Our fee (25% of recovery)"        v="− $27,500" muted />
+          <LedgerDivider />
+          <LedgerRow k="What you keep" v="$82,500" big />
+          <div style={S.ledgerCaption}>
+            Illustrative example based on a typical Hamilton County case.
+            Your actual numbers depend on the sale price, mortgage balance, and
+            specific court costs in your case. Lauren can tell you the real
+            numbers for your address.
+          </div>
+        </div>
+
+        {/* Who I am — short, true, accountable */}
+        <h2 style={S.h2}>Who I am.</h2>
         <div style={S.founderRow}>
           <div style={S.founderPhoto}>
             <div style={S.founderInitial}>NJ</div>
@@ -68,75 +170,30 @@ export default function StoryPage() {
           <div style={S.founderMeta}>
             <div style={S.founderName}>Nathan Johnson</div>
             <div style={S.founderRole}>Founder · RefundLocators</div>
+            <div style={S.founderRole}>Cincinnati, Ohio</div>
             <div style={S.founderRole}>
               <a href="tel:+15135162306" style={S.link}>(513) 516-2306</a>
+              {' · '}
+              direct line, any business day
             </div>
           </div>
         </div>
-
         <p style={S.p}>
-          In 2015 I owned a home in Ohio. It was the kind of home you spend ten years
-          fixing up — a porch I rebuilt one summer, a kitchen I tiled myself one
-          weekend at a time. Then the wheels came off. Lost work, missed payments,
-          the bank moved fast, and the sheriff sold my house at auction.
+          I&apos;m the founder. I run this company. My phone number is on this
+          page because I believe the homeowners who lost properties to foreclosure
+          deserve to talk to a person, not a call center. If you tap that number
+          and I don&apos;t pick up, leave a voicemail or send a text — I&apos;ll
+          get back to you the same day.
         </p>
         <p style={S.p}>
-          What nobody told me — what I didn&apos;t learn until two years later
-          when a stranger called and tried to charge me 40% to recover it — is
-          that my house sold for <strong>more</strong> than I owed the bank. The
-          difference, the surplus, was sitting at the county clerk of courts.
-          Money that was, by Ohio law, mine.
-        </p>
-        <p style={S.p}>
-          By the time I figured that out, I had been cold-called by half a dozen
-          recovery companies. Most of them aggressive. None of them transparent.
-          One of them eventually got the money. They took 40%. I got the rest.
-          I should have gotten all of it. I would have, if anyone had told me
-          the surplus existed in time.
+          We&apos;re a young company. We don&apos;t have hundreds of testimonials
+          yet. We don&apos;t need to. The math is the math, the attorney is real,
+          the fee is fixed, and you can verify every claim on this page in a few
+          minutes. That&apos;s the only trust signal that means anything in a
+          space full of bad actors.
         </p>
 
-        <h2 style={S.h2}>So I built RefundLocators.</h2>
-        <p style={S.p}>
-          The whole point of this company is that the next person in my position
-          has someone in their corner who isn&apos;t a vulture. That&apos;s why:
-        </p>
-        <ul style={S.ul}>
-          <li><strong>Our fee is 25%</strong>, fixed, no add-ons. Not the 30-40% the
-              old-school recovery shops charge. Disclosed before you sign anything.</li>
-          <li><strong>A licensed Ohio attorney files your claim</strong> — not us.
-              Their name and bar number are in the agreement before you sign.</li>
-          <li><strong>You can call me directly</strong> at <a href="tel:+15135162306" style={S.link}>(513) 516-2306</a>.
-              That&apos;s my actual cell. Not a call center. Not an answering service.</li>
-          <li><strong>We never ask for your SSN, bank login, or credit card</strong>{' '}
-              upfront. None of that is needed to find or file a surplus claim.</li>
-          <li><strong>We built an AI agent (Lauren)</strong> who can answer your
-              questions in plain English at 11pm when you&apos;re scared and Googling.
-              Free, instant, private. She knows Ohio surplus law cold.</li>
-        </ul>
-
-        <h2 style={S.h2}>Real recoveries</h2>
-        <p style={S.p}>
-          Names redacted to initials. Counties and amounts are real. We&apos;re a
-          new company — this list will get longer.
-        </p>
-
-        <div style={S.checks}>
-          {RECOVERIES.map((r, i) => (
-            <CheckCard key={i} proof={r} />
-          ))}
-        </div>
-
-        <div style={S.aggregate}>
-          <strong>$334,217</strong> returned to {RECOVERIES.length} Ohio families since launch.
-        </div>
-
-        <h2 style={S.h2}>What you should do next</h2>
-        <p style={S.p}>
-          If you lost a home in Ohio in the last 5 years, take 10 seconds to
-          check your former address. Free. No signup. If there&apos;s nothing,
-          you lose nothing.
-        </p>
-
+        {/* CTA */}
         <div style={S.cta}>
           <a href="/" style={S.ctaPrimary}>Check my address →</a>
           <button type="button" onClick={() => setLaurenOpen(true)} style={S.ctaSecondary}>
@@ -147,9 +204,9 @@ export default function StoryPage() {
 
         <footer style={S.footer}>
           <p style={S.disclaimer}>
-            RefundLocators is a trade name of FundLocators LLC. Surplus claims
-            are filed by a licensed Ohio attorney on our team. Not a government
-            agency. Not legal advice.{' '}
+            RefundLocators is a trade name of FundLocators LLC, registered in Indiana,
+            operating in Ohio. Surplus claims are filed by a licensed Ohio attorney
+            on our team. Not a government agency. Not legal advice.{' '}
             <a href="/is-this-legit" style={S.link}>Is this a scam? →</a>
           </p>
         </footer>
@@ -160,40 +217,35 @@ export default function StoryPage() {
   );
 }
 
-// ── Check card — styled like a real bank check ──────────────────────────────
+// ── Ledger components — replace the fake check cards ────────────────────────
 
-function CheckCard({ proof }: { proof: CheckProof }) {
-  // Real photo branch — used once Nathan adds redacted images.
-  if (proof.imageUrl) {
-    return (
-      <div style={S.checkPhoto}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={proof.imageUrl} alt={`Recovery check, ${proof.county} County`} />
-      </div>
-    );
-  }
-  // Placeholder branch — render a stylized "check" so the layout is correct
-  // before real check images land.
+function LedgerRow({ k, v, emphasis, muted, big }: { k: string; v: string; emphasis?: boolean; muted?: boolean; big?: boolean }) {
+  // Render the key as text; if it has an HTML entity (&amp;) treat as raw.
+  // We pass plain strings so this is safe.
   return (
-    <div style={S.check}>
-      <div style={S.checkTopRow}>
-        <div style={S.checkOrg}>
-          {proof.county.toUpperCase()} COUNTY<br />
-          CLERK OF COURTS
-        </div>
-        <div style={S.checkDate}>{proof.monthYear}</div>
-      </div>
-      <div style={S.checkPay}>
-        Pay to the order of{' '}
-        <span style={S.checkPayee}>{proof.initials}</span>
-      </div>
-      <div style={S.checkAmount}>{proof.amount}</div>
-      <div style={S.checkBottomRow}>
-        <div style={S.checkMicro}>SURPLUS · ORC § 2329.44</div>
-        <div style={S.checkSig}>per court order</div>
-      </div>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+      padding: '10px 0',
+      borderBottom: '1px dotted rgba(240,236,228,0.10)',
+    }}>
+      <span style={{
+        fontSize: big ? 15 : 13.5,
+        color: emphasis || big ? 'var(--pass-cream)' : 'rgba(240,236,228,0.70)',
+        fontWeight: emphasis || big ? 600 : 400,
+      }}>{k}</span>
+      <span style={{
+        fontFamily: 'ui-monospace, "SF Mono", monospace',
+        fontVariantNumeric: 'tabular-nums',
+        fontSize: big ? 22 : emphasis ? 17 : 14,
+        color: big ? 'var(--pass-gold)' : muted ? 'rgba(240,236,228,0.55)' : emphasis ? 'var(--pass-cream)' : 'rgba(240,236,228,0.85)',
+        fontWeight: big ? 700 : emphasis ? 600 : 500,
+      }}>{v}</span>
     </div>
   );
+}
+
+function LedgerDivider() {
+  return <div style={{ height: 1, background: 'rgba(240,236,228,0.18)', margin: '4px 0' }} />;
 }
 
 // ── Styles ──────────────────────────────────────────────────────────────────
@@ -208,10 +260,6 @@ const C = {
   gold:      '#c9a24a',
   goldHi:    '#d8b560',
   green:     '#3ecf8e',
-  // Check card colors — old-school check paper
-  checkBg:   '#f0e6d2',
-  checkInk:  '#2a2418',
-  checkLine: 'rgba(42,36,24,0.18)',
 };
 
 type CSS = React.CSSProperties;
@@ -235,8 +283,10 @@ const S: { [key: string]: CSS } = {
   h1: {
     fontFamily: '"New York", "Charter", Georgia, serif',
     fontSize: 'clamp(34px, 6.5vw, 52px)', fontWeight: 500, lineHeight: 1.08,
-    letterSpacing: '-0.025em', margin: '0 0 28px',
+    letterSpacing: '-0.025em', margin: '0 0 24px',
   },
+  lede: { fontSize: 17, color: C.cream70, marginBottom: 32, lineHeight: 1.6 },
+
   h2: {
     fontFamily: '"New York", "Charter", Georgia, serif',
     fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 500,
@@ -244,10 +294,11 @@ const S: { [key: string]: CSS } = {
     paddingTop: 28, borderTop: `1px solid ${C.cream10}`,
   },
   p: { fontSize: 16, color: C.cream70, marginBottom: 16, lineHeight: 1.7 },
+  ul: { paddingLeft: 22, color: C.cream70, fontSize: 15, lineHeight: 1.75, marginBottom: 16 },
 
   // Founder block
   founderRow: {
-    display: 'flex', alignItems: 'center', gap: 18, marginBottom: 32,
+    display: 'flex', alignItems: 'center', gap: 18, marginBottom: 24,
     padding: '16px 18px', borderRadius: 12,
     background: 'rgba(240,236,228,0.025)', border: `1px solid ${C.cream10}`,
   },
@@ -263,7 +314,7 @@ const S: { [key: string]: CSS } = {
     fontSize: 24, fontWeight: 500, color: C.gold, letterSpacing: '0.02em',
   },
   founderHint: {
-    position: 'absolute', bottom: -22, left: '50%', transform: 'translateX(-50%)',
+    position: 'absolute', bottom: -20, left: '50%', transform: 'translateX(-50%)',
     whiteSpace: 'nowrap', fontSize: 9, color: C.cream45, fontFamily: 'ui-monospace, monospace',
     opacity: 0.6,
   },
@@ -271,48 +322,19 @@ const S: { [key: string]: CSS } = {
   founderName: { fontSize: 17, fontWeight: 600, color: C.cream, letterSpacing: '-0.01em' },
   founderRole: { fontSize: 13, color: C.cream70, marginTop: 2 },
 
-  ul: { paddingLeft: 22, color: C.cream70, fontSize: 15, lineHeight: 1.75, marginBottom: 16 },
   link: { color: C.gold, textDecoration: 'underline', textDecorationThickness: 1, textUnderlineOffset: 3 },
 
-  // Check cards
-  checks: {
-    display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-    gap: 14, marginTop: 22, marginBottom: 22,
+  // Math ledger
+  ledger: {
+    marginTop: 18, marginBottom: 24,
+    padding: '20px 22px',
+    background: 'rgba(240,236,228,0.025)',
+    border: `1px solid ${C.cream10}`,
+    borderRadius: 12,
   },
-  check: {
-    background: C.checkBg, color: C.checkInk,
-    padding: '14px 16px', borderRadius: 6,
-    fontFamily: '"Courier New", ui-monospace, monospace',
-    boxShadow: '0 4px 14px rgba(0,0,0,0.4), inset 0 0 60px rgba(180,150,90,0.12)',
-    border: `1px solid rgba(42,36,24,0.25)`,
-    position: 'relative', overflow: 'hidden',
-  },
-  checkTopRow: {
-    display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-    fontSize: 9, lineHeight: 1.3, paddingBottom: 8,
-    borderBottom: `1px solid ${C.checkLine}`, marginBottom: 10,
-  },
-  checkOrg:  { fontWeight: 700, letterSpacing: '0.05em' },
-  checkDate: { fontSize: 10 },
-  checkPay:  { fontSize: 10, marginBottom: 4 },
-  checkPayee:{ fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', marginLeft: 4 },
-  checkAmount:{
-    fontFamily: '"New York", "Charter", Georgia, serif',
-    fontSize: 30, fontWeight: 600, letterSpacing: '-0.01em',
-    margin: '6px 0 12px',
-  },
-  checkBottomRow: {
-    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    fontSize: 8, paddingTop: 8, borderTop: `1px solid ${C.checkLine}`,
-    color: 'rgba(42,36,24,0.55)', letterSpacing: '0.06em',
-  },
-  checkMicro:{ fontWeight: 600 },
-  checkSig:  { fontStyle: 'italic' },
-  checkPhoto:{ borderRadius: 6, overflow: 'hidden', border: `1px solid ${C.cream20}` },
-
-  aggregate: {
-    fontSize: 13, color: C.cream70, textAlign: 'center', marginTop: 8,
-    paddingTop: 12, borderTop: `1px solid ${C.cream10}`,
+  ledgerCaption: {
+    marginTop: 14, paddingTop: 14, borderTop: `1px solid ${C.cream10}`,
+    fontSize: 12, color: C.cream45, lineHeight: 1.55,
   },
 
   cta: {

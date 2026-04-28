@@ -33,11 +33,12 @@ export default function HomeClient() {
   const [laurenOpen, setLaurenOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Real, specific recovery total — Visionary/Florida Claim Solutions
-  // research showed specific numbers ($64,527.46) outperform round
-  // aggregates ($2.4M) on trust. Update as new claims close.
-  const recoveryTotal: number = 334_217;
-  const familyCount = 12;
+  // Recovery counter intentionally null until we have closed cases we can
+  // attest to. Showing fabricated totals undercuts the very trust position
+  // the /is-this-legit page stakes out. Replace with a real number (and
+  // family count) only after Castle ships row #1 and we have a recovery.
+  const recoveryTotal: number | null = null;
+  const familyCount = 0;
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -313,7 +314,9 @@ export default function HomeClient() {
             Chat with Lauren now
           </button>
 
-          {recoveryTotal !== null && (
+          {/* When real recoveries land, render: "$X returned to N Ohio families".
+              Until then, a defensible pride-of-place line. */}
+          {recoveryTotal !== null ? (
             <div className="home-trust">
               <strong>{fmtRecoveryTotal(recoveryTotal)}</strong> returned to{' '}
               <span className="home-buckeye" aria-hidden="true">
@@ -368,6 +371,10 @@ export default function HomeClient() {
                 </svg>
               </span>{' '}
               {familyCount} Ohio families
+            </div>
+          ) : (
+            <div className="home-trust">
+              Built for Ohio · headquartered in Cincinnati
             </div>
           )}
 
