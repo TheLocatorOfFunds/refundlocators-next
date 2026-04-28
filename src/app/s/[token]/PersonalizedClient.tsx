@@ -253,7 +253,7 @@ function PassHero({
 
       <header className="pass-top">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/s-assets/logo-mark.svg" alt="" width={32} height={32} />
+        <img src="/s-assets/logo-mark.svg" alt="" width={44} height={44} />
         <span className="pass-top-domain">refundlocators.com</span>
       </header>
 
@@ -433,6 +433,10 @@ function CaseCard({ token }: { token: TokenView }) {
 // ── FAQ (third screen) ───────────────────────────────────────────────────────
 
 const FAQS: Array<{ q: string; a: string }> = [
+  {
+    q: 'Who is RefundLocators?',
+    a: `RefundLocators is the surplus-recovery arm of FundLocators LLC — a private Ohio company. For years our sister brand Defender Homeowner Advocates has worked complex Ohio real estate cases: foreclosure defense, probate, surplus funds, partition disputes, lien clearance — the kind of cases other firms walk away from. We're local, owned and run by Ohioans, and if your case is the kind that needs a face-to-face meeting, we'll drive to you. A licensed Ohio attorney on our team files every claim through the {county} County court.`,
+  },
   {
     q: 'Is this a scam?',
     a: `No. We are a private Ohio company working with a licensed Ohio attorney. The surplus amount shown above comes from public county court records — you can verify it yourself at the {county} County Clerk of Courts website. We only make money if you get paid.`,

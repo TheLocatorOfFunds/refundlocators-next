@@ -75,17 +75,23 @@
 .pass-top {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-shrink: 0;
   /* Push to the left edge, leaving dynamic island clear in the center */
   margin-bottom: 48px;
 }
-.pass-top img { display: block; opacity: 0.95; }
+.pass-top img {
+  display: block;
+  opacity: 1;
+  width: 44px;
+  height: 44px;
+}
 .pass-top-domain {
   font-family: var(--pass-mono);
-  font-size: 14px;
-  letter-spacing: 0.04em;
-  color: var(--pass-cream-70);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--pass-cream);
   text-transform: lowercase;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
@@ -147,7 +153,7 @@
 }
 .pass-recipient-name {
   font-family: var(--pass-mono);
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.16em;
   color: var(--pass-cream);
