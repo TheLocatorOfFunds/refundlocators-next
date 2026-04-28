@@ -69,6 +69,8 @@ export interface PersonalizedLink {
   last_viewed_at: string | null;
   view_count: number;
   converted_to_contract: boolean;
+  relationship: 'homeowner' | 'spouse' | 'child' | 'parent' | 'sibling' | 'other' | null;
+  contact_id: string | null;
 }
 
 export interface Recovery {

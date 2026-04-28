@@ -43,6 +43,20 @@ export interface CopyBundle {
   subtext: string;
   /** Primary CTA button label on the website */
   ctaLabel: string;
+  /**
+   * Hero context line on the rendered page — the empathetic factual lead-in
+   * above the dollar amount. Split around the bolded phrase so each
+   * relationship can phrase the bold beat differently.
+   */
+  pageContext: { lead: string; bold: string; trail: string };
+  /** Empathy section body paragraphs (rendered as <p>'s in order). */
+  pageEmpathy: string[];
+  /**
+   * Closing paragraph in the empathy section — the inline "one click"
+   * link is rendered between `lead` and `trail` and triggers the claim
+   * modal.
+   */
+  pageEmpathyClose: { lead: string; trail: string };
 }
 
 function fallbackName(first: string | null): string {
@@ -70,6 +84,14 @@ export function copyFor(input: CopyInput): CopyBundle {
     ? `Surplus Fund Intelligence · ${county} County`
     : 'Surplus Fund Intelligence · Ohio';
 
+  const countyClerk = county ? `${county} County Clerk` : 'County Clerk';
+  const countyOffice = county ? `${county} County Clerk's office` : "County Clerk's office";
+
+  // Shared "process explanation" paragraph used in the empathy section
+  // for every relationship — the underlying mechanic of how surplus
+  // gets stranded is the same regardless of who's reading.
+  const processPara = `Here's what most families aren't told: when a home sells for more than the debt, the leftover money — the surplus — sits at the ${countyOffice}. The county is required to send only one certified letter, usually to the foreclosed address no one lives at anymore.`;
+
   switch (input.relationship) {
     case 'spouse':
       return {
@@ -82,6 +104,20 @@ export function copyFor(input: CopyInput): CopyBundle {
         headlineGold: $ ? `${$} may be owed to your family.` : `Your family may be owed money.`,
         subtext,
         ctaLabel: $ ? `Start our ${$} claim` : 'Start our claim',
+        pageContext: {
+          lead: 'Your home was recently sold at a sheriff’s sale. We believe it sold for ',
+          bold: 'more than what was owed',
+          trail: ` — and that extra money may belong to your family, held by the ${countyClerk}.`,
+        },
+        pageEmpathy: [
+          'Losing your home is hard. We know that, and we don’t take it lightly.',
+          processPara,
+          'If no one claims it within the window, the money quietly stays with the county. Many families lose what’s rightfully theirs simply because they were never told.',
+        ],
+        pageEmpathyClose: {
+          lead: 'That’s why we read the public court records and reach out to family directly — to make sure you know, and to make it as easy as ',
+          trail: ' for your family to get it.',
+        },
       };
 
     case 'child':
@@ -95,6 +131,20 @@ export function copyFor(input: CopyInput): CopyBundle {
         headlineGold: $ ? `${$} may now belong to your family.` : `Your family may be owed money.`,
         subtext,
         ctaLabel: $ ? `Open the ${$} claim` : 'Open the claim',
+        pageContext: {
+          lead: 'Your parent’s home was recently sold at a sheriff’s sale. We believe it sold for ',
+          bold: 'more than what was owed',
+          trail: ` — and that extra money may belong to your family, held by the ${countyClerk}.`,
+        },
+        pageEmpathy: [
+          'Watching a parent go through this is hard. We know that, and we don’t take it lightly.',
+          processPara,
+          'If no one claims it within the window, the money quietly stays with the county. Many families lose what’s rightfully theirs simply because they were never told. If there’s a probate situation or other complications, we can help navigate that too.',
+        ],
+        pageEmpathyClose: {
+          lead: 'That’s why we read the public court records and reach out to family — to make sure you know, and to make it as easy as ',
+          trail: ' for you to help your family get it.',
+        },
       };
 
     case 'parent':
@@ -108,6 +158,20 @@ export function copyFor(input: CopyInput): CopyBundle {
         headlineGold: $ ? `${$} may be available to claim.` : `Your family may be owed money.`,
         subtext,
         ctaLabel: $ ? `See the ${$} case` : 'See the case',
+        pageContext: {
+          lead: 'Your child’s home was recently sold at a sheriff’s sale. We believe it sold for ',
+          bold: 'more than what was owed',
+          trail: ` — and that extra money may belong to your family, held by the ${countyClerk}.`,
+        },
+        pageEmpathy: [
+          'Watching your child go through this is hard. We know that, and we don’t take it lightly.',
+          processPara,
+          'If no one claims it within the window, the money quietly stays with the county. Many families lose what’s rightfully theirs simply because they were never told.',
+        ],
+        pageEmpathyClose: {
+          lead: 'That’s why we read the public court records and reach out to family — to make sure you know, and to make it as easy as ',
+          trail: ' for your family to get it.',
+        },
       };
 
     case 'sibling':
@@ -121,6 +185,20 @@ export function copyFor(input: CopyInput): CopyBundle {
         headlineGold: $ ? `${$} may be unclaimed.` : `Money may be unclaimed.`,
         subtext,
         ctaLabel: $ ? `Help dig into the ${$}` : 'Help me dig in',
+        pageContext: {
+          lead: 'Your sibling’s home was recently sold at a sheriff’s sale. We believe it sold for ',
+          bold: 'more than what was owed',
+          trail: ` — and that extra money may be unclaimed, held by the ${countyClerk}.`,
+        },
+        pageEmpathy: [
+          'Watching family go through this is hard. We know that, and we don’t take it lightly.',
+          processPara,
+          'If no one claims it within the window, the money quietly stays with the county. Many families lose what’s rightfully theirs simply because they were never told.',
+        ],
+        pageEmpathyClose: {
+          lead: 'That’s why we read the public court records and reach out to family — to make sure you know, and to make it as easy as ',
+          trail: ' for your family to get it.',
+        },
       };
 
     case 'other':
@@ -134,6 +212,20 @@ export function copyFor(input: CopyInput): CopyBundle {
         headlineGold: $ ? `${$} is at stake.` : `Money may be at stake.`,
         subtext,
         ctaLabel: $ ? `Look into the ${$}` : 'Look into it',
+        pageContext: {
+          lead: 'A home connected to your family was recently sold at a sheriff’s sale. We believe it sold for ',
+          bold: 'more than what was owed',
+          trail: ` — and that extra money may be at stake, held by the ${countyClerk}.`,
+        },
+        pageEmpathy: [
+          'These cases are hard. We know that, and we don’t take it lightly.',
+          processPara,
+          'If no one claims it within the window, the money quietly stays with the county. Many families lose what’s rightfully theirs simply because they were never told.',
+        ],
+        pageEmpathyClose: {
+          lead: 'That’s why we read the public court records and reach out to family directly — to make sure you know, and to make it as easy as ',
+          trail: ' for your family to get it.',
+        },
       };
 
     case 'homeowner':
@@ -148,6 +240,20 @@ export function copyFor(input: CopyInput): CopyBundle {
         headlineGold: $ ? `${$} may be owed to you.` : `The bank may owe you money.`,
         subtext,
         ctaLabel: $ ? `File for my ${$}` : 'File my claim',
+        pageContext: {
+          lead: 'Your home was recently sold at a sheriff’s sale. We believe it sold for ',
+          bold: 'more than what you owed',
+          trail: ` — and that extra money belongs to you, held by the ${countyClerk}.`,
+        },
+        pageEmpathy: [
+          'Losing a home is hard. We know that, and we don’t take it lightly.',
+          `Here’s what most people aren’t told: when a home sells for more than the debt, the leftover money — the surplus — sits at the ${countyOffice}. The county is required to send only one certified letter, usually to the foreclosed address the family no longer lives at.`,
+          'If no one claims it within the window, the money quietly stays with the county. Many families lose what’s rightfully theirs simply because they were never told.',
+        ],
+        pageEmpathyClose: {
+          lead: 'That’s why we read the public court records and reach out directly — to make sure you know, and to make it as easy as ',
+          trail: ' for you to get it.',
+        },
       };
   }
 }
