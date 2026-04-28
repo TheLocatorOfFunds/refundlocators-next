@@ -42,6 +42,18 @@ export default async function OGImage({ params }: Props) {
   const county    = (data?.county || '').trim();
   const address   = (data?.property_address || '').trim();
 
+  // Street View backdrop. Same idea as the website hero — the photo of
+  // their house, heavily darkened, behind the gold-on-cream text. Per
+  // Nathan 2026-04-28 he wants the photo IN the preview image too.
+  // Falls back to the plain dark background if no address (no fetch
+  // attempted) or if the Maps API can't find imagery.
+  const photoAddress = address && county
+    ? `${address}, ${county} County, OH`
+    : (address || '');
+  const photoUrl = photoAddress
+    ? `https://refundlocators.com/api/streetview?address=${encodeURIComponent(photoAddress)}&w=640&h=400`
+    : null;
+
   // Eyebrow text — county-specific if we have it, else fall back to the
   // generic site eyebrow.
   const eyebrow = county
@@ -80,7 +92,42 @@ export default async function OGImage({ params }: Props) {
           position: 'relative',
         }}
       >
-        {/* Background gradient orbs (kept identical to site-wide image) */}
+        {/* Street View of the property — full-bleed backdrop. Heavily
+            dimmed via the gradient overlay below so the type stays
+            legible. */}
+        {photoUrl && (
+          <img
+            src={photoUrl}
+            width={1200}
+            height={630}
+            alt=""
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              filter: 'brightness(0.5) saturate(0.9)',
+            }}
+          />
+        )}
+        {/* Dim gradient over the photo. Lighter at top so the house
+            shows through, dark at bottom where the headline + subtext
+            live so they read crisp. */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background:
+              'linear-gradient(180deg, rgba(5,17,31,0.35) 0%, rgba(5,17,31,0.55) 45%, rgba(5,17,31,0.92) 100%)',
+          }}
+        />
+        {/* Brand gradient orbs (kept from site-wide image, but dimmer
+            so they don't fight the photo). */}
         <div
           style={{
             position: 'absolute',
@@ -89,7 +136,7 @@ export default async function OGImage({ params }: Props) {
             width: 600,
             height: 600,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(201,162,74,0.18) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(201,162,74,0.14) 0%, transparent 70%)',
           }}
         />
         <div
@@ -100,7 +147,7 @@ export default async function OGImage({ params }: Props) {
             width: 400,
             height: 400,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(201,162,74,0.08) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(201,162,74,0.06) 0%, transparent 70%)',
           }}
         />
 
