@@ -14,7 +14,9 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 interface Props {
-  params: { token: string };
+  // Next.js 16: dynamic segment params arrive as a Promise. Awaiting is
+  // mandatory — accessing `params.token` synchronously yields undefined.
+  params: Promise<{ token: string }>;
 }
 
 function fmtMoney(n: number | null): string {
@@ -23,7 +25,7 @@ function fmtMoney(n: number | null): string {
 }
 
 export default async function OGImage({ params }: Props) {
-  const { token } = params;
+  const { token } = await params;
   const db = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
