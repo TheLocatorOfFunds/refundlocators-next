@@ -24,16 +24,56 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const db = getDB();
   const { data } = await db
     .from('personalized_links')
-    .select('first_name')
+    .select('first_name, last_name, property_address, county, estimated_surplus_low, estimated_surplus_high')
     .eq('token', token)
     .single();
 
   if (!data) {
     return { title: 'FundLocators' };
   }
+
+  // Per Nathan 2026-04-28: when this link is texted to a lead, the iMessage
+  // preview should make them feel "this is MY case" before they tap. Use
+  // their name + amount in the title, their address + county in the body,
+  // and the Street View of their property as the og:image.
+  const firstName = (data.first_name || '').trim();
+  const lastName  = (data.last_name  || '').trim();
+  const fullName  = [firstName, lastName].filter(Boolean).join(' ');
+  const surplus   = data.estimated_surplus_low ?? data.estimated_surplus_high ?? null;
+  const surplusFmt = typeof surplus === 'number'
+    ? `$${Math.round(surplus).toLocaleString('en-US')}`
+    : null;
+
+  const title = surplusFmt
+    ? `${fullName || 'Your case'} — ${surplusFmt} surplus from your home`
+    : `${fullName || 'Your case'} — your foreclosure case`;
+
+  const description = surplusFmt
+    ? `${data.property_address} · ${data.county} County, OH. The Clerk of Courts is holding ${surplusFmt} for you.`
+    : `${data.property_address} · ${data.county} County, OH. We've been tracking your case.`;
+
+  const photoAddress = `${data.property_address}, ${data.county} County, OH`;
+  const ogImage = `https://refundlocators.com/api/streetview?address=${encodeURIComponent(photoAddress)}&w=640&h=400`;
+  const pageUrl = `https://refundlocators.com/s/${token}`;
+
   return {
-    title: `${data.first_name} — FundLocators`,
+    title,
+    description,
     robots: { index: false, follow: false }, // never index personal pages
+    openGraph: {
+      type: 'website',
+      url: pageUrl,
+      siteName: 'RefundLocators',
+      title,
+      description,
+      images: [{ url: ogImage, width: 640, height: 400, alt: `${data.property_address}, photo from public street view` }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage],
+    },
   };
 }
 
