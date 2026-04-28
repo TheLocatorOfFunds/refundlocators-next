@@ -48,8 +48,13 @@ export default function LaurenChat({
     setSession(getSessionId());
     if (!greeted.current) {
       greeted.current = true;
+      // Kill-switch: when CONFIG.LAUREN_DISABLED is on, render a static
+      // offline message instead of the greeting and don't allow sends.
+      const initial = CONFIG.LAUREN_DISABLED
+        ? CONFIG.LAUREN_DISABLED_MESSAGE
+        : (greeting ?? DEFAULT_GREETING);
       const timer = setTimeout(() => {
-        setMessages([{ role: 'assistant', content: greeting ?? DEFAULT_GREETING }]);
+        setMessages([{ role: 'assistant', content: initial }]);
       }, 700);
       return () => clearTimeout(timer);
     }
@@ -63,6 +68,13 @@ export default function LaurenChat({
 
   const send = useCallback(async () => {
     if (busy || !input.trim()) return;
+    // Kill-switch: short-circuit before fetch when Lauren is disabled.
+    if (CONFIG.LAUREN_DISABLED) {
+      const userMsg: Message = { role: 'user', content: input.trim() };
+      setMessages(prev => [...prev, userMsg, { role: 'assistant', content: CONFIG.LAUREN_DISABLED_MESSAGE }]);
+      setInput('');
+      return;
+    }
     const text = input.trim();
     setInput('');
 

@@ -165,12 +165,16 @@ export default function LaurenSheet({
 
   useEffect(() => {
     if (open && messages.length === 0) {
-      setMessages([{ role: 'assistant', content: greeting }]);
+      // Kill-switch: replace the greeting with the offline message and
+      // skip the auto-seed send.
+      const initial = CONFIG.LAUREN_DISABLED ? CONFIG.LAUREN_DISABLED_MESSAGE : greeting;
+      setMessages([{ role: 'assistant', content: initial }]);
       const focusT = setTimeout(() => inputRef.current?.focus(), 350);
       // If a seed message is supplied, send it on the user's behalf so
       // Lauren picks up the conversation immediately with full context.
+      // Skip the seed-send entirely when the kill-switch is on.
       let seedT: ReturnType<typeof setTimeout> | undefined;
-      if (seed && seed.trim()) {
+      if (seed && seed.trim() && !CONFIG.LAUREN_DISABLED) {
         seedT = setTimeout(() => { void send(seed); }, 600);
       }
       return () => { clearTimeout(focusT); if (seedT) clearTimeout(seedT); };
@@ -245,6 +249,20 @@ export default function LaurenSheet({
     // Use the ref (not state) for the lock — refs see writes immediately
     // across closures, state doesn't until the next render.
     if (!text || inFlightRef.current) return;
+
+    // Kill-switch: short-circuit before any backend call.
+    if (CONFIG.LAUREN_DISABLED) {
+      const userMsg: ChatMsg = { role: 'user', content: text };
+      const next: ChatMsg[] = [
+        ...messagesRef.current,
+        userMsg,
+        { role: 'assistant', content: CONFIG.LAUREN_DISABLED_MESSAGE },
+      ];
+      messagesRef.current = next;
+      setMessages(next);
+      setInput('');
+      return;
+    }
 
     inFlightRef.current = true;
     setThinking(true);
