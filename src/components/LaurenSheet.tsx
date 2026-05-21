@@ -159,9 +159,60 @@ export default function LaurenSheet({
   // agent" — the competitive research found that framing makes scam-wary,
   // older audiences MORE anxious, not less. Same product, framed as a person
   // who knows the answer.
-  const greeting = token
+  //
+  // Returning-visitor framing: if /api/lauren/recent-history says this
+  // visitor has chatted with us in the last 30 days, we soften the open
+  // with a "welcome back" so they don't feel like they're starting from
+  // scratch. Set asynchronously below; defaults to the first-time greeting
+  // until the fetch resolves so we never block the open.
+  const [returningHint, setReturningHint] = useState<string | null>(null);
+  const baseGreeting = token
     ? `Hi ${token.firstName || 'there'}, I'm Lauren. I handle surplus funds cases like yours at ${token.propertyAddress}. What do you want to know?`
     : `Hi, I'm Lauren. I've read every Ohio foreclosure case in the public record, so I can give you a straight answer about your situation — how the process works, what to expect, whether your address has surplus, anything. What's on your mind?`;
+  const greeting = returningHint
+    ? token
+      ? `Welcome back. Still here about your case at ${token.propertyAddress}, or something different on your mind?`
+      : `Welcome back. Last time we touched on "${returningHint}". Want to pick that up, or is something else on your mind?`
+    : baseGreeting;
+
+  // Returning-visitor probe — fires once per open. Cheap GET, no body,
+  // no PII; the route returns nothing if the visitor has no recent
+  // history or if their last conversation contained an opt-out keyword.
+  // Runs in parallel with the greeting render; if it resolves before
+  // the user has typed anything, we swap the greeting in place so they
+  // see "welcome back" instead of the first-time opener.
+  useEffect(() => {
+    if (!open) { setReturningHint(null); return; }
+    if (CONFIG.LAUREN_DISABLED) return;
+    let cancelled = false;
+    const vid = getVisitorId();
+    fetch(`/api/lauren/recent-history?visitor_id=${encodeURIComponent(vid)}`, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        if (cancelled) return;
+        if (j && j.has_history) {
+          setReturningHint(j.last_topic_hint || '');
+        }
+      })
+      .catch(() => { /* silent — chat works fine without this */ });
+    return () => { cancelled = true; };
+  }, [open]);
+
+  // Swap the greeting in place when the probe resolves AFTER we've
+  // already painted the first-time greeting. Only swaps when the
+  // transcript is still just the original greeting (no user input
+  // yet) — never overwrites a real conversation.
+  useEffect(() => {
+    if (!returningHint) return;
+    if (messages.length !== 1) return;
+    if (messages[0].role !== 'assistant') return;
+    if (messages[0].content === greeting) return;          // already swapped
+    if (messages[0].content === CONFIG.LAUREN_DISABLED_MESSAGE) return; // kill-switch on
+    setMessages([{ role: 'assistant', content: greeting }]);
+  }, [returningHint, greeting, messages]);
 
   useEffect(() => {
     if (open && messages.length === 0) {
