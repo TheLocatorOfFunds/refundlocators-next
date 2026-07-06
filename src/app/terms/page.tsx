@@ -48,7 +48,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="Fees and contingency">
-          Our standard fee is <strong style={{ color: 'var(--gold)' }}>20% of funds recovered</strong>. You pay nothing unless we successfully recover funds on your behalf. In cases requiring contested litigation, a fee of 35% applies — you will be informed of this before signing any agreement. No upfront costs, deposits, or processing fees are charged under any circumstances.
+          Our fee is a contingency fee of <strong style={{ color: 'var(--gold)' }}>up to 25% of funds recovered</strong>, set case by case and stated in your written Recovery Agreement before we file. You pay nothing unless we successfully recover funds on your behalf. No upfront costs, deposits, or processing fees are charged under any circumstances.
         </Section>
 
         <Section title="Recovery agreement">

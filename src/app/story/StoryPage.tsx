@@ -101,11 +101,11 @@ export default function StoryPage() {
         </p>
         <ul style={S.ul}>
           <li>
-            <strong>Disclosed 25% fee, no add-ons.</strong> Not 30. Not 40. No
-            &ldquo;administrative fees,&rdquo; no &ldquo;filing fees,&rdquo; no
-            &ldquo;case prep fees.&rdquo; The fee is on the homepage, on this
-            page, in the agreement, and in every quote. If we recover $0, you
-            owe $0.
+            <strong>A disclosed, capped fee, no add-ons.</strong> Not the 30 or
+            40 percent the industry charges. No &ldquo;administrative
+            fees,&rdquo; no &ldquo;filing fees,&rdquo; no &ldquo;case prep
+            fees.&rdquo; Your exact percentage is in the agreement and in every
+            quote before you sign. If we recover $0, you owe $0.
           </li>
           <li>
             <strong>A way to get your specific question answered instantly.</strong>{' '}
@@ -150,14 +150,14 @@ export default function StoryPage() {
           <LedgerRow k="Court costs &amp; fees"            v="− $9,000" />
           <LedgerDivider />
           <LedgerRow k="Surplus held by the county clerk" v="$110,000" emphasis />
-          <LedgerRow k="Our fee (25% of recovery)"        v="− $27,500" muted />
+          <LedgerRow k="Our fee (25% in this case)"       v="− $27,500" muted />
           <LedgerDivider />
           <LedgerRow k="What you keep" v="$82,500" big />
           <div style={S.ledgerCaption}>
             Illustrative example based on a typical Hamilton County case.
-            Your actual numbers depend on the sale price, mortgage balance, and
-            specific court costs in your case. Lauren can tell you the real
-            numbers for your address.
+            Your actual numbers depend on the sale price, mortgage balance,
+            specific court costs, and the fee set in your written agreement.
+            Lauren can tell you the real numbers for your address.
           </div>
         </div>
 
@@ -189,8 +189,8 @@ export default function StoryPage() {
         <p style={S.p}>
           We&apos;re a young company. We don&apos;t have hundreds of testimonials
           yet. We don&apos;t need to. The math is the math, the attorney is real,
-          the fee is fixed, and you can verify every claim on this page in a few
-          minutes. That&apos;s the only trust signal that means anything in a
+          the fee is capped and in writing, and you can verify every claim on
+          this page in a few minutes. That&apos;s the only trust signal that means anything in a
           space full of bad actors.
         </p>
 

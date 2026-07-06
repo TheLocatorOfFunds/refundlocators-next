@@ -382,7 +382,7 @@ export default function HomeClient() {
           )}
 
           <div className="pass-legal home-legal">
-            FundLocators LLC · Licensed Ohio attorney files · 25% of recovery · $0 upfront
+            FundLocators LLC · Licensed Ohio attorney files · Contingency fee in writing · $0 upfront
             <br />
             <span style={{ fontSize: 10.5, color: 'var(--pass-cream-45)' }}>
               <a href="/is-this-legit" style={{ color: 'var(--pass-gold)', textDecoration: 'none' }}>

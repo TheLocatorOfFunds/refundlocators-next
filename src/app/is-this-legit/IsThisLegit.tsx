@@ -80,7 +80,7 @@ export default function IsThisLegit() {
         <ul style={S.ul}>
           <li><strong>We will never ask for your Social Security number, bank account, credit card, or login credentials</strong> to start. None of that is needed to identify a surplus claim. If a service asks for it upfront, walk away — that goes for us, them, and anyone else.</li>
           <li><strong>You can verify our entity</strong> at the link above — we&apos;re FundLocators LLC, registered in Indiana, operating in Ohio.</li>
-          <li><strong>We charge 25% of what we recover. Zero upfront, ever.</strong> If we recover $0 you owe $0. The 25% is in the offer, on this page, in the agreement you&apos;d sign, and on every quote. No hidden fees, no &ldquo;administrative costs,&rdquo; no add-ons.</li>
+          <li><strong>Our fee is a percentage of what we recover — capped, and put in writing before you sign. Zero upfront, ever.</strong> If we recover $0 you owe $0. The exact percentage is in the offer, in the agreement you&apos;d sign, and on every quote. No hidden fees, no &ldquo;administrative costs,&rdquo; no add-ons.</li>
           <li><strong>A licensed Ohio attorney files your claim</strong> — not us. Their name and Ohio bar number are in the agreement before you sign.</li>
           <li><strong>You can call our founder Nathan directly</strong> at <a href="tel:+15135162306" style={S.link}>(513) 516-2306</a>. Not a call center, not an answering service — his actual cell. Most services hide their leadership; ours doesn&apos;t.</li>
           <li><strong>You can also verify us with the Ohio Attorney General Consumer Protection line</strong> at <a href="tel:18002823784" style={S.link}>1-800-282-3784</a> — they&apos;ll confirm any complaints (we have none) and answer questions about surplus recovery in general.</li>
@@ -98,7 +98,8 @@ export default function IsThisLegit() {
           treated as.
         </p>
         <p style={S.p}>
-          That&apos;s why our fee is fixed at 25% with no add-ons. Why our attorney
+          That&apos;s why our fee is capped, put in writing before you sign, and
+          carries no add-ons. Why our attorney
           is named in writing. Why my phone number is on this page. Why we built an
           AI agent (Lauren) who can answer your questions in plain English at 11 PM
           when you&apos;re scared and Googling. And why this page exists at all —

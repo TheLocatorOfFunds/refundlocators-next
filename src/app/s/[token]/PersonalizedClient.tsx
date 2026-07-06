@@ -321,7 +321,7 @@ function PassHero({
         <div className="pass-legal">
           Filed by a licensed Ohio attorney
           <br />
-          25% of recovery · $0 upfront
+          Contingency fee in writing · $0 upfront
         </div>
       </div>
 
@@ -461,7 +461,7 @@ const FAQS: Array<{ q: string; a: string }> = [
   },
   {
     q: `What's the fee?`,
-    a: `Twenty-five percent of what we recover for you. Zero upfront. If the court releases $0, you owe $0. The fee, the process, and your right to cancel are all spelled out in the one-page agreement you'll sign.`,
+    a: `A percentage of what we recover for you — the exact rate is set in the one-page agreement you'll sign, before anything is filed. Zero upfront. If the court releases $0, you owe $0. The fee, the process, and your right to cancel are all spelled out in writing.`,
   },
   {
     q: 'Are you attorneys?',

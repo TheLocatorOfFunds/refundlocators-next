@@ -52,13 +52,13 @@ export default function StatsBar() {
       {[
         { target: 7, suffix: ' days', label: 'to file your claim' },
         { target: 47000, label: 'avg Ohio surplus', abbr: true },
-        { target: 25, suffix: '%', label: 'fee · zero upfront' },
-      ].map((s, i) => (
+        { target: 0, prefix: '$', label: 'upfront · fee in writing' },
+      ].map((s: { target: number; prefix?: string; suffix?: string; label: string; abbr?: boolean }, i) => (
         <React.Fragment key={i}>
           {i > 0 && <div style={{ width: 1, background: 'var(--border)', flexShrink: 0 }} />}
           <div style={{ flex: 1, textAlign: 'center', padding: '24px 16px' }}>
             <div style={{ fontSize: 32, fontWeight: 900, letterSpacing: '-.04em', color: 'var(--cream)' }}>
-              <StatCounter target={s.target} suffix={s.suffix} abbr={s.abbr} />
+              <StatCounter target={s.target} prefix={s.prefix} suffix={s.suffix} abbr={s.abbr} />
             </div>
             <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--cream-45)', marginTop: 4 }}>
               {s.label}
