@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { SearchResult, ForeclosureCase } from '@/lib/supabase';
 
 const SEARCH_STEPS = [
-  'Checking Ohio sheriff sale records…',
+  'Checking sheriff sale records…',
   'Searching statewide surplus fund filings…',
   'Matching against attorney-filed cases…',
   'Cross-referencing Clerk of Courts holdings…',
@@ -62,7 +62,7 @@ function ResultConfirmed({ result, onClaim, onChat }: {
         <motion.div variants={rowItem}><Row label="Status" value="Unclaimed" highlight /></motion.div>
       </motion.div>
       <p style={{ fontSize: 14, color: 'var(--cream-45)', marginBottom: 20, lineHeight: 1.6 }}>
-        You have a statutory right to claim this money. Our attorneys handle the legal filing on your behalf for 20% of recovered funds. Zero upfront cost.
+        You have a legal right to claim this money. Our attorneys handle the filing on your behalf for 25% of what we recover. Zero upfront cost — if we recover nothing, you owe nothing.
       </p>
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         <AnimatedButton onClick={onClaim} primary>That&apos;s my property — help me claim it →</AnimatedButton>
@@ -104,7 +104,7 @@ function ResultLikely({ result, onClaim, onChat }: {
         )}
       </motion.div>
       <p style={{ fontSize: 14, color: 'var(--cream-45)', marginBottom: 20, lineHeight: 1.6 }}>
-        The money typically sits with the county Clerk of Courts for 5 years after the sale. If nobody claims it, it escheats to the state. Our attorney files the motion — we cover the filing fees. You pay 20% only if we recover.
+        The money sits with the county Clerk of Courts after the sale. If nobody claims it, it eventually goes to the state and gets much harder to get back. Our attorney files the motion — we cover the filing fees. You pay 25% only if we recover.
       </p>
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         <AnimatedButton onClick={onClaim} primary>Help me claim this surplus →</AnimatedButton>

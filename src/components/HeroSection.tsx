@@ -42,7 +42,7 @@ export default function HeroSection() {
           }}
         >
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--gold)', animation: 'pulse-dot 2s ease-in-out infinite' }} />
-          Surplus Fund Intelligence · Ohio
+          Foreclosure surplus recovery
         </motion.div>
 
         {/* H1 line 1 */}
@@ -76,7 +76,7 @@ export default function HeroSection() {
             maxWidth: 500, margin: '0 auto 36px', lineHeight: 1.65, textAlign: 'center',
           }}
         >
-          When a home sells at foreclosure for more than the debt, the leftover money is yours by Ohio law. Most people never hear about it. Type the address — we&apos;ll tell you in 10 seconds.
+          When a home sells at foreclosure for more than the debt, the leftover money belongs to the former owner — not the bank, not the county. Most people are never told. Put in the address and we&apos;ll check the court records for free.
         </motion.p>
 
         {/* Search box */}
@@ -97,11 +97,11 @@ export default function HeroSection() {
           {...fadeUp(0.84)}
           style={{ marginTop: 28, fontSize: 13, color: 'var(--cream-45)', textAlign: 'center' }}
         >
-          Prefer to talk?{' '}
+          Prefer a person?{' '}
           <a href="tel:+15135162306" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 600 }}>
             Call Nathan
           </a>{' '}
-          · CEO · Ohio-based
+          · owner · answers his own phone
         </motion.p>
 
         {/* Scroll cue */}
@@ -134,8 +134,11 @@ export default function HeroSection() {
           <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold)' }}>
             Or just ask Lauren
           </span>
-          <p style={{ fontSize: 14, color: 'var(--cream-45)', marginTop: 6 }}>
-            If your address didn&apos;t match, or you have questions first — Lauren reads Ohio court records in real time.
+          <p style={{ fontSize: 15, color: 'var(--cream-70)', marginTop: 8, lineHeight: 1.6 }}>
+            Lauren reads court records in real time and answers straight — including when the answer is &ldquo;there&apos;s nothing here&rdquo; or &ldquo;you should talk to a lawyer instead of us.&rdquo; She&apos;s awake at 2am when you are, and she doesn&apos;t need your phone number to help.
+          </p>
+          <p style={{ fontSize: 13, color: 'var(--cream-45)', marginTop: 10, lineHeight: 1.6 }}>
+            People usually start with: <span style={{ color: 'var(--gold)' }}>&ldquo;Is this a scam?&rdquo;</span> · <span style={{ color: 'var(--gold)' }}>&ldquo;Why didn&apos;t the county tell me?&rdquo;</span> · <span style={{ color: 'var(--gold)' }}>&ldquo;What&apos;s the catch?&rdquo;</span>
           </p>
         </div>
         <LaurenChat />

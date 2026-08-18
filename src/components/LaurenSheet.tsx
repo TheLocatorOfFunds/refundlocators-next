@@ -168,7 +168,7 @@ export default function LaurenSheet({
   const [returningHint, setReturningHint] = useState<string | null>(null);
   const baseGreeting = token
     ? `Hi ${token.firstName || 'there'}, I'm Lauren. I handle surplus funds cases like yours at ${token.propertyAddress}. What do you want to know?`
-    : `Hi, I'm Lauren. I've read every Ohio foreclosure case in the public record, so I can give you a straight answer about your situation — how the process works, what to expect, whether your address has surplus, anything. What's on your mind?`;
+    : `Hi, I'm Lauren. I help people find and recover foreclosure surplus funds anywhere in the country — how the process works, what to expect, whether there's money waiting on your address, anything. What's on your mind?`;
   const greeting = returningHint
     ? token
       ? `Welcome back. Still here about your case at ${token.propertyAddress}, or something different on your mind?`
@@ -329,7 +329,11 @@ export default function LaurenSheet({
     // 25 s hard ceiling — abort the request rather than leaving the user
     // staring at a dim send button forever.
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25_000);
+    // 50s ceiling (was 25s): the national Lauren consults the state matrix
+    // and knowledge base mid-reply, which can legitimately run past 25s —
+    // the old ceiling was hanging up on her and showing "try once more"
+    // (Nathan hit this on 2026-08-18). Long-term fix is EF latency, not UI.
+    const timeoutId = setTimeout(() => controller.abort(), 50_000);
 
     const finishWith = (replyContent: string) => {
       const next = [...messagesRef.current, { role: 'assistant' as const, content: replyContent }];
@@ -480,7 +484,7 @@ export default function LaurenSheet({
         </div>
 
         <div className="la-foot">
-          AI agent · trained on Ohio surplus funds law. For a human, text{' '}
+          AI agent · surplus funds, answered straight · nationwide. For a human, text{' '}
           <a href="sms:+15135162306">(513) 516-2306</a>.
         </div>
       </div>
