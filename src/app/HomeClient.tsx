@@ -133,7 +133,7 @@ export default function HomeClient() {
         title: "Possible match — let's confirm yours.",
         body: (
           <>
-            The address turned up partial matches in Ohio court records. Lauren
+            The address turned up partial matches in court records. Lauren
             can ask a couple of follow-up questions — sale year, name on the
             deed, exact street formatting — and pin down your case.
           </>
@@ -204,20 +204,22 @@ export default function HomeClient() {
               </svg>
             </div>
             <div className="home-brand-name">RefundLocators</div>
-            <div className="home-brand-tagline">Built for Ohio homeowners · not the leads list</div>
+            <div className="home-brand-tagline">Built for homeowners · everything in writing</div>
           </div>
 
           <h1 className="home-headline">
-            Lost a home in Ohio?{' '}
+            Lost a home to foreclosure?{' '}
             <span className="home-headline-accent">
-              The county may owe you money.
+              The county may be holding money that&apos;s yours.
             </span>
           </h1>
 
           <p className="home-sub">
-            When a foreclosure sells for more than the mortgage owed, the
-            leftover — the <strong>surplus</strong> — belongs to you by law.
-            We read every Ohio court record to find your case.
+            When a home sells at auction for more than what&apos;s owed on it,
+            the money left over after the debts are paid — the{' '}
+            <strong>surplus</strong>{' '}— goes to the former owner. Not the bank.
+            Not the county. Most people are never told it exists. Put in the
+            address and we&apos;ll check the court records for free.
           </p>
 
           <form onSubmit={handleSearch} className="home-search" noValidate>
@@ -298,12 +300,14 @@ export default function HomeClient() {
             />
             <div className="home-lauren-copy">
               <div className="home-lauren-name">
-                Ohio surplus law, answered instantly
+                Not sure yet? Ask Lauren.
               </div>
               <div className="home-lauren-blurb">
-                Lauren has read every Ohio foreclosure record and knows the
-                Revised Code cold. Ask her your specific question and get a
-                straight answer in seconds. Free, private, no signup.
+                Our AI assistant. Ask her how surplus funds work, what happens
+                after a sheriff&apos;s sale, or whether any of this is real —
+                she&apos;ll give you a straight answer or tell you she
+                doesn&apos;t know. She&apos;s not a lawyer and won&apos;t
+                pretend to be. Free, any hour, no signup and no phone number.
               </div>
             </div>
           </div>
@@ -314,7 +318,7 @@ export default function HomeClient() {
             onClick={() => setLaurenOpen(true)}
           >
             <span className="home-lauren-cta-dot" aria-hidden="true" />
-            Get my question answered
+            Ask Lauren — free, no signup
           </button>
 
           {/* When real recoveries land, render: "$X returned to N Ohio families".
@@ -373,16 +377,16 @@ export default function HomeClient() {
                   </g>
                 </svg>
               </span>{' '}
-              {familyCount} Ohio families
+              {familyCount} families
             </div>
           ) : (
             <div className="home-trust">
-              Built for Ohio · headquartered in Cincinnati
+              A real company · run by one person you can actually call
             </div>
           )}
 
           <div className="pass-legal home-legal">
-            FundLocators LLC · Licensed Ohio attorney files · Contingency fee in writing · $0 upfront
+            FundLocators LLC · A licensed attorney files every claim · Contingency fee in writing · $0 upfront
             <br />
             <span style={{ fontSize: 10.5, color: 'var(--pass-cream-45)' }}>
               <a href="/is-this-legit" style={{ color: 'var(--pass-gold)', textDecoration: 'none' }}>
