@@ -74,8 +74,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// Branded dead-end for missing or expired links. People open texts days or
+// weeks late — a bare 404 kills the lead silently, so give them a way back
+// in (address search on the homepage, or text the team directly).
+function LinkFallback({ firstName }: { firstName?: string | null }) {
+  const name = (firstName || '').trim();
+  return (
+    <div className="pass-root" data-bg="flat" data-gold="full">
+      <div className="pass-fallback">
+        <header className="pass-top">
+          <span className="pass-top-domain">refundlocators.com</span>
+        </header>
+        <h1 className="pass-fallback-title">
+          {name ? `${name}, this` : 'This'} secure link is no longer active.
+        </h1>
+        <p className="pass-fallback-body">
+          Personalized links expire after 90 days for your privacy — but if there
+          was surplus money attached to a property, it doesn&apos;t go away when the
+          link does. It stays with the county until it&apos;s claimed or the claim
+          window closes.
+        </p>
+        <div className="pass-fallback-actions">
+          <a className="pass-cta-primary" href="/">
+            <span>Search my address</span>
+            <span className="pass-arrow" aria-hidden="true">→</span>
+          </a>
+          <a className="pass-cta-secondary" href="sms:+15135162306?&body=Hi%2C%20my%20RefundLocators%20link%20expired%20%E2%80%94%20can%20you%20send%20a%20new%20one%3F">
+            Text us for a fresh link
+          </a>
+        </div>
+        <div className="pass-legal">
+          FundLocators LLC · Licensed Ohio attorney files · Contingency fee in writing · $0 upfront
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default async function PersonalizedPage({ params }: Props) {
   const { token } = await params;
+
+  // Obvious junk (crawler probes, truncated URLs) still gets a plain 404.
+  if (!/^[1-9A-HJ-NP-Za-km-z]{4,12}$/.test(token)) return notFound();
+
   const db = getDB();
 
   const { data: link } = await db
@@ -84,19 +125,14 @@ export default async function PersonalizedPage({ params }: Props) {
     .eq('token', token)
     .single();
 
-  // Not found or expired
-  if (!link) return notFound();
-  if (new Date(link.expires_at) < new Date()) return notFound();
+  if (!link) return <LinkFallback />;
+  if (new Date(link.expires_at) < new Date()) {
+    return <LinkFallback firstName={link.first_name} />;
+  }
 
-  // Record the view (fire-and-forget)
-  db.from('personalized_links')
-    .update({
-      view_count: (link.view_count || 0) + 1,
-      last_viewed_at: new Date().toISOString(),
-      first_viewed_at: link.first_viewed_at ?? new Date().toISOString(),
-    })
-    .eq('token', token)
-    .then(() => null);
+  // View counting happens client-side via /api/s/event ('viewed') — SMS
+  // link-preview bots fetch this page to build the preview card, so a
+  // server-render increment would count people who never opened the link.
 
   return <PersonalizedClient link={link as PersonalizedLink} />;
 }

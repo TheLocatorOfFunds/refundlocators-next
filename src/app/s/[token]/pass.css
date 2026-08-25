@@ -369,6 +369,110 @@
   text-align: center;
 }
 
+/* ── Verify-yourself link + attorney line (CaseCard) ─────────────────────── */
+.cc-receipt-foot-link {
+  color: var(--pass-gold);
+  text-decoration: none;
+}
+
+.cc-verify {
+  display: block;
+  margin: 14px auto 0;
+  max-width: 480px;
+  padding: 12px 16px;
+  border: 1px dashed var(--pass-cream-20);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--pass-cream-70);
+  text-decoration: none;
+}
+
+.cc-verify:active { background: rgba(255, 255, 255, 0.04); }
+
+/* ── Wrong-person flag (footer) ──────────────────────────────────────────── */
+.pass-footer-wrong {
+  margin-top: 14px;
+  font-size: 11.5px;
+  color: var(--pass-cream-45);
+}
+
+.pass-footer-wrong-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--pass-cream-45);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* ── Save-contact vCard button (claim done screen) ───────────────────────── */
+.claim-done-vcard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px auto 0;
+  padding: 12px 16px;
+  border: 1px solid var(--pass-cream-10);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--pass-gold);
+  text-decoration: none;
+}
+
+/* ── Expired / missing link fallback ─────────────────────────────────────── */
+.pass-fallback {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 28px;
+  gap: 18px;
+}
+
+.pass-fallback-title {
+  font-family: var(--pass-serif, Georgia, serif);
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--pass-cream);
+  max-width: 480px;
+  margin: 8px 0 0;
+}
+
+.pass-fallback-body {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--pass-cream-70);
+  max-width: 440px;
+  margin: 0;
+}
+
+.pass-fallback-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.pass-fallback-actions .pass-cta-primary,
+.pass-fallback-actions .pass-cta-secondary {
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.pass-fallback .pass-legal { margin-top: 26px; }
+
 /* ── Founder note (real video from Nathan, hidden until asset exists) ────── */
 .pass-founder-section {
   max-width: 560px;
