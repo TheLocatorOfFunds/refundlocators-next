@@ -89,13 +89,13 @@ export default function IsThisLegit() {
         {/* Section 5 — the founder bit */}
         <h2 style={S.h2}>Why I built this</h2>
         <p style={S.p}>
-          I (Nathan) lost a home to foreclosure in Ohio. Nobody told me there was
-          surplus money I could claim. By the time I figured it out, I&apos;d been
-          cold-called by half a dozen recovery companies — most of them aggressive,
-          half of them charging 30-40%, none of them transparent. I built
-          RefundLocators because the people this happens to deserve a service that
-          treats them like the homeowners they were, not the marks they&apos;re
-          treated as.
+          Before I (Nathan) built this, I spent months studying the surplus
+          recovery industry — the companies that cold-call families after a
+          foreclosure. What I found was aggressive outreach, 30-40% fees, and
+          almost nobody disclosing their percentage up front. I built
+          RefundLocators because the people this happens to deserve a service
+          that treats them like the homeowners they were, not the marks
+          they&apos;re treated as.
         </p>
         <p style={S.p}>
           That&apos;s why our fee is capped, put in writing before you sign, and

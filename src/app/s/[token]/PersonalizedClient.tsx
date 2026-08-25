@@ -364,6 +364,63 @@ function WhyWeReachOut({ copy, onStartClaim }: { copy: CopyBundle; onStartClaim:
 
 // ── Case card (second screen) ────────────────────────────────────────────────
 
+// ── Founder note ─────────────────────────────────────────────────────────────
+// Short real video from Nathan, keyed to the recipient's relationship —
+// five real recorded variants (homeowner/spouse/child/parent/sibling) with
+// default.mp4 as the generic fallback. The section renders nothing until
+// an asset exists at /s-assets/founder/, so this ships ahead of filming.
+// Per CEO + Compliance 2026-08-25: real recordings only — no AI-generated
+// or per-recipient synthetic video; no fee numbers, no case-specific
+// amounts, no hardship claims. Approved script: docs/founder-video-script.md.
+
+function FounderNote({ relationship }: { relationship: Relationship }) {
+  const [src, setSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const candidates = [
+      `/s-assets/founder/${relationship}.mp4`,
+      '/s-assets/founder/default.mp4',
+    ];
+    (async () => {
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { method: 'HEAD' });
+          const type = res.headers.get('content-type') || '';
+          if (res.ok && type.startsWith('video/')) {
+            if (!cancelled) setSrc(url);
+            return;
+          }
+        } catch { /* unreachable asset — stay hidden */ }
+        if (cancelled) return;
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [relationship]);
+
+  if (!src) return null;
+
+  return (
+    <section className="pass-section pass-founder-section">
+      <div className="pass-section-eyebrow">A NOTE FROM OUR FOUNDER</div>
+      <div className="pass-founder-video-wrap">
+        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+        <video
+          className="pass-founder-video"
+          src={src}
+          poster={src.replace(/\.mp4$/, '.jpg')}
+          controls
+          playsInline
+          preload="metadata"
+        />
+      </div>
+      <div className="pass-founder-caption">
+        Nathan Johnson · Founder · <a href={`sms:${CONFIG.NATHAN_PHONE}`}>{CONFIG.NATHAN_PHONE_DISPLAY}</a>
+      </div>
+    </section>
+  );
+}
+
 function CaseCard({ token }: { token: TokenView }) {
   const surplusMid = token.confirmed ? (token.confirmedAmount ?? 0) : token.estimatedMidpoint;
   const fees = Math.max(2000, Math.round((token.salePrice - token.judgmentAmount - surplusMid) / 100) * 100);
@@ -918,6 +975,7 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
         onTalkToLauren={() => setLaurenOpen(true)}
       />
       <WhyWeReachOut copy={buildCopy(token)} onStartClaim={() => setModalOpen(true)} />
+      <FounderNote relationship={token.relationship} />
       <CaseCard token={token} />
       <FAQ token={token} />
 
