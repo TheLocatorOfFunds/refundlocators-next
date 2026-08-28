@@ -634,7 +634,7 @@ function FAQ({ token }: { token: TokenView }) {
         </div>
         <div className="pass-footer-wrong">
           {flaggedWrongPerson ? (
-            <span>Thanks for letting us know — sorry for the interruption.</span>
+            <span>Done — this number won&apos;t hear from us again. Sorry for the interruption.</span>
           ) : (
             <button
               type="button"
@@ -644,7 +644,7 @@ function FAQ({ token }: { token: TokenView }) {
                 setFlaggedWrongPerson(true);
               }}
             >
-              Not {token.firstName || 'you'}? Tap here to let us know — or reply STOP to the text.
+              Not {token.firstName || 'you'}? Tap here and we&apos;ll stop texting this number.
             </button>
           )}
         </div>
