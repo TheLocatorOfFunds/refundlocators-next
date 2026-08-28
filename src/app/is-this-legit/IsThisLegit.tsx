@@ -80,7 +80,7 @@ export default function IsThisLegit() {
         <ul style={S.ul}>
           <li><strong>We will never ask for your Social Security number, bank account, credit card, or login credentials</strong> to start. None of that is needed to identify a surplus claim. If a service asks for it upfront, walk away — that goes for us, them, and anyone else.</li>
           <li><strong>You can verify our entity</strong> at the link above — we&apos;re FundLocators LLC, registered in Indiana, operating in Ohio.</li>
-          <li><strong>We charge 25% of what we recover. Zero upfront, ever.</strong> If we recover $0 you owe $0. The 25% is in the offer, on this page, in the agreement you&apos;d sign, and on every quote. No hidden fees, no &ldquo;administrative costs,&rdquo; no add-ons.</li>
+          <li><strong>Our fee is a percentage of what we recover — capped, and put in writing before you sign. Zero upfront, ever.</strong> If we recover $0 you owe $0. The exact percentage is in the offer, in the agreement you&apos;d sign, and on every quote. No hidden fees, no &ldquo;administrative costs,&rdquo; no add-ons.</li>
           <li><strong>A licensed Ohio attorney files your claim</strong> — not us. Their name and Ohio bar number are in the agreement before you sign.</li>
           <li><strong>You can call our founder Nathan directly</strong> at <a href="tel:+15135162306" style={S.link}>(513) 516-2306</a>. Not a call center, not an answering service — his actual cell. Most services hide their leadership; ours doesn&apos;t.</li>
           <li><strong>You can also verify us with the Ohio Attorney General Consumer Protection line</strong> at <a href="tel:18002823784" style={S.link}>1-800-282-3784</a> — they&apos;ll confirm any complaints (we have none) and answer questions about surplus recovery in general.</li>
@@ -89,16 +89,17 @@ export default function IsThisLegit() {
         {/* Section 5 — the founder bit */}
         <h2 style={S.h2}>Why I built this</h2>
         <p style={S.p}>
-          I (Nathan) lost a home to foreclosure in Ohio. Nobody told me there was
-          surplus money I could claim. By the time I figured it out, I&apos;d been
-          cold-called by half a dozen recovery companies — most of them aggressive,
-          half of them charging 30-40%, none of them transparent. I built
-          RefundLocators because the people this happens to deserve a service that
-          treats them like the homeowners they were, not the marks they&apos;re
-          treated as.
+          Before I (Nathan) built this, I spent months studying the surplus
+          recovery industry — the companies that cold-call families after a
+          foreclosure. What I found was aggressive outreach, 30-40% fees, and
+          almost nobody disclosing their percentage up front. I built
+          RefundLocators because the people this happens to deserve a service
+          that treats them like the homeowners they were, not the marks
+          they&apos;re treated as.
         </p>
         <p style={S.p}>
-          That&apos;s why our fee is fixed at 25% with no add-ons. Why our attorney
+          That&apos;s why our fee is capped, put in writing before you sign, and
+          carries no add-ons. Why our attorney
           is named in writing. Why my phone number is on this page. Why we built an
           AI agent (Lauren) who can answer your questions in plain English at 11 PM
           when you&apos;re scared and Googling. And why this page exists at all —

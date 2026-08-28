@@ -14,7 +14,34 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PersonalizedLink } from '@/lib/supabase';
 import { CONFIG } from '@/lib/config';
+import { COUNTIES, clerkSearchUrl } from '@/lib/counties';
 import { copyFor, type Relationship, type CopyBundle } from './copy';
+
+// ── Funnel events ────────────────────────────────────────────────────────────
+// Fire-and-forget beacons to /api/s/event. 'viewed' replaces the old
+// server-render view counter (link-preview bots fetch the page; only a real
+// browser runs this). sessionStorage guard keeps a same-session refresh from
+// double-counting while still counting genuine return visits.
+
+type FunnelEvent = 'viewed' | 'claim_modal_opened' | 'lauren_opened' | 'wrong_person';
+
+function sendEvent(token: string, event: FunnelEvent, oncePerSession = true) {
+  try {
+    const key = `rfl_ev_${event}_${token}`;
+    if (oncePerSession) {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, '1');
+    }
+  } catch { /* private mode — still send */ }
+  try {
+    fetch('/api/s/event', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token, event }),
+      keepalive: true,
+    }).catch(() => null);
+  } catch { /* never let tracking break the page */ }
+}
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -36,6 +63,7 @@ interface TokenView {
   confirmed: boolean;
   confirmedAmount: number | null;
   relationship: Relationship;
+  phone: string;
 }
 
 // ── Formatters ───────────────────────────────────────────────────────────────
@@ -94,6 +122,7 @@ function mapLinkToToken(link: PersonalizedLink): TokenView {
     confirmed: false,
     confirmedAmount: null,
     relationship: (link.relationship as Relationship) || 'homeowner',
+    phone: (link.phone || '').replace(/\D/g, '').slice(-10),
   };
 }
 
@@ -321,7 +350,7 @@ function PassHero({
         <div className="pass-legal">
           Filed by a licensed Ohio attorney
           <br />
-          25% of recovery · $0 upfront
+          Contingency fee in writing · $0 upfront
         </div>
       </div>
 
@@ -364,7 +393,70 @@ function WhyWeReachOut({ copy, onStartClaim }: { copy: CopyBundle; onStartClaim:
 
 // ── Case card (second screen) ────────────────────────────────────────────────
 
+// ── Founder note ─────────────────────────────────────────────────────────────
+// Short real video from Nathan, keyed to the recipient's relationship —
+// five real recorded variants (homeowner/spouse/child/parent/sibling) with
+// default.mp4 as the generic fallback. The section renders nothing until
+// an asset exists at /s-assets/founder/, so this ships ahead of filming.
+// Per CEO + Compliance 2026-08-25: real recordings only — no AI-generated
+// or per-recipient synthetic video; no fee numbers, no case-specific
+// amounts, no hardship claims. Approved script: docs/founder-video-script.md.
+
+function FounderNote({ relationship }: { relationship: Relationship }) {
+  const [src, setSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const candidates = [
+      `/s-assets/founder/${relationship}.mp4`,
+      '/s-assets/founder/default.mp4',
+    ];
+    (async () => {
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { method: 'HEAD' });
+          const type = res.headers.get('content-type') || '';
+          if (res.ok && type.startsWith('video/')) {
+            if (!cancelled) setSrc(url);
+            return;
+          }
+        } catch { /* unreachable asset — stay hidden */ }
+        if (cancelled) return;
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [relationship]);
+
+  if (!src) return null;
+
+  return (
+    <section className="pass-section pass-founder-section">
+      <div className="pass-section-eyebrow">A NOTE FROM OUR FOUNDER</div>
+      <div className="pass-founder-video-wrap">
+        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+        <video
+          className="pass-founder-video"
+          src={src}
+          poster={src.replace(/\.mp4$/, '.jpg')}
+          controls
+          playsInline
+          preload="metadata"
+        />
+      </div>
+      <div className="pass-founder-caption">
+        Nathan Johnson · Founder · <a href={`sms:${CONFIG.NATHAN_PHONE}`}>{CONFIG.NATHAN_PHONE_DISPLAY}</a>
+      </div>
+    </section>
+  );
+}
+
 function CaseCard({ token }: { token: TokenView }) {
+  // "Verify it yourself" — the county's own website is the one trust signal
+  // we can't fake. Only rendered when the county has a real clerk URL
+  // (no Google-search fallback here; a search link reads weaker than nothing).
+  const countyMeta = COUNTIES.find(c => c.name === token.county);
+  const verifyUrl = countyMeta?.clerkUrl ? clerkSearchUrl(countyMeta) : null;
+
   const surplusMid = token.confirmed ? (token.confirmedAmount ?? 0) : token.estimatedMidpoint;
   const fees = Math.max(2000, Math.round((token.salePrice - token.judgmentAmount - surplusMid) / 100) * 100);
 
@@ -417,9 +509,30 @@ function CaseCard({ token }: { token: TokenView }) {
           ))}
         </div>
         <div className="cc-receipt-foot">
-          Filed by a licensed Ohio attorney · public court record
+          Filed by our attorney partner Jeff Kalniz, licensed Ohio attorney ·{' '}
+          <a
+            href="https://www.supremecourt.ohio.gov/AttorneySearch/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cc-receipt-foot-link"
+          >
+            Ohio Bar #0068927
+          </a>
         </div>
       </div>
+
+      {verifyUrl && (
+        <a
+          className="cc-verify"
+          href={verifyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {token.caseNumber
+            ? <>Don&apos;t take our word for it — look up case {token.caseNumber} at the {token.county} County Clerk of Courts →</>
+            : <>Don&apos;t take our word for it — verify this at the {token.county} County Clerk of Courts →</>}
+        </a>
+      )}
 
       <a className="pass-nathan" href={`sms:+15135162306?&body=${smsBody}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -461,7 +574,7 @@ const FAQS: Array<{ q: string; a: string }> = [
   },
   {
     q: `What's the fee?`,
-    a: `Twenty-five percent of what we recover for you. Zero upfront. If the court releases $0, you owe $0. The fee, the process, and your right to cancel are all spelled out in the one-page agreement you'll sign.`,
+    a: `A percentage of what we recover for you — the exact rate is set in the one-page agreement you'll sign, before anything is filed. Zero upfront. If the court releases $0, you owe $0. The fee, the process, and your right to cancel are all spelled out in writing.`,
   },
   {
     q: 'Are you attorneys?',
@@ -479,6 +592,7 @@ const FAQS: Array<{ q: string; a: string }> = [
 
 function FAQ({ token }: { token: TokenView }) {
   const [openIdx, setOpenIdx] = useState(-1);
+  const [flaggedWrongPerson, setFlaggedWrongPerson] = useState(false);
   return (
     <section className="pass-section pass-faq-section">
       <div className="pass-section-eyebrow">QUESTIONS</div>
@@ -518,12 +632,36 @@ function FAQ({ token }: { token: TokenView }) {
           FundLocators LLC. Not a government service. Not a law firm. We partner with
           a licensed Ohio attorney to file your surplus claim.
         </div>
+        <div className="pass-footer-wrong">
+          {flaggedWrongPerson ? (
+            <span>Done — this number won&apos;t hear from us again. Sorry for the interruption.</span>
+          ) : (
+            <button
+              type="button"
+              className="pass-footer-wrong-btn"
+              onClick={() => {
+                sendEvent(token.token, 'wrong_person', false);
+                setFlaggedWrongPerson(true);
+              }}
+            >
+              Not {token.firstName || 'you'}? Tap here and we&apos;ll stop texting this number.
+            </button>
+          )}
+        </div>
       </div>
     </section>
   );
 }
 
 // ── Claim modal ──────────────────────────────────────────────────────────────
+
+function formatPhoneStatic(raw: string) {
+  const digits = raw.replace(/\D/g, '').slice(0, 10);
+  if (digits.length === 0) return '';
+  if (digits.length <= 3) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
 
 function ClaimModal({
   open, onClose, token,
@@ -540,21 +678,19 @@ function ClaimModal({
       setStage('form');
       const fullName = [token.firstName, token.lastName].filter(Boolean).join(' ');
       setName(fullName);
-      setAddress(`${token.propertyAddress}${token.county ? `, ${token.county} OH` : ''}`);
-      setPhone('');
+      // Mailing-address guess from the property record: street + city + zip
+      // when we parsed them, falling back to county so it's never bare.
+      const locality = token.city || (token.county ? `${token.county} County` : '');
+      setAddress(`${token.propertyAddress}${locality ? `, ${locality}` : ''}, OH${token.zip ? ' ' + token.zip : ''}`);
+      // Pre-filled from the number we texted — they only edit if it's wrong.
+      setPhone(token.phone ? formatPhoneStatic(token.phone) : '');
       setErrors({});
       const t = setTimeout(() => firstFieldRef.current?.focus(), 350);
       return () => clearTimeout(t);
     }
   }, [open, token]);
 
-  const formatPhone = (raw: string) => {
-    const digits = raw.replace(/\D/g, '').slice(0, 10);
-    if (digits.length === 0) return '';
-    if (digits.length <= 3) return `(${digits}`;
-    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-  };
+  const formatPhone = formatPhoneStatic;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -592,7 +728,11 @@ function ClaimModal({
 
   if (!open) return null;
 
-  const claimReference = `RFL-${(token.caseNumber || token.token).replace(/[^A-Z0-9]/gi, '').slice(-6).toUpperCase()}-${Math.floor(Math.random() * 900 + 100)}`;
+  // Deterministic — derived from the token so it's identical on every visit
+  // (was Math.random(), which minted a new "reference" per page load; if
+  // they quoted it to Lauren later it wouldn't match anything).
+  const refSeed = token.token.split('').reduce((a, c) => ((a * 31 + c.charCodeAt(0)) >>> 0), 7);
+  const claimReference = `RFL-${(token.caseNumber || token.token).replace(/[^A-Z0-9]/gi, '').slice(-6).toUpperCase()}-${100 + (refSeed % 900)}`;
 
   return (
     <div className="claim-scrim" role="dialog" aria-modal="true" aria-label="Start my claim">
@@ -704,6 +844,14 @@ function ClaimModal({
               <div className="claim-done-k">Claim reference</div>
               <div className="claim-done-v">{claimReference}</div>
             </div>
+
+            <a className="claim-done-vcard" href="/s-assets/refundlocators.vcf" download="RefundLocators.vcf">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <circle cx="7" cy="4.5" r="2.5" stroke="currentColor" strokeWidth="1.25" />
+                <path d="M2 12.5c.6-2.4 2.6-3.5 5-3.5s4.4 1.1 5 3.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
+              </svg>
+              Save our contact — so you know it&apos;s us when we text
+            </a>
 
             <button type="button" className="claim-done-close" onClick={onClose}>
               Close
@@ -910,14 +1058,28 @@ export default function PersonalizedClient({ link }: { link: PersonalizedLink })
   const [modalOpen, setModalOpen] = useState(false);
   const [laurenOpen, setLaurenOpen] = useState(false);
 
+  useEffect(() => {
+    sendEvent(link.token, 'viewed');
+  }, [link.token]);
+
+  const openClaim = () => {
+    sendEvent(token.token, 'claim_modal_opened');
+    setModalOpen(true);
+  };
+  const openLauren = () => {
+    sendEvent(token.token, 'lauren_opened');
+    setLaurenOpen(true);
+  };
+
   return (
     <div className="pass-root" data-bg="flat" data-gold="full">
       <PassHero
         token={token}
-        onStartClaim={() => setModalOpen(true)}
-        onTalkToLauren={() => setLaurenOpen(true)}
+        onStartClaim={openClaim}
+        onTalkToLauren={openLauren}
       />
-      <WhyWeReachOut copy={buildCopy(token)} onStartClaim={() => setModalOpen(true)} />
+      <WhyWeReachOut copy={buildCopy(token)} onStartClaim={openClaim} />
+      <FounderNote relationship={token.relationship} />
       <CaseCard token={token} />
       <FAQ token={token} />
 
