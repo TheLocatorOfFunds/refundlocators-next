@@ -71,12 +71,13 @@ function sendBeacon(path: string, referrer: string) {
   //
   // text/plain is deliberate (CORS-safelisted → no preflight). History: until
   // 2026-09-19 the drain sent no Access-Control-Allow-Origin header, so
-  // application/json beacons failed preflight and 100% of events were
-  // silently dropped in every environment. The drain now speaks proper CORS
-  // (drain v55), but text/plain stays: it saves a preflight round-trip per
-  // event, we never read the response, the drain parses the JSON body
-  // regardless of content type, and delivery keeps working even if the
-  // drain's CORS config ever regresses.
+  // application/json beacons could fail CORS preflight and drop silently —
+  // reproduced in dev, and the Apr–Sep event volume (~230 sessions total)
+  // says delivery was a partial undercount, though not the total blackout
+  // first assumed. The drain now speaks proper CORS (drain v55), but
+  // text/plain stays: no preflight round-trip per event, we never read the
+  // response, the drain parses the JSON body regardless of content type,
+  // and delivery keeps working even if the drain's CORS config regresses.
   if (navigator.sendBeacon) {
     const blob = new Blob([JSON.stringify([event])], { type: 'text/plain' });
     navigator.sendBeacon(DRAIN_URL, blob);
