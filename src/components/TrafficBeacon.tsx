@@ -67,18 +67,39 @@ function sendBeacon(path: string, referrer: string) {
     projectId: 'refundlocators-next',
   };
 
-  // navigator.sendBeacon is ideal — doesn't block navigation
+  // navigator.sendBeacon is ideal — doesn't block navigation.
+  //
+  // Content type MUST stay text/plain (CORS-safelisted): the drain sends no
+  // Access-Control-Allow-Origin header, so an application/json body triggers
+  // a preflight that fails and the browser never sends the event — which is
+  // exactly what was happening in production until 2026-09-19 (every beacon
+  // silently dropped). text/plain needs no preflight, we never read the
+  // response, and the drain parses the JSON body regardless (verified 200).
   if (navigator.sendBeacon) {
-    const blob = new Blob([JSON.stringify([event])], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify([event])], { type: 'text/plain' });
     navigator.sendBeacon(DRAIN_URL, blob);
   } else {
     fetch(DRAIN_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify([event]),
       keepalive: true,
     }).catch(() => {/* silently drop */});
   }
+}
+
+/**
+ * Track a discrete interaction as a synthetic pageview (e.g. `/_door/sold`
+ * when a visitor picks a homepage door). Rides the same drain + payload
+ * shape as real pageviews so nothing downstream needs a new schema; the
+ * per-tab sessionId lets analysis dedupe repeat picks. Callers should treat
+ * it as fire-and-forget.
+ */
+export function trackEvent(syntheticPath: string) {
+  try {
+    sendBeacon(syntheticPath, '');
+  } catch { /* never let tracking break the page */ }
 }
 
 export default function TrafficBeacon() {

@@ -13,6 +13,14 @@
 import { useRef, useState } from 'react';
 import type { SearchResult } from '@/lib/supabase';
 import LaurenSheet from '@/components/LaurenSheet';
+import { trackEvent } from '@/components/TrafficBeacon';
+import { CONFIG } from '@/lib/config';
+
+// The three homepage doors ("Where are you right now?"). 'sold' is the core
+// surplus path (address check), 'home' is the pre-auction/Defender path,
+// 'curious' is the read-first path. Door picks are tracked as synthetic
+// pageviews (/_door/<door>) so Nathan learns the visitor mix.
+type Door = 'sold' | 'home' | 'curious';
 
 // Format a recovery total — specific dollars win on trust over rounded
 // aggregates ("$334,217" beats "$334k" beats "$2.4M" for this audience).
@@ -31,7 +39,20 @@ export default function HomeClient() {
   const [error, setError] = useState('');
   const [result, setResult] = useState<SearchResult | null>(null);
   const [laurenOpen, setLaurenOpen] = useState(false);
+  const [laurenLane, setLaurenLane] = useState<'defender' | undefined>(undefined);
+  const [door, setDoor] = useState<Door | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const pickDoor = (d: Door) => {
+    setDoor(d);
+    trackEvent(`/_door/${d}`);
+    if (d === 'sold') setTimeout(() => inputRef.current?.focus(), 250);
+  };
+
+  const openLauren = (l?: 'defender') => {
+    setLaurenLane(l);
+    setLaurenOpen(true);
+  };
 
   // Recovery counter intentionally null until we have closed cases we can
   // attest to. Showing fabricated totals undercuts the very trust position
@@ -218,10 +239,99 @@ export default function HomeClient() {
             When a home sells at auction for more than what&apos;s owed on it,
             the money left over after the debts are paid — the{' '}
             <strong>surplus</strong>{' '}— goes to the former owner. Not the bank.
-            Not the county. Most people are never told it exists. Put in the
-            address and we&apos;ll check the court records for free.
+            Not the county. Most people are never told it exists.
           </p>
 
+          {/* One question, three doors — every visitor should see themselves
+              in the first five seconds, not just the person whose home
+              already sold. */}
+          <div className="home-doors" role="group" aria-label="Where are you right now?">
+            <div className="home-doors-q">Where are you right now?</div>
+            <button
+              type="button"
+              className="home-door"
+              data-active={door === 'sold' ? '1' : '0'}
+              onClick={() => pickDoor('sold')}
+            >
+              <span className="home-door-title">My home already sold at auction</span>
+              <span className="home-door-sub">Check your address for surplus money — free</span>
+            </button>
+            <button
+              type="button"
+              className="home-door"
+              data-active={door === 'home' ? '1' : '0'}
+              onClick={() => pickDoor('home')}
+            >
+              <span className="home-door-title">I&apos;m still in my home</span>
+              <span className="home-door-sub">The auction hasn&apos;t happened — you have options</span>
+            </button>
+            <button
+              type="button"
+              className="home-door"
+              data-active={door === 'curious' ? '1' : '0'}
+              onClick={() => pickDoor('curious')}
+            >
+              <span className="home-door-title">I&apos;m just curious — or you contacted me</span>
+              <span className="home-door-sub">Read first, decide later. No pressure.</span>
+            </button>
+          </div>
+
+          {door === 'home' && (
+            <div className="home-door-panel">
+              <p className="home-door-panel-body">
+                If the auction hasn&apos;t happened yet, you have time — and you
+                deserve straight answers, not a pitch. We won&apos;t promise to
+                stop a foreclosure; nobody honest will. What we can do:
+                explain how the process works in plain English, and have a
+                real person call you back and tell you honestly what your
+                options look like — including the ones that don&apos;t involve
+                us. And if the home does sell, there may be money left over
+                that belongs to you. Almost nobody tells families that.
+              </p>
+              <button
+                type="button"
+                className="pass-cta-primary home-door-panel-cta"
+                onClick={() => openLauren('defender')}
+              >
+                <span className="home-lauren-cta-dot" aria-hidden="true" />
+                <span>Talk it through with Lauren now</span>
+              </button>
+              <a className="pass-cta-secondary home-door-panel-cta" href={`sms:${CONFIG.NATHAN_PHONE}`}>
+                Or text Nathan directly — {CONFIG.NATHAN_PHONE_DISPLAY}
+              </a>
+            </div>
+          )}
+
+          {door === 'curious' && (
+            <div className="home-door-panel">
+              <p className="home-door-panel-body">
+                Smart. This industry is full of people who count on you not
+                checking. Read how to verify us — and anyone else who
+                contacts you — before you sign anything with anybody.
+              </p>
+              <a className="home-door-link" href="/is-this-legit">
+                Is this a scam? How to check us out →
+              </a>
+              <a className="home-door-link" href="/story">
+                Why Nathan built this →
+              </a>
+              <p className="home-door-panel-body">
+                Got a letter or text from us? The scam-check page shows how to
+                verify it&apos;s really us. Or just ask Lauren below — free, no
+                signup, no phone number needed.
+              </p>
+              <button
+                type="button"
+                className="pass-cta-secondary home-door-panel-cta"
+                onClick={() => openLauren()}
+              >
+                <span className="home-lauren-cta-dot" aria-hidden="true" />
+                Ask Lauren anything
+              </button>
+            </div>
+          )}
+
+          {door === 'sold' && (<>
           <form onSubmit={handleSearch} className="home-search" noValidate>
             <div className="home-search-field">
               <span className="home-search-icon" aria-hidden="true">
@@ -275,7 +385,7 @@ export default function HomeClient() {
                 <button
                   type="button"
                   className="home-found-cta"
-                  onClick={() => setLaurenOpen(true)}
+                  onClick={() => openLauren()}
                 >
                   <span className="home-lauren-cta-dot" aria-hidden="true" />
                   {resultTile.cta} →
@@ -315,11 +425,24 @@ export default function HomeClient() {
           <button
             type="button"
             className="pass-cta-secondary home-lauren-cta"
-            onClick={() => setLaurenOpen(true)}
+            onClick={() => openLauren()}
           >
             <span className="home-lauren-cta-dot" aria-hidden="true" />
             Ask Lauren — free, no signup
           </button>
+          </>)}
+
+          {/* "Run by one person you can actually call" — so the number is
+              actually here. Nathan's cell (decided 2026-09-18), same number
+              as /is-this-legit and /story. */}
+          <div className="home-phone">
+            Questions? Call or text Nathan directly:{' '}
+            <a href={`tel:${CONFIG.NATHAN_PHONE}`}>{CONFIG.NATHAN_PHONE_DISPLAY}</a>
+            <div className="home-phone-sub">
+              If he&apos;s free during business hours he picks up. If not,{' '}
+              <a href={`sms:${CONFIG.NATHAN_PHONE}`}>text</a> — he replies the same day.
+            </div>
+          </div>
 
           {/* When real recoveries land, render: "$X returned to N Ohio families".
               Until then, a defensible pride-of-place line. */}
@@ -405,6 +528,7 @@ export default function HomeClient() {
         open={laurenOpen}
         onClose={() => setLaurenOpen(false)}
         seed={laurenSeed}
+        lane={laurenLane}
       />
     </div>
   );

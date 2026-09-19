@@ -37,7 +37,7 @@ export interface LaurenTokenContext {
 interface ChatMsg { role: 'user' | 'assistant'; content: string }
 
 export default function LaurenSheet({
-  open, onClose, token, seed,
+  open, onClose, token, seed, lane,
 }: {
   open: boolean;
   onClose: () => void;
@@ -47,6 +47,11 @@ export default function LaurenSheet({
       Used by the homepage when an address search comes back inconclusive
       and we want Lauren to pick up the case in conversation. */
   seed?: string;
+  /** Which homepage door the visitor came through. 'defender' = still in
+      the home (pre-auction) — Lauren greets in her pre-auction lane and
+      shows chips for that situation. Her server prompt owns the MARS
+      boundary; this only sets the opening frame. Default: surplus. */
+  lane?: 'defender';
 }) {
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState('');
@@ -161,7 +166,9 @@ export default function LaurenSheet({
   // who knows the answer.
   const greeting = token
     ? `Hi ${token.firstName || 'there'}, I'm Lauren. I handle surplus funds cases like yours at ${token.propertyAddress}. What do you want to know?`
-    : `Hi, I'm Lauren. I help people find and recover foreclosure surplus funds anywhere in the country — how the process works, what to expect, whether there's money waiting on your address, anything. What's on your mind?`;
+    : lane === 'defender'
+      ? `Hi, I'm Lauren. If the auction hasn't happened yet, there's a lot worth understanding first. I can explain how the process works in plain English, and a real person can call you back and be straight with you about your options. What's going on with the house?`
+      : `Hi, I'm Lauren. I help people find and recover foreclosure surplus funds anywhere in the country — how the process works, what to expect, whether there's money waiting on your address, anything. What's on your mind?`;
 
   useEffect(() => {
     if (open && messages.length === 0) {
@@ -343,12 +350,21 @@ export default function LaurenSheet({
         'How long does it take?',
         'Who is the attorney?',
       ]
-    : [
-        `What's a surplus, exactly?`,
-        'How long does recovery take?',
-        `What's the fee?`,
-        'How do I know my address has one?',
-      ];
+    : lane === 'defender'
+      ? [
+          'What happens between now and the auction?',
+          'What are my options?',
+          'Is this real?',
+          'Can a real person call me?',
+        ]
+      : [
+          // "What's the fee?" chip removed 2026-09-19: it's the one question
+          // Lauren is required to deflect — never make it the first tap.
+          'Is this real?',
+          `What happens after a sheriff's sale?`,
+          `My home hasn't sold yet`,
+          'I got a letter from you',
+        ];
 
   return (
     <div
