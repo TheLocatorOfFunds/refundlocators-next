@@ -5,7 +5,8 @@
  * (no token, general Q&A) and the personalized /s/[token] page
  * (token-aware, knows the visitor's case).
  *
- * Posts to CONFIG.LAUREN_URL with optional personalization_context.
+ * Posts to CONFIG.LAUREN_URL; case context is server-derived from
+ * link_token (never client-built — see lauren-chat v68).
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -142,23 +143,12 @@ export default function LaurenSheet({
     };
   }, [open]);
 
-  // Build personalization_context only when we have a token
-  const personalizationContext = token
-    ? (() => {
-        const amt = token.confirmed
-          ? `$${(token.confirmedAmount ?? 0).toLocaleString('en-US')} (confirmed by the court)`
-          : `roughly $${token.estimatedLow.toLocaleString('en-US')}–$${token.estimatedHigh.toLocaleString('en-US')} (estimated from court records)`;
-        return [
-          `Person: ${[token.firstName, token.lastName].filter(Boolean).join(' ') || 'Former Ohio homeowner'}`,
-          `Property: ${token.propertyAddress}, ${token.county} County OH`,
-          `Case number: ${token.caseNumber}`,
-          `Sold at sheriff's sale: ${token.saleDate} for $${token.salePrice.toLocaleString('en-US')}`,
-          `Judgment debt paid off: $${token.judgmentAmount.toLocaleString('en-US')}`,
-          `Their surplus: ${amt}`,
-          `Money is held by the ${token.county} County Clerk of Courts.`,
-        ].join('\n');
-      })()
-    : undefined;
+  // Case context is no longer built client-side: lauren-chat (v68+) rebuilds
+  // it server-side from a link_token, so a caller can't spoof a fake "case"
+  // into Lauren's context. This component's `token` prop still drives the
+  // greeting and quick replies; the /s/[token] page's own sheet passes the
+  // link_token. (This tokenful path is currently unused — every live mount
+  // of LaurenSheet is tokenless.)
 
   // Greeting differs by mode. Generic mode used to lead with "AI surplus-funds
   // agent" — the competitive research found that framing makes scam-wary,
@@ -306,7 +296,6 @@ export default function LaurenSheet({
           messages: snapshot,
           session_id: sessionRef.current,
           visitor_id: getVisitorId(),
-          ...(personalizationContext ? { personalization_context: personalizationContext } : {}),
         }),
       });
       const data = await res.json().catch(() => ({}));

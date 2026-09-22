@@ -877,20 +877,10 @@ function LaurenAISheet({
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const personalizationContext = (() => {
-    const amt = token.confirmed
-      ? `$${(token.confirmedAmount ?? 0).toLocaleString('en-US')} (confirmed by the court)`
-      : `roughly $${token.estimatedLow.toLocaleString('en-US')}–$${token.estimatedHigh.toLocaleString('en-US')} (estimated from court records)`;
-    return [
-      `Person: ${[token.firstName, token.lastName].filter(Boolean).join(' ') || 'Former Ohio homeowner'}`,
-      `Property: ${token.propertyAddress}, ${token.county} County OH`,
-      `Case number: ${token.caseNumber}`,
-      `Sold at sheriff's sale: ${token.saleDate} for $${token.salePrice.toLocaleString('en-US')}`,
-      `Judgment debt paid off: $${token.judgmentAmount.toLocaleString('en-US')}`,
-      `Their surplus: ${amt}`,
-      `Money is held by the ${token.county} County Clerk of Courts.`,
-    ].join('\n');
-  })();
+  // Case context is built SERVER-SIDE by lauren-chat from link_token (v68+).
+  // Never send client-built case text: a caller could spoof any "case" and
+  // screenshot Lauren discussing it. The token is the credential; the edge
+  // function looks the row up itself.
 
   useEffect(() => {
     if (open && messages.length === 0) {
@@ -932,7 +922,7 @@ function LaurenAISheet({
         body: JSON.stringify({
           messages: next,
           session_id: sessionId,
-          personalization_context: personalizationContext,
+          link_token: token.token,
         }),
       });
       const data = await res.json();
