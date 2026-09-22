@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { PersonalizedLink } from '@/lib/supabase';
 import { CONFIG } from '@/lib/config';
 import { COUNTIES, clerkSearchUrl } from '@/lib/counties';
+import { getLaurenCredential, storeLaurenCredential } from '@/lib/laurenCredential';
 import { copyFor, type Relationship, type CopyBundle } from './copy';
 
 // ── Funnel events ────────────────────────────────────────────────────────────
