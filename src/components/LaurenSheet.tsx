@@ -11,6 +11,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { CONFIG } from '@/lib/config';
+import { getLaurenCredential, storeLaurenCredential } from '@/lib/laurenCredential';
 
 /** Persistent per-browser id so the LAUREN_URL endpoint can stitch sessions. */
 function getVisitorId(): string {
@@ -296,9 +297,11 @@ export default function LaurenSheet({
           messages: snapshot,
           session_id: sessionRef.current,
           visitor_id: getVisitorId(),
+          ...(getLaurenCredential() ? { visitor_credential: getLaurenCredential() } : {}),
         }),
       });
       const data = await res.json().catch(() => ({}));
+      if (data) storeLaurenCredential(data.visitor_credential);
       if (data && data.session_id) {
         sessionRef.current = data.session_id;
         setSessionId(data.session_id);

@@ -923,9 +923,11 @@ function LaurenAISheet({
           messages: next,
           session_id: sessionId,
           link_token: token.token,
+          ...(getLaurenCredential() ? { visitor_credential: getLaurenCredential() } : {}),
         }),
       });
       const data = await res.json();
+      storeLaurenCredential(data.visitor_credential);
       if (data.session_id) setSessionId(data.session_id);
       const reply = (data.reply || '').trim()
         || `Sorry — I'm having a hiccup on my end. You can text our team at (513) 516-2306 and we'll get right back to you.`;
